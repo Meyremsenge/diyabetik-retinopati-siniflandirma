@@ -1,0 +1,26 @@
+# VisionDx bağımlılıkları — Python 3.12
+# NVIDIA GPU'lu Windows'ta torch/torchvision ÖNCE CUDA sürümüyle kurulur (README), sonra bu dosya.
+# Yeni kütüphane eklemek ekip onayı ister (CLAUDE.md); her satırda gerekçe yazılır.
+
+# --- Derin öğrenme ---
+torch==2.14.1            # model eğitimi ve tahmin
+torchvision==0.29.1      # ResNet50 / EfficientNet-B3 ImageNet ağırlıkları + transforms v2 (augmentation)
+
+# --- Veri ve görüntü ---
+numpy==2.5.4             # dizi işlemleri (Ben Graham, kırpma)
+pandas==3.0.6            # CSV okuma/yazma (etiketler, bölme, tahminler)
+pillow==12.3.0           # görüntü okuma, kırpma, yeniden boyutlandırma, Gauss bulanıklaştırma (streamlit <13 istiyor)
+imagehash==4.3.2         # perceptual hash ile tekrar görüntü tespiti (FG-2)
+
+# --- Değerlendirme ve görselleştirme ---
+scikit-learn==1.9.1      # QWK, F1, recall, confusion matrix, tabakalı bölme
+matplotlib==3.11.2       # confusion matrix ve eğitim grafikleri
+grad-cam==1.5.7          # Grad-CAM ısı haritaları (FG-9)
+
+# --- Arayüz ---
+streamlit==1.66.0        # görüntü yükle -> tahmin -> Grad-CAM demosu (FG-10)
+
+# --- Yardımcılar ---
+pyyaml==6.0.3            # configs/*.yaml okuma
+tqdm==4.70.1             # eğitim ve ön işleme ilerleme çubuğu
+pytest==9.1.1            # birim testleri

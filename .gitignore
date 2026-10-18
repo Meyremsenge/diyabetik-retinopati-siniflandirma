@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Gizli bilgiler
+.env
+kaggle.json
+
+# Kişisel bilgi içeren notlar (öğrenci numaraları)
+gptilekonuşma.md
+gptilekonusma.md
+
+# Editör / Claude yerel ayarları
+.vscode/
+.idea/
+.claude/settings.local.json
+
+# Veri ve model çıktıları — ASLA commit'lenmez
+data/*
+!data/README.md
+outputs/
+*.pt
+*.pth
+*.ckpt
+*.zip
+
+# Notebook
+.ipynb_checkpoints/
+
+# İşletim sistemi
+.DS_Store
+Thumbs.db
+desktop.ini
