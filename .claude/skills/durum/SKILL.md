@@ -18,13 +18,25 @@ Yalnız şunları oku:
 ## 2. Kişiyi belirle
 
 `git config user.name` değerini PLAN.md'deki "Git kullanıcı adı → kişi" tablosunda ara → `R`, `B` veya `M`.
-- Bulunamazsa tek soru sor: "Rümeysa, Büşra, Meyrem — hangisisin?" Cevaba göre tabloyu doldurmayı öner.
+- Bulunamazsa (kişi tabloda yoksa) tek soru sor: "Rümeysa, Büşra, Meyrem — hangisisin?" Sonra PLAN.md'deki tabloya **yalnız kendi satırını** `git config user.name` değeriyle doldurmayı öner.
 
 ## 3. Hedef maddeyi seç
 
 - Argüman verildiyse o madde.
 - Yoksa: kişinin `[X]` veya `[E]` etiketli **ilk işaretsiz** `- [ ]` maddesi (en erken haftadan başla).
-- Seçilen madde başka birinin çıktısına bağlıysa (ör. `splits.csv` yok) bunu söyle. Bekleyenler için sahte/küçük veriyle ilerlenebilecek kısmı öner.
+- `[E]` maddede kişinin harfi (`R⬜ B⬜ M⬜` içinde) zaten ✅ ise o madde bitmiştir; sıradakine geç.
+
+## Kartı oku
+
+Madde no `<h>.<n>` ise kart `docs/planlar/H<h>.md` dosyasındadır. Dosyanın tamamını okuma; yalnız o kartı al:
+
+```bash
+sed -n '/^## <h>\.<n> —/,/^## /p' docs/planlar/H<h>.md
+```
+
+(Son satır bir sonraki kartın başlığıdır; yok say.)
+
+Kartın **Önkoşul** bölümü bitmemiş bir maddeye/dosyaya bağlıysa bunu söyle ve kartın önerdiği sahte/küçük veriyle yapılabilecek kısmı öner.
 
 ## 4. Kısa rapor (tam bu biçimde)
 
@@ -40,13 +52,13 @@ Bağımlılık: <yok | ... bekleniyor>
 
 ## 5. Uygula
 
-Rapordan sonra durma, doğrudan başla (`/durum` = "devam et"). `CLAUDE.md` çalışma döngüsü ve doğrulama matrisine uy. Ayrıntı için TEKNIK_TASARIM'ın yalnız ilgili bölümünü `grep` ile bul.
+Rapordan sonra durma, doğrudan başla (`/durum` = "devam et"). Kartın **Adımlar**, **Arayüz** ve **Test** bölümlerini sırayla uygula; dosya adları ve imzalar karttakiyle birebir olsun. `CLAUDE.md` çalışma döngüsü ve doğrulama matrisine uy. Kartta olmayan bir ayrıntı için TEKNIK_TASARIM'ın yalnız ilgili bölümünü `grep` ile bul.
 
 **Önce onay gerektirenler** (CLAUDE.md "İzin ve onay sınırları"): başkasının dosyası, sözleşme/`splits` değişikliği, bağımlılık, silme, 30 dakikadan uzun eğitim, push. Bu durumda raporun sonuna `Bu madde onay gerektiriyor: <sebep>. Başlayayım mı?` ekle ve bekle.
 
 ## 6. Bitince
 
-- PLAN.md'de kutuyu `- [x]` yap.
+- PLAN.md'de kutuyu `- [x]` yap (`[E]` kişi başı maddede yalnız kendi harfini ✅ yap; üç harf ✅ olunca `[x]`).
 - CLAUDE.md çıktı formatı (Değişen / Doğrulanan / Nasıl çalışır / Kalan).
 - Commit **atma**; kullanıcı `/bitir` der. Sıradaki maddeye kendiliğinden geçme.
 

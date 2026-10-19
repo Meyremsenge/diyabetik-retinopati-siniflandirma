@@ -7,12 +7,27 @@ argument-hint: "(boş) | <commit mesajı>"
 
 # Maddeyi kapat
 
+## Kartı oku
+
+Madde no `<h>.<n>` ise kart `docs/planlar/H<h>.md` dosyasındadır. Dosyanın tamamını okuma; yalnız o kartı al:
+
+```bash
+sed -n '/^## <h>\.<n> —/,/^## /p' docs/planlar/H<h>.md
+```
+
+(Son satır bir sonraki kartın başlığıdır; yok say.)
+
 ## 1. Doğrula
-CLAUDE.md doğrulama matrisine göre **minimum gerekli** kontrolü çalıştır. Birden çok kategori varsa en genişini seç.
-Kırılırsa **dur, commit atma**. Çıktıyı göster ve sor.
+- Kartın **"6. Test / doğrulama"** bölümündeki komutu çalıştır ve **gerçek çıktıyı** göster.
+- Kartta komut yoksa CLAUDE.md doğrulama matrisine göre minimum gerekli kontrolü çalıştır.
+- Kartın **"7. Kabul ölçütü"** maddelerini **tek tek** kontrol et; her biri için ✅/❌ ve kanıtı (komut çıktısı veya dosya) yaz.
+- Test kırılırsa veya bir ölçüt sağlanmazsa **dur, commit atma**. Çıktıyı göster ve sor.
 
 ## 2. Planı güncelle
-PLAN.md'de maddeyi `- [x]` yap. Plan dışı bir şey yapıldıysa "Plan dışı eklenen maddeler" bölümüne yaz.
+Yalnız **tüm kabul ölçütleri sağlanınca** PLAN.md'de maddeyi `- [x]` yap.
+
+`[E]` kişi başı maddelerde (`R⬜ B⬜ M⬜`): kişiyi `git config user.name` ile PLAN.md'deki kişi tablosundan bul; **yalnız kendi harfini** ✅ yap (ör. `M⬜` → `M✅`). Üç harf de ✅ olunca `- [x]` yap. Kişi tabloda yoksa sor ve tabloya kendi satırını yazmayı öner.
+ Plan dışı bir şey yapıldıysa "Plan dışı eklenen maddeler" bölümüne yaz.
 Madde bir deney sonucuysa DENEY_KAYDI'nın dolu olduğunu kontrol et.
 
 ## 3. Commit öncesi kontrol
