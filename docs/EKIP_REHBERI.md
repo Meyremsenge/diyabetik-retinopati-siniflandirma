@@ -102,3 +102,14 @@ Claude Code kullanmayan ekip üyesi aynı düzeni elle uygular: PLAN.md'den madd
 2. Engeller — kim kimden ne bekliyor?
 3. Sözleşme değişikliği gerekiyor mu? (gerekirse KARAR_KAYDI)
 4. Gelecek hafta maddeleri ve kaptan.
+
+## 7. Repoyu ilk kez çektiğinde Claude'a ne diyeceksin
+
+Repoyu ilk kez klonladıktan sonra Claude Code'u proje klasöründe aç ve aşağıdaki mesajı yapıştır (`<Rümeysa|Büşra>` yerine kendi adını yaz):
+
+```text
+Ben <Rümeysa|Büşra>. Bu repoyu ilk kez açıyorum. CLAUDE.md, docs/EKIP_REHBERI.md ve docs/PLAN.md'yi oku.
+1) `git config user.name` değerimi PLAN.md'deki kişi tablosuna yaz (sadece kendi satırım).
+2) README'deki macOS kurulumunu benimle adım adım yap ve her komutun çıktısını kontrol et.
+3) Sonra /durum ile benim ilk maddemi başlat. Kodu yazdıktan sonra bana /anlat ile açıkla.
+```
