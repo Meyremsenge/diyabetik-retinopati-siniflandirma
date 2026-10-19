@@ -81,6 +81,7 @@ Repoda hazır komutlar (`.claude/skills/`):
 | `/bitir` | Testleri çalıştırır, PLAN'ı işaretler, kendi dalına commit atar |
 | `/deney <id>` | Bir deneyi koşturur/kaydeder; sonucu DENEY_KAYDI'na **yalnız gerçek dosyadan** yazar |
 | `/haftalik-rapor` | Git geçmişi + PLAN + DENEY_KAYDI'ndan haftalık rapor taslağı |
+| `/ders-raporu <şablon yolu>` | Dersin Word raporunu şablona göre, projenin gerçek durumuyla doldurur (Downloads'a yazar, git dışı) |
 | `/anlat <dosya veya kavram>` | Kodu/kavramı sade Türkçeyle anlatır, küçük alıştırma verir |
 | `/handoff` | Yarım kalan işi bir sonraki oturuma devretmek için HANDOFF.md yazar |
 

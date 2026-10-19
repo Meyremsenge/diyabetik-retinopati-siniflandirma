@@ -147,4 +147,4 @@ Kalan: —
 
 ## Proje komutları (`.claude/skills/`)
 
-`/durum` · `/ilerle` · `/bitir` · `/deney <id>` · `/haftalik-rapor` · `/anlat <dosya|kavram>` · `/handoff`. Ayrıntı: EKIP_REHBERI §4.
+`/durum` · `/ilerle` · `/bitir` · `/deney <id>` · `/haftalik-rapor` · `/ders-raporu <şablon yolu>` · `/atdd <madde>` · `/anlat <dosya|kavram>` · `/handoff`. Ayrıntı: EKIP_REHBERI §4.
