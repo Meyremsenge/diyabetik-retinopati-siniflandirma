@@ -44,7 +44,7 @@
 - [ ] 1.6 `[R]` Veri raporu (`src/inspect_dataset.py`) → [kart](planlar/H1.md#m1-6)
 - [ ] 1.7 `[R]` Veri seti bölümü rapor taslağı → [kart](planlar/H1.md#m1-7)
 - [x] 1.8 `[B]` `src/utils.py` (`set_seed`, `get_device`) → [kart](planlar/H1.md#m1-8)
-- [ ] 1.9 `[B]` `src/models.py` (`build_model`) → [kart](planlar/H1.md#m1-9)
+- [x] 1.9 `[B]` `src/models.py` (`build_model`) → [kart](planlar/H1.md#m1-9)
 - [ ] 1.10 `[B]` Transfer learning eğitimini oku/dene → [kart](planlar/H1.md#m1-10)
 - [ ] 1.11 `[M]` `src/metrics.py` (`compute_metrics`) → [kart](planlar/H1.md#m1-11)
 - [ ] 1.12 `[M]` Metrik açıklaması (RAPOR §7) → [kart](planlar/H1.md#m1-12)
