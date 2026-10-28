@@ -62,8 +62,8 @@
 - [x] 2.6 `[B]` (üstlenen: Rümeysa) `configs/resnet50_baseline.yaml` + `src/train.py` → [kart](planlar/H2.md#m2-6)
 - [x] 2.7 `[B]` (üstlenen: Rümeysa) Duman testi (E0) → [kart](planlar/H2.md#m2-7)
 - [x] 2.8 `[B]` (üstlenen: Rümeysa) `src/predict.py` → [kart](planlar/H2.md#m2-8)
-- [ ] 2.9 `[B]` E1: ResNet50 baseline tam eğitim → [kart](planlar/H2.md#m2-9)
-- [ ] 2.10 `[M]` (üstlenen: Rümeysa; E1 val tahmininde çalıştırma bekliyor) `src/evaluate.py` → [kart](planlar/H2.md#m2-10)
+- [x] 2.9 `[B]` (üstlenen: Rümeysa) E1: ResNet50 baseline tam eğitim → [kart](planlar/H2.md#m2-9)
+- [x] 2.10 `[M]` (üstlenen: Rümeysa) `src/evaluate.py` → [kart](planlar/H2.md#m2-10)
 - [ ] 2.11 `[M]` E1'i yerel GPU'da çalıştır, süreyi ölç → [kart](planlar/H2.md#m2-11)
 - [ ] 2.12 `[E]` H2 haftalık rapor → [kart](planlar/H2.md#m2-12)
 
