@@ -18,7 +18,7 @@
 
 | Deney | Run ID | Kim | Donanım | Model | Ön işleme | Loss | Süre | Val QWK | Val macro F1 | Val recall (0/1/2/3/4) | Durum / not |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| E0 | | B | | resnet18 | kırp+512 | CE | | — | — | — | Duman testi, raporlanmaz |
+| E0 | 20261028-1705_resnet18_smoke | R (B adına) | Kaggle Tesla T4 | resnet18 | kırp+512 | CE | | — | — | — | Duman testi geçti (--limit 64 --epochs 1; ResNet50 baseline config'i de çalıştı: 20261028-1710_resnet50_baseline), raporlanmaz |
 | E1 | | B | | resnet50 | kırp+512 | CE | | | | | çalıştırılmadı |
 | E2 | | B | | efficientnet_b3 | kırp+512 | CE | | | | | çalıştırılmadı |
 | E3 | | B | | | kırp+512 | ağırlıklı CE | | | | | çalıştırılmadı |
