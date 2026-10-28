@@ -55,9 +55,9 @@
 ## H2 (26 Ekim – 1 Kasım) — Veri hattı ve ilk baseline
 
 - [x] 2.1 `[R]` `src/preprocessing.py` (kırpma, kareye boyutlandırma) → [kart](planlar/H2.md#m2-1)
-- [ ] 2.2 `[R]` `src/preprocess_images.py` (512 px önbellek) → [kart](planlar/H2.md#m2-2)
-- [ ] 2.3 `[R]` `src/find_duplicates.py` (tekrar grupları) → [kart](planlar/H2.md#m2-3)
-- [ ] 2.4 `[R]` `src/make_splits.py` → `splits/aptos_splits.csv` → [kart](planlar/H2.md#m2-4)
+- [x] 2.2 `[R]` `src/preprocess_images.py` (512 px önbellek) → [kart](planlar/H2.md#m2-2)
+- [x] 2.3 `[R]` `src/find_duplicates.py` (tekrar grupları) → [kart](planlar/H2.md#m2-3)
+- [x] 2.4 `[R]` `src/make_splits.py` → `splits/aptos_splits.csv` → [kart](planlar/H2.md#m2-4)
 - [ ] 2.5 `[R]` `src/data.py` (`RetinaDataset`, `get_transforms`) → [kart](planlar/H2.md#m2-5)
 - [ ] 2.6 `[B]` `configs/resnet50_baseline.yaml` + `src/train.py` → [kart](planlar/H2.md#m2-6)
 - [ ] 2.7 `[B]` Duman testi (E0) → [kart](planlar/H2.md#m2-7)
