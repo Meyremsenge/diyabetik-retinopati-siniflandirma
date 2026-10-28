@@ -59,3 +59,13 @@ def test_main_cli(raw_dir, tmp_path, capsys):
 
     assert len(list(out_dir.glob("*.jpg"))) == 3
     assert "Yazılan görüntü: 3" in capsys.readouterr().out
+
+
+def test_ben_graham_flag(raw_dir, tmp_path):
+    out_dir = tmp_path / "out"
+
+    preprocess_all(raw_dir, out_dir, size=64, ben_graham=True)
+
+    with Image.open(out_dir / "a.jpg") as img:
+        corner = img.getpixel((0, 0))
+    assert all(abs(channel - 128) <= 3 for channel in corner)
