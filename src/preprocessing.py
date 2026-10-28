@@ -12,7 +12,7 @@ Test: python -m pytest tests/test_preprocessing.py -q
 """
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFilter
 
 BLACK_THRESHOLD = 7
 
@@ -48,3 +48,27 @@ def prepare_image(img: Image.Image, size: int = 512) -> Image.Image:
     """RGB'ye çevir → siyah kenarları kırp → kare boyutlandır."""
     rgb = img.convert("RGB")
     return resize_square(crop_black_borders(rgb), size)
+
+
+def ben_graham(
+    img: Image.Image, sigma_divisor: float = 30.0, mask_ratio: float = 0.9
+) -> Image.Image:
+    """Ben Graham dönüşümü: bulanık arka planı çıkarıp ince ayrıntıları öne çıkarır.
+
+    Girdi `prepare_image` çıktısı (kare RGB) olmalı. Formül: 4*görüntü - 4*bulanık + 128.
+    Merkezden uzaklığı mask_ratio * yarıçaptan büyük pikseller gri (128) yapılır.
+    """
+    rgb = img.convert("RGB")
+    width, height = rgb.size
+    radius = min(width, height) / 2
+    # Pillow'da GaussianBlur'un radius parametresi standart sapmadır
+    blurred = rgb.filter(ImageFilter.GaussianBlur(radius=radius / sigma_divisor))
+
+    sharpened = 4 * np.asarray(rgb, dtype=np.float32) - 4 * np.asarray(blurred, dtype=np.float32) + 128
+    result = np.clip(sharpened, 0, 255)
+
+    rows, columns = np.ogrid[:height, :width]
+    distance = np.sqrt((columns - (width - 1) / 2) ** 2 + (rows - (height - 1) / 2) ** 2)
+    result[distance > mask_ratio * radius] = 128
+
+    return Image.fromarray(result.astype(np.uint8), mode="RGB")
