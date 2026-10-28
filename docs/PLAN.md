@@ -36,8 +36,8 @@
 
 ## H1 (19–25 Ekim) — Kurulum ve veriyi tanıma
 
-- [ ] 1.1 `[E]` Python 3.12 ortamı + requirements kurulumu R✅ B✅ M⬜ → [kart](planlar/H1.md#m1-1)
-- [ ] 1.2 `[E]` Kaggle hesabı + telefon doğrulaması + APTOS kuralları R✅ B✅ M⬜ → [kart](planlar/H1.md#m1-2)
+- [x] 1.1 `[E]` Python 3.12 ortamı + requirements kurulumu R✅ B✅ M✅ → [kart](planlar/H1.md#m1-1)
+- [x] 1.2 `[E]` Kaggle hesabı + telefon doğrulaması + APTOS kuralları R✅ B✅ M✅ → [kart](planlar/H1.md#m1-2)
 - [ ] 1.3 `[M]` GitHub collaborator + PR kuralı → [kart](planlar/H1.md#m1-3)
 - [ ] 1.4 `[E]` Git kullanıcı adı tablosunu doldur R✅ B✅ M⬜ → [kart](planlar/H1.md#m1-4)
 - [ ] 1.5 `[M]` Disk 25 GB + CUDA'lı PyTorch → [kart](planlar/H1.md#m1-5)
@@ -46,7 +46,7 @@
 - [x] 1.8 `[B]` `src/utils.py` (`set_seed`, `get_device`) → [kart](planlar/H1.md#m1-8)
 - [x] 1.9 `[B]` `src/models.py` (`build_model`) → [kart](planlar/H1.md#m1-9)
 - [ ] 1.10 `[B]` Transfer learning eğitimini oku/dene → [kart](planlar/H1.md#m1-10)
-- [ ] 1.11 `[M]` `src/metrics.py` (`compute_metrics`) → [kart](planlar/H1.md#m1-11)
+- [x] 1.11 `[M]` `src/metrics.py` (`compute_metrics`) → [kart](planlar/H1.md#m1-11)
 - [ ] 1.12 `[M]` Metrik açıklaması (RAPOR §7) → [kart](planlar/H1.md#m1-12)
 - [ ] 1.13 `[E]` H1 haftalık rapor → [kart](planlar/H1.md#m1-13)
 
