@@ -8,7 +8,7 @@
 
 | Ayar | Değer |
 |---|---|
-| Bölme | `splits/aptos_splits.csv` (commit: _doldurulacak_) |
+| Bölme | `splits/aptos_splits.csv` (commit: 46dc40c) |
 | Seed | 42 |
 | Görüntü boyutu | 384 *(değişirse buraya)* |
 | Epoch / erken durdurma | 15 / val QWK 4 epoch |
