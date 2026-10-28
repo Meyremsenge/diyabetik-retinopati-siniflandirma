@@ -91,8 +91,8 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument("--data-root", type=Path, required=True,
                         help="train.csv ve görüntüleri içeren klasör (512 kopya)")
-    parser.add_argument("--threshold", type=int, default=4,
-                        help="pHash Hamming eşiği (varsayılan: 4)")
+    parser.add_argument("--threshold", type=int, default=0,
+                        help="pHash Hamming eşiği (varsayılan: 0, bkz. KARAR_KAYDI D-18)")
     parser.add_argument("--ext", default=".jpg",
                         help="görüntü uzantısı (varsayılan: .jpg)")
     parser.add_argument("--out-dir", type=Path, default=Path("outputs/data_reports"),
