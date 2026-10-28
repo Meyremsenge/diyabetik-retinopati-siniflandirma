@@ -59,7 +59,7 @@
 - [x] 2.3 `[R]` `src/find_duplicates.py` (tekrar grupları) → [kart](planlar/H2.md#m2-3)
 - [x] 2.4 `[R]` `src/make_splits.py` → `splits/aptos_splits.csv` → [kart](planlar/H2.md#m2-4)
 - [x] 2.5 `[R]` `src/data.py` (`RetinaDataset`, `get_transforms`) → [kart](planlar/H2.md#m2-5)
-- [ ] 2.6 `[B]` `configs/resnet50_baseline.yaml` + `src/train.py` → [kart](planlar/H2.md#m2-6)
+- [x] 2.6 `[B]` (üstlenen: Rümeysa) `configs/resnet50_baseline.yaml` + `src/train.py` → [kart](planlar/H2.md#m2-6)
 - [ ] 2.7 `[B]` Duman testi (E0) → [kart](planlar/H2.md#m2-7)
 - [ ] 2.8 `[B]` `src/predict.py` → [kart](planlar/H2.md#m2-8)
 - [ ] 2.9 `[B]` E1: ResNet50 baseline tam eğitim → [kart](planlar/H2.md#m2-9)
