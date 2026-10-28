@@ -16,6 +16,8 @@
 
 **Ortak:** model seçimi toplantısı (H4), haftalık rapor (kaptan dönüşümlü), sunum, kod incelemesi (her PR'ı sahibi dışında **bir kişi** onaylar).
 
+**Birbirinin işini üstlenme:** Biri müsait değilse (ör. Büşra devam edemiyorsa) diğer ikisinden biri onun maddesini yapabilir; Meyrem'in maddelerini de Rümeysa veya Büşra yapabilir. Üstlenen kişi PLAN.md'de maddenin yanına `(üstlenen: <ad>)` yazar, sahibi haberdar edilir, PR'ı sahibi dışında biri inceler. Dosya sahibi değişmez; yalnız o madde için yazma izni vardır.
+
 **Haftalık kaptan dönüşümü** (haftalık raporu toplar ve gönderir): H1 Meyrem · H2 Rümeysa · H3 Büşra · H4 Meyrem · H5 Rümeysa · H6 Büşra · H7 tüm ekip.
 
 ## 2. Kişi bazlı yol haritası

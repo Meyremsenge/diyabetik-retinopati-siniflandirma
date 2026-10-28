@@ -86,7 +86,7 @@ Kararlar verilmiştir: **yeni mimari, model veya kütüphane önerme; uygula.** 
 **Var olan dosyayı değiştirmeden önce** ne değişeceğini tek cümleyle söyle. Yeni dosya açmak, PLAN maddesinin kapsamındaysa serbesttir.
 
 **Önce açık onay al:**
-- Başka bir ekip üyesinin sahip olduğu dosyayı değiştirmek (EKIP_REHBERI §1). Önce kullanıcıya kimin dosyası olduğunu söyle.
+- Başka bir ekip üyesinin sahip olduğu dosyayı değiştirmek (EKIP_REHBERI §1). Önce kullanıcıya kimin dosyası olduğunu söyle. İstisna: kullanıcı o maddeyi üstlendiğini açıkça söylediyse (ekip birbirinin işini yapabilir, EKIP_REHBERI §1) o maddenin dosyaları için ayrıca onay gerekmez; PLAN'da `(üstlenen: <ad>)` notu düşülür.
 - Dosya sözleşmesi, `splits/` veya config varsayılanını değiştirmek
 - Bağımlılık eklemek veya sürüm değiştirmek (`requirements.txt`'de gerekçesiyle)
 - Dosya/klasör silmek, toplu yeniden adlandırmak, 3+ dosyalık refactor
