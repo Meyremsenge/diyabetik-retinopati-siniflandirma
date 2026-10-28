@@ -58,7 +58,40 @@ Tekrar politikası (TEKNIK_TASARIM §3), ardından tabakalı 70/15/15 bölme. Te
 _Donanım (Kaggle P100/T4, RTX 3060), yazılım sürümleri (env.txt), hiperparametre tablosu, deney listesi E1–E4._
 
 ## 7. Değerlendirme Metrikleri *[Meyrem]*
-_PLAN 1.12: QWK (formül ve sezgi), macro F1, recall, confusion matrix; accuracy'nin neden tek başına yetmediği (sınıf 0 ≈ %49)._
+Model her görüntü için beş seviyeden (0–4) birini tahmin eder. Başarıyı tek bir sayıyla değil, birbirini tamamlayan ölçülerle değerlendiriyoruz.
+
+### 7.1 Doğruluk (accuracy)
+
+Doğru tahmin edilen görüntülerin tüm görüntülere oranıdır. Anlaşılması kolaydır, ama bu veride yanıltıcıdır: APTOS'un 3.662 görüntüsünün 1.805'i (%49,3) seviye 0'dır. Her görüntüye "0" diyen bir model %49,3 doğruluk alır, oysa hasta olan hiçbir görüntüyü yakalamaz. Aynı model için QWK 0, macro F1 ise 0,132 çıkar (seviye 0'ın F1 değeri 0,660, diğer dört seviyeninki 0'dır; ortalama 0,132). Bu yüzden doğruluk tek başına başarı kanıtı sayılmaz.
+
+### 7.2 Seviye bazlı recall ve macro F1
+
+Recall, bir seviyedeki görüntülerin ne kadarının doğru yakalandığını gösterir. Örneğin seviye 3'teki 20 görüntünün 10'una "3" denmişse seviye 3 için recall 0,5'tir. Precision ise modelin "3" dediği görüntülerin ne kadarının gerçekten seviye 3 olduğudur. F1, bir seviye için recall ile precision'ı tek sayıda birleştirir. Macro F1, beş seviyenin F1 değerlerinin ortalamasıdır ve her seviyeye eşit ağırlık verir.
+
+Seviye 3 ve 4 veride azdır (%5,3 ve %8,1) ama en ağır hastaları temsil eder; bunları kaçırmak en pahalı hatadır. Doğruluk bu seviyelerdeki başarısızlığı gizleyebildiği için recall ve macro F1 ayrıca izlenir.
+
+### 7.3 Karışıklık matrisi (confusion matrix)
+
+5 × 5'lik bir tablodur: satır gerçek seviyeyi, sütun modelin tahminini gösterir. Köşegen doğru tahminleri, köşegen dışındaki hücreler hangi seviyenin hangisiyle karıştırıldığını gösterir. Satır-normalize hâlinde her satır kendi toplamına bölünür; böylece "seviye 3'teki görüntülerin yüzde kaçına hangi seviye denmiş?" sorusu doğrudan okunur ve az görüntülü seviyeler de görünür kalır.
+
+### 7.4 QWK (quadratic weighted kappa)
+
+QWK [18], tahminin gerçek seviyeye ne kadar yakın olduğunu ölçer ve APTOS yarışmasının resmî ölçüsüdür. Fikir şudur: seviye 3 olan bir görüntüye 2 demek, 0 demekten daha hafif bir hatadır. Formül:
+
+    κ = 1 − ( Σ wij · Oij ) / ( Σ wij · Eij )
+    wij = (i − j)² / (K − 1)²,  K = 5 (seviye sayısı)
+
+- Oij: gerçek seviyesi i, tahmini j olan görüntü sayısı (karışıklık matrisi).
+- Eij: model rastgele tahmin etseydi beklenen sayı. Eij = (gerçek seviyesi i olanların sayısı) × (tahmini j olanların sayısı) / (toplam görüntü).
+- wij: hata ağırlığı. Bir basamaklık hata 1/16 = 0,0625, iki basamaklık hata 0,25, dört basamaklık hata (örneğin 0 yerine 4) 1 sayılır. Uzak hata, yakın hatadan 16 kat pahalıdır.
+
+Tam uyumda κ = 1, tahminler şans düzeyindeyse κ = 0 olur.
+
+Küçük bir örnek, 6 görüntü: gerçek seviyeler 0, 0, 1, 2, 3, 4; model 0, 1, 1, 2, 4, 4 demiş. İki hata var ve ikisi de bir basamaklık (0 yerine 1, 3 yerine 4). Formülün payındaki Σ wij · Oij = 2 × (1/16) = 0,125 olur. Paydadaki Σ wij · Eij ise beklenen sayılarla 1,75 çıkar. Böylece κ = 1 − 0,125 / 1,75 = 1 − 1/14 = 13/14 ≈ 0,929. Aynı iki hata birer basamak değil de dört basamak uzağa düşseydi QWK çok daha düşük olurdu.
+
+### 7.5 Final model seçim kuralı
+
+Final model, doğrulama verisinde en yüksek QWK'yı veren modeldir. İki modelin QWK farkı 0,01'den küçükse, seviye 3 ve 4'ün recall ortalaması daha yüksek olan seçilir (karar D-17). Kural sonuçlar görülmeden belirlendi. Seçim yalnız doğrulama verisiyle yapılır; test kümesine ve IDRiD'ye model dondurulduktan sonra yalnız bir kez bakılır.
 
 ## 8. Sonuçlar *[Meyrem]*
 _Deneyler tamamlandıktan sonra DENEY_KAYDI'ndan doldurulacak: karşılaştırma tablosu, confusion matrix, test ve IDRiD sonuçları, iç/dış fark._
