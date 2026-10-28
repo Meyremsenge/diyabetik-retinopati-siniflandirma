@@ -6,7 +6,7 @@
 import numpy as np
 from PIL import Image
 
-from src.preprocessing import crop_black_borders, prepare_image, resize_square
+from src.preprocessing import ben_graham, crop_black_borders, prepare_image, resize_square
 
 
 def test_crop_finds_bright_region():
@@ -64,3 +64,26 @@ def test_prepare_image_is_deterministic():
     second = prepare_image(img, 64)
 
     assert np.array_equal(np.array(first), np.array(second))
+
+
+def test_ben_graham_uniform_image_is_gray():
+    uniform = Image.new("RGB", (64, 64), (100, 100, 100))
+    assert (np.array(ben_graham(uniform)) == 128).all()
+
+
+def test_ben_graham_mask_corner():
+    rng = np.random.default_rng(0)
+    noisy = Image.fromarray(rng.integers(0, 256, size=(64, 64, 3), dtype=np.uint8))
+    assert ben_graham(noisy).getpixel((0, 0)) == (128, 128, 128)
+
+
+def test_ben_graham_keeps_size_and_mode():
+    result = ben_graham(Image.new("RGB", (100, 100), (50, 80, 20)))
+    assert result.size == (100, 100)
+    assert result.mode == "RGB"
+
+
+def test_ben_graham_deterministic():
+    rng = np.random.default_rng(1)
+    noisy = Image.fromarray(rng.integers(0, 256, size=(64, 64, 3), dtype=np.uint8))
+    assert np.array_equal(np.array(ben_graham(noisy)), np.array(ben_graham(noisy)))
