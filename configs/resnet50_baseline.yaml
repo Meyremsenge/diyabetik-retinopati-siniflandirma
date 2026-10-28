@@ -1,0 +1,20 @@
+# E1 — ResNet50 baseline (TEKNIK_TASARIM §6, §8)
+experiment: E1
+run_label: baseline
+model: resnet50
+pretrained: true
+preprocessing: crop      # crop | crop_ben_graham (E4). Eğitim kodu kullanmaz; demo ve IDRiD hazırlığı hangi ön işlemeyi yapacağını buradan okur
+num_classes: 5
+image_size: 384
+batch_size: 16
+epochs: 15
+early_stopping_patience: 4
+lr: 1.0e-4
+weight_decay: 1.0e-4
+loss: ce
+mixed_precision: true
+num_workers: 2
+seed: 42
+data_root: data/processed/aptos_512
+splits_csv: splits/aptos_splits.csv
+output_dir: outputs/runs
