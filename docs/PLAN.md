@@ -54,7 +54,7 @@
 
 ## H2 (26 Ekim – 1 Kasım) — Veri hattı ve ilk baseline
 
-- [ ] 2.1 `[R]` `src/preprocessing.py` (kırpma, kareye boyutlandırma) → [kart](planlar/H2.md#m2-1)
+- [x] 2.1 `[R]` `src/preprocessing.py` (kırpma, kareye boyutlandırma) → [kart](planlar/H2.md#m2-1)
 - [ ] 2.2 `[R]` `src/preprocess_images.py` (512 px önbellek) → [kart](planlar/H2.md#m2-2)
 - [ ] 2.3 `[R]` `src/find_duplicates.py` (tekrar grupları) → [kart](planlar/H2.md#m2-3)
 - [ ] 2.4 `[R]` `src/make_splits.py` → `splits/aptos_splits.csv` → [kart](planlar/H2.md#m2-4)
