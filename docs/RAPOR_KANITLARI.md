@@ -12,6 +12,7 @@
 | Birebir aynı (MD5) çift | 134 | `outputs/data_reports/candidate_pairs.csv` `[yerel]` (`python -m src.find_duplicates`) | `same_md5` sütunu doğru olan satır sayısı |
 | Görüntü parmak izi (pHash) mesafesi 0 olan çift | 158 | aynı dosya | `distance == 0` olan satır sayısı |
 | Tekrar grupları, eşik 0 (seçilen) | 139 grup · 287 görüntü · 37 çelişkili · en büyük grup 4 | aynı dosya | MD5 çiftleri + eşik ≤ 0 çiftleri `group_pairs` ile gruplanır; bir grupta farklı etiket varsa "çelişkili" |
+| Eşik taraması (Şekil 3) | görüntü sayısı 287 / 577 / 1.384 / 2.339 / 3.157 / 3.526; en büyük grup 4 / 34 / 248 / 2.011 / 2.996 / 3.484 (eşik 0, 2, 4, 6, 8, 10) | aynı dosya | Her eşik için aynı gruplama |
 | Tekrar grupları, eşik 4 (kullanılmadı) | 249 grup · 1.384 görüntü · 94 çelişkili · en büyük grup 248 | aynı dosya | Aynı yöntem, eşik 4. Zincirleme eşleşme nedeniyle bırakıldı (karar D-18) |
 | Elenen görüntü | 185 (106 tekrar + 79 çelişkili etiket) | `splits/aptos_splits.csv` `[git]` | `split == "excluded"` satırları; `note` sütunu nedeni verir |
 | Kalan ve bölme | 3.477 → eğitim 2.433 · doğrulama 522 · test 522 (%70,0 / 15,0 / 15,0) | aynı dosya | `split` sütununu say; `python -m src.make_splits` (tohum 42), bir kez üretildi |
@@ -30,8 +31,9 @@ E1 koşusunun dosyaları (`outputs/runs/20261028-1716_resnet50_baseline/`) Kaggl
 |---|---|
 | Şekil 1: her seviyeden APTOS örneği | PLAN 1.7 çıktısı `outputs/figures/ornek_goruntuler.png` `[yerel]` |
 | Şekil 2: ham → kırpılmış → Ben Graham | IDRiD `IDRiD_001.jpg`; `src.preprocessing.prepare_image` ve `ben_graham` ile üretildi |
-| Şekil 3: karışıklık matrisi | E1 `metrics_val.json` → `src.evaluate.normalize_rows` ve `save_confusion_matrix` |
-| Şekil 4: eğitim eğrileri | E1 `history.csv` (kayıp ve `val_qwk`) |
+| Şekil 3: tekrar tespitinde eşik karşılaştırması | `candidate_pairs.csv`; eşik 0, 2, 4, 6, 8, 10 için 4. bölümdeki gruplama kodu. Kesikli çizgi (yaklaşık 262): Kaggle tartışması [6], `docs/ARASTIRMA.md` §3 |
+| Şekil 4: karışıklık matrisi | E1 `metrics_val.json` → `src.evaluate.normalize_rows` ve `save_confusion_matrix` |
+| Şekil 5: eğitim eğrileri | E1 `history.csv` (kayıp ve `val_qwk`) |
 
 ## 3. Rapor §7'deki örnek sayılar
 
@@ -62,7 +64,7 @@ label_of = {}
 for row in pairs.itertuples():
     label_of[row.id_a] = row.diagnosis_a
     label_of[row.id_b] = row.diagnosis_b
-for threshold in (0, 4):
+for threshold in (0, 2, 4, 6, 8, 10):
     selected = pairs[(pairs["distance"] <= threshold) | pairs["same_md5"]]
     groups = pd.Series(group_pairs(list(zip(selected["id_a"], selected["id_b"]))))
     table = pd.DataFrame({"group": groups.values, "label": [label_of[i] for i in groups.index]})
