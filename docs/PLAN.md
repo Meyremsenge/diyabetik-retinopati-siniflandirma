@@ -74,7 +74,7 @@
 - [ ] 3.1 `[B]` E2: EfficientNet-B3 → [kart](planlar/H3.md#m3-1)
 - [ ] 3.2 `[B]` E3: ağırlıklı Cross Entropy → [kart](planlar/H3.md#m3-2)
 - [ ] 3.3 `[R]` `ben_graham` + E4 → [kart](planlar/H3.md#m3-3)
-- [ ] 3.4 `[R]` IDRiD hazırlığı (`src/prepare_idrid.py`) → [kart](planlar/H3.md#m3-4)
+- [x] 3.4 `[R]` IDRiD hazırlığı (`src/prepare_idrid.py`) → [kart](planlar/H3.md#m3-4)
 - [ ] 3.5 `[M]` Karşılaştırma tablosu + grafikler → [kart](planlar/H3.md#m3-5)
 - [ ] 3.6 `[M]` Val hata analizi → [kart](planlar/H3.md#m3-6)
 - [ ] 3.7 `[M]` `src/gradcam.py` prototipi → [kart](planlar/H3.md#m3-7)
