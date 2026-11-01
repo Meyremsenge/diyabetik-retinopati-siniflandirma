@@ -34,6 +34,23 @@
 
 ---
 
+## Sıradaki işler (1 Kasım 2026 itibarıyla; H1 ve H2 bitti, H3'e geçildi)
+
+Sıra bağımlılığa göre. Önce `git pull` (2.5, 1.11, 2.6 `main`'dedir; 2.6–2.10'u Rümeysa üstlendi).
+
+| Sıra | Madde | Sahibi | Bağlı olduğu |
+|---|---|---|---|
+| 1 | 3.1 E2 EfficientNet-B3 (yeni config: `configs/efficientnet_b3.yaml`) | Büşra | Yok. Veri hazır. |
+| 1 | 3.2 E3 ağırlıklı Cross Entropy (yeni config) | Büşra | Yok. E2 ile paralel. |
+| 1 | 3.3 E4 Ben Graham koşusu (kod PR #10'da `main`'de; `visiondx-aptos-512-bg` hazır) | Büşra (kod Rümeysa'dan) | Yok. |
+| 2 | 3.7 `src/gradcam.py` prototipi | Meyrem | E1 checkpoint'i (`.pt`, Kaggle çıktısından). |
+| 3 | 3.5 karşılaştırma tablosu + grafikler, 3.6 val hata analizi | Meyrem | E2 ve E3 sonuçları (E4 gelirse eklenir). |
+| 4 | 3.8 H3 haftalık raporu | Ortak (kaptan Büşra) | Yukarıdakiler. |
+
+E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardımı (2.6–2.9'da olduğu gibi) takvim gerektirirse kullanılır. Ertelenen: 2.11.
+
+---
+
 ## H1 (19–25 Ekim) — Kurulum ve veriyi tanıma
 
 - [x] 1.1 `[E]` Python 3.12 ortamı + requirements kurulumu R✅ B✅ M✅ → [kart](planlar/H1.md#m1-1)
