@@ -105,6 +105,7 @@ ANLA → PLAN maddesini bul → HEDEFLİ OKU → KÜÇÜK ADIMLA UYGULA → ÇAL
 
 - Repoyu baştan sona okuma. İlgili modülü, onu çağıranları, testini ve gerekirse belgenin ilgili bölümünü oku.
 - Belirsizlik varsa bağımsız kısımları bitir, kalan kısım için sor. Tahminle yanlış kod yazma.
+- **Önemsiz ayrıntı için kimse bekletilmez** (tarih, küçük not, biçim, boş bırakılabilecek alan; herkesin işi için geçerli). Boş bırak veya makul varsay, işi ilerlet. Yalnız ciddi durumda dur ve sor: yanlış sonuç, veri sızıntısı, kırılan test, başkasının işini bozma. "İzin ve onay sınırları" bundan etkilenmez.
 - Ekip yeni öğreniyor: her kod değişikliğinden sonra **ne yaptığını, neden gerektiğini, nasıl çalıştırılacağını, beklenen çıktıyı ve sık hataları** sade Türkçeyle 3–6 satırda anlat. Uzun kod bloklarını cevaba kopyalama; `dosya:satır` ver.
 
 ---

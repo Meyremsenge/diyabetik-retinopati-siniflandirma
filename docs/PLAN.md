@@ -24,13 +24,30 @@
 
 | # | Hafta sonu | Kilometre taşı | Durum |
 |---|---|---|---|
-| K1 | H1 | Ortam kuruldu, APTOS doğrulandı, metrik modülü testli | ⬜ |
-| K2 | H2 | Veri bölmesi sabit, **ilk ResNet50 baseline doğrulama sonucu kayıtlı** | ⬜ |
+| K1 | H1 | Ortam kuruldu, APTOS doğrulandı, metrik modülü testli | ✅ |
+| K2 | H2 | Veri bölmesi sabit, **ilk ResNet50 baseline doğrulama sonucu kayıtlı** | ✅ |
 | K3 | H3 | EfficientNet-B3 karşılaştırması + 2 ek deney, IDRiD hazır | ⬜ |
 | K4 | H4 | Final model seçildi ve donduruldu, test + dış test **bir kez** yapıldı | ⬜ |
 | K5 | H5 | Streamlit + Grad-CAM demo çalışıyor, rapor taslağı tam → **proje teknik olarak bitti** | ⬜ |
 | K6 | H6 | Tampon / "Could" işleri / rapor cilası | ⬜ |
 | K7 | H7 | Final rapor, sunum, demo provası, `v1.0` etiketi | ⬜ |
+
+---
+
+## Sıradaki işler (1 Kasım 2026 itibarıyla; H1 ve H2 bitti, H3'e geçildi)
+
+Sıra bağımlılığa göre. Önce `git pull` (2.5, 1.11, 2.6 `main`'dedir; 2.6–2.10'u Rümeysa üstlendi).
+
+| Sıra | Madde | Sahibi | Bağlı olduğu |
+|---|---|---|---|
+| 1 | 3.1 E2 EfficientNet-B3 (yeni config: `configs/efficientnet_b3.yaml`) | Büşra | Yok. Veri hazır. |
+| 1 | 3.2 E3 ağırlıklı Cross Entropy (yeni config) | Büşra | Yok. E2 ile paralel. |
+| 1 | 3.3 E4 Ben Graham koşusu (kod PR #10'da `main`'de; `visiondx-aptos-512-bg` hazır) | Büşra (kod Rümeysa'dan) | Yok. |
+| 2 | 3.7 `src/gradcam.py` prototipi | Meyrem | E1 checkpoint'i (`.pt`, Kaggle çıktısından). |
+| 3 | 3.5 karşılaştırma tablosu + grafikler, 3.6 val hata analizi | Meyrem | E2 ve E3 sonuçları (E4 gelirse eklenir). |
+| 4 | 3.8 H3 haftalık raporu | Ortak (kaptan Büşra) | Yukarıdakiler. |
+
+E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardımı (2.6–2.9'da olduğu gibi) takvim gerektirirse kullanılır. Ertelenen: 2.11.
 
 ---
 
@@ -45,10 +62,10 @@
 - [x] 1.7 `[R]` Veri seti bölümü rapor taslağı → [kart](planlar/H1.md#m1-7)
 - [x] 1.8 `[B]` `src/utils.py` (`set_seed`, `get_device`) → [kart](planlar/H1.md#m1-8)
 - [x] 1.9 `[B]` `src/models.py` (`build_model`) → [kart](planlar/H1.md#m1-9)
-- [ ] 1.10 `[B]` Transfer learning eğitimini oku/dene → [kart](planlar/H1.md#m1-10)
+- [x] 1.10 `[B]` Transfer learning eğitimini oku/dene (Büşra bildirdi; kendi dalındaki işareti PR ile gelecek) → [kart](planlar/H1.md#m1-10)
 - [x] 1.11 `[M]` `src/metrics.py` (`compute_metrics`) → [kart](planlar/H1.md#m1-11)
 - [x] 1.12 `[M]` (üstlenen: Rümeysa) Metrik açıklaması (RAPOR §7) → [kart](planlar/H1.md#m1-12)
-- [ ] 1.13 `[E]` H1 haftalık rapor → [kart](planlar/H1.md#m1-13)
+- [x] 1.13 `[E]` H1 haftalık rapor → [kart](planlar/H1.md#m1-13)
 
 ---
 
@@ -64,8 +81,8 @@
 - [x] 2.8 `[B]` (üstlenen: Rümeysa) `src/predict.py` → [kart](planlar/H2.md#m2-8)
 - [x] 2.9 `[B]` (üstlenen: Rümeysa) E1: ResNet50 baseline tam eğitim → [kart](planlar/H2.md#m2-9)
 - [x] 2.10 `[M]` (üstlenen: Rümeysa) `src/evaluate.py` → [kart](planlar/H2.md#m2-10)
-- [ ] 2.11 `[M]` E1'i yerel GPU'da çalıştır, süreyi ölç → [kart](planlar/H2.md#m2-11)
-- [ ] 2.12 `[E]` H2 haftalık rapor → [kart](planlar/H2.md#m2-12)
+- [ ] 2.11 ⏸ `[M]` E1'i yerel GPU'da çalıştır, süreyi ölç (ertelendi: E1 Kaggle T4'te ölçüldü, 5,5 dk; yerel 512 veri kopyası yok, `visiondx-aptos-512` arşivi indirilemiyor) → [kart](planlar/H2.md#m2-11)
+- [x] 2.12 `[E]` H2 haftalık rapor (PR #21) → [kart](planlar/H2.md#m2-12)
 
 ---
 
@@ -128,3 +145,5 @@
 ## Plan dışı eklenen maddeler
 
 *(Plan dışında yapılan her iş buraya eklenir — sessizce geçilmez.)*
+
+- **Çalışma kuralı (Meyrem, 1 Kasım 2026):** Önemsiz bir ayrıntı (tarih, küçük not, biçim) yüzünden kimse bekletilmez ve iş durdurulmaz; ayrıntı boş bırakılır veya makul varsayılır, iş ilerler. Yalnız ciddi bir durumda (yanlış sonuç, veri sızıntısı, kırılan test, başkasının işini bozma) durup sorulur.
