@@ -20,7 +20,7 @@
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | E0 | 20261028-1705_resnet18_smoke | R (B adına) | Kaggle Tesla T4 | resnet18 | kırp+512 | CE | | — | — | — | Duman testi geçti (--limit 64 --epochs 1; ResNet50 baseline config'i de çalıştı: 20261028-1710_resnet50_baseline), raporlanmaz |
 | E1 | 20261028-1716_resnet50_baseline | R (B adına) | Kaggle Tesla T4 | resnet50 | kırp+512 | CE | 5,5 dk | 0.903 | 0.663 | 0.981 / 0.471 / 0.942 / 0.320 / 0.450 | Tamamlandı. 9. epoch'ta erken durdurma, en iyi epoch 5 (metrics_val.json, n=522). Kaggle torch 2.11.0+cu128, commit 14a4a08 |
-| E2 | | B | | efficientnet_b3 | kırp+512 | CE | | | | | çalıştırılmadı |
+| E2 | 20261102-0849_efficientnet_b3_effb3 | B | Kaggle Tesla T4 | efficientnet_b3 | kırp+512 | CE | 7,5 dk | 0.896 | 0.662 | 0.981 / 0.471 / 0.848 / 0.560 / 0.400 | Tamamlandı. 7. epoch'ta erken durdurma, en iyi epoch 3 (metrics_val.json, n=522). Kaggle torch 2.11.0+cu128, commit 0df1961. Batch/boyut E1 ile aynı (16 / 384) |
 | E3 | | B | | | kırp+512 | ağırlıklı CE | | | | | çalıştırılmadı |
 | E4 | | | | | + Ben Graham | | | | | | çalıştırılmadı |
 
