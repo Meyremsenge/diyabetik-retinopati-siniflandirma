@@ -117,3 +117,39 @@ def test_predictions_and_compare_exclusive(tmp_path):
     csv_path = write_fake_predictions(tmp_path / "val_predictions.csv")
     with pytest.raises(SystemExit):
         main(["--predictions", str(csv_path), "--compare", str(tmp_path)])
+
+
+def test_top_confusions():
+    from src.evaluate import top_confusions
+    cm = compute_metrics(Y_TRUE, Y_PRED)["confusion_matrix"]
+    assert top_confusions(cm) == [(0, 1, 1), (3, 4, 1)]
+
+
+def test_pick_error_examples_order():
+    from src.evaluate import pick_error_examples
+    rows = []
+    for image_id, true_label, predicted, p in [("p0", 0, 0, 0.9), ("p1", 0, 4, 0.5),
+                                                ("p2", 4, 3, 0.7), ("p3", 2, 1, 0.9)]:
+        rest = (1 - p) / 4
+        probabilities = [p if cls == predicted else rest for cls in range(5)]
+        rows.append([image_id, true_label, predicted] + probabilities)
+    columns = ["image_id", "y_true", "y_pred", "prob_0", "prob_1", "prob_2", "prob_3", "prob_4"]
+    examples = pick_error_examples(pd.DataFrame(rows, columns=columns))
+    assert list(examples["image_id"]) == ["p1", "p3", "p2"]
+
+
+def test_errors_rejects_test_file(tmp_path):
+    csv_path = write_fake_predictions(tmp_path / "test_predictions.csv")
+    with pytest.raises(ValueError):
+        main(["--errors", str(csv_path), "--data-root", str(tmp_path)])
+
+
+def test_save_error_grid(tmp_path):
+    from PIL import Image
+    from src.evaluate import pick_error_examples, save_error_grid
+    for index in range(3):
+        Image.new("RGB", (32, 32)).save(tmp_path / f"p{index}.jpg")
+    examples = pd.DataFrame({"image_id": ["p0", "p1", "p2"], "y_true": [0, 1, 2], "y_pred": [1, 2, 3],
+                             "prob_0": 0.1, "prob_1": 0.2, "prob_2": 0.3, "prob_3": 0.4, "prob_4": 0.0})
+    save_error_grid(examples, tmp_path, tmp_path / "errors.png")
+    assert (tmp_path / "errors.png").exists()
