@@ -92,3 +92,22 @@ def test_length_mismatch_raises():
 def test_out_of_range_label_raises():
     with pytest.raises(ValueError):
         compute_metrics([0, 1], [0, 5])
+
+
+def test_severe_recall():
+    from src.metrics import severe_recall
+    assert severe_recall({"recall_per_class": [1, 1, 1, 0.5, 1]}) == 0.75
+
+
+def test_pick_best_clear_winner():
+    from src.metrics import pick_best
+    candidates = [{"run_id": "A", "qwk": 0.80, "severe_recall": 0.5},
+                  {"run_id": "B", "qwk": 0.78, "severe_recall": 0.9}]
+    assert pick_best(candidates) == "A"
+
+
+def test_pick_best_tie_uses_severe_recall():
+    from src.metrics import pick_best
+    candidates = [{"run_id": "A", "qwk": 0.800, "severe_recall": 0.5},
+                  {"run_id": "B", "qwk": 0.795, "severe_recall": 0.6}]
+    assert pick_best(candidates) == "B"
