@@ -51,3 +51,14 @@
 |---|---|---|
 | Final config — 1 | | |
 | Final config — 2 (aynı seed) | | |
+
+## Karşılaştırma (val, E1–E4)
+
+> `python -m src.evaluate --compare outputs/runs/<e1> ... <e4>` çıktısıdır (`outputs/figures/comparison.md`); değerler `metrics_val.json` ve `history.csv` dosyalarından gelir. D-17 kuralına göre önde: E4 (QWK 0,913; ikincisi E1 0,903, fark ≥ 0,01). Tek koşu, tek seed.
+
+| run_id | experiment | model | loss | preprocessing | image_size | val_qwk | val_macro_f1 | recall_3 | recall_4 | severe_recall | epochs_run | best_epoch | train_minutes |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 20261028-1716_resnet50_baseline | E1 | resnet50 | ce | crop | 384 | 0.903 | 0.663 | 0.320 | 0.450 | 0.385 | 9 | 5 | 5.497 |
+| 20261102-0849_efficientnet_b3_effb3 | E2 | efficientnet_b3 | ce | crop | 384 | 0.896 | 0.662 | 0.560 | 0.400 | 0.480 | 7 | 3 | 7.485 |
+| 20261102-1049_efficientnet_b3_weighted_ce | E3 | efficientnet_b3 | weighted_ce | crop | 384 | 0.898 | 0.687 | 0.480 | 0.650 | 0.565 | 13 | 9 | 11.474 |
+| 20261103-1104_efficientnet_b3_ben_graham | E4 | efficientnet_b3 | weighted_ce | crop_ben_graham | 384 | 0.913 | 0.672 | 0.520 | 0.600 | 0.560 | 15 | 11 | 15.658 |
