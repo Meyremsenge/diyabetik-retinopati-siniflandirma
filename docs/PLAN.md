@@ -90,7 +90,7 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 
 - [x] 3.1 `[B]` E2: EfficientNet-B3 → [kart](planlar/H3.md#m3-1)
 - [x] 3.2 `[B]` E3: ağırlıklı Cross Entropy → [kart](planlar/H3.md#m3-2)
-- [ ] 3.3 `[R]` `ben_graham` + E4 → [kart](planlar/H3.md#m3-3)
+- [x] 3.3 `[R]` (E4 eğitimi: Büşra) `ben_graham` + E4 → [kart](planlar/H3.md#m3-3)
 - [x] 3.4 `[R]` IDRiD hazırlığı (`src/prepare_idrid.py`) → [kart](planlar/H3.md#m3-4)
 - [ ] 3.5 `[M]` Karşılaştırma tablosu + grafikler → [kart](planlar/H3.md#m3-5)
 - [ ] 3.6 `[M]` Val hata analizi → [kart](planlar/H3.md#m3-6)
