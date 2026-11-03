@@ -7,6 +7,7 @@ Rapordaki ve DENEY_KAYDI'ndaki sayıların tek kaynağı bu JSON dosyasıdır.
 Nasıl çalıştırılır (proje kökünden):
     python -m src.evaluate --predictions outputs/runs/<run_id>/val_predictions.csv
     python -m src.evaluate --compare outputs/runs/<e1> outputs/runs/<e2> ...   (yalnız val; PLAN 3.5)
+    python -m src.evaluate --errors outputs/runs/<run_id>/val_predictions.csv --data-root data/processed/aptos_512   (PLAN 3.6)
 """
 import argparse
 import json
@@ -19,6 +20,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import yaml
+from PIL import Image
 from sklearn.metrics import ConfusionMatrixDisplay
 
 from src.metrics import CLASS_LABELS, compute_metrics, pick_best, severe_recall
@@ -173,6 +175,59 @@ def compare_runs(run_dirs: list[Path], out_dir: Path) -> pd.DataFrame:
     return table
 
 
+def top_confusions(cm: list[list[int]], k: int = 5) -> list[tuple[int, int, int]]:
+    """Köşegen dışı (gerçek, tahmin, adet) üçlülerini adet büyükten küçüğe sıralar."""
+    confusions = [(true_label, predicted, count)
+                  for true_label, row in enumerate(cm)
+                  for predicted, count in enumerate(row)
+                  if true_label != predicted and count > 0]
+    confusions.sort(key=lambda item: (-item[2], item[0], item[1]))
+    return confusions[:k]
+
+
+def pick_error_examples(df: pd.DataFrame, n: int = 10) -> pd.DataFrame:
+    """Yanlış tahminlerden n örnek: önce sınıf farkı büyük, sonra tahmin olasılığı yüksek olanlar."""
+    wrong = df[df["y_true"] != df["y_pred"]].copy()
+    wrong["gap"] = (wrong["y_true"] - wrong["y_pred"]).abs()
+    wrong["pred_prob"] = [row[f"prob_{int(row['y_pred'])}"] for _, row in wrong.iterrows()]
+    wrong = wrong.sort_values(["gap", "pred_prob"], ascending=[False, False])
+    return wrong.head(n).drop(columns=["gap", "pred_prob"]).reset_index(drop=True)
+
+
+def save_error_grid(examples: pd.DataFrame, image_dir: Path, path: Path) -> None:
+    """Yanlış örnekleri 2 satır × 5 sütunluk ızgara olarak kaydeder."""
+    fig, axes = plt.subplots(2, 5, figsize=(15, 6.5))
+    for ax in axes.flat:
+        ax.axis("off")
+    for ax, (_, row) in zip(axes.flat, examples.iterrows()):
+        image = Image.open(Path(image_dir) / f"{row['image_id']}.jpg").convert("RGB")
+        ax.imshow(image)
+        probability = row[f"prob_{int(row['y_pred'])}"]
+        ax.set_title(f"{row['image_id']}\ngerçek {int(row['y_true'])} → tahmin {int(row['y_pred'])} "
+                     f"(p={probability:.2f})", fontsize=8)
+    fig.tight_layout()
+    fig.savefig(path, dpi=150)
+    plt.close(fig)
+
+
+def run_errors(predictions_path: Path, data_root: Path | None, out_dir: Path, parser) -> None:
+    """Val hata analizi: en sık karışmaları yazdırır, yanlış örnek ızgarasını kaydeder."""
+    if split_from_filename(predictions_path) != "val":
+        raise ValueError("hata analizi yalnız val'de")
+    if data_root is None:
+        parser.error("--errors için --data-root gerekli")
+    predictions = load_predictions(predictions_path)
+    cm = compute_metrics(predictions["y_true"], predictions["y_pred"])["confusion_matrix"]
+    print("En sık karışmalar (gerçek -> tahmin: adet):")
+    for true_label, predicted, count in top_confusions(cm):
+        print(f"  {true_label} -> {predicted}: {count}")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    examples = pick_error_examples(predictions)
+    save_error_grid(examples, data_root, out_dir / "errors_val.png")
+    print(examples[["image_id", "y_true", "y_pred"]].to_string(index=False))
+    print(f"Yazıldı: {out_dir / 'errors_val.png'}")
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(
         description="Tahmin dosyasından metrics_<split>.json ve confusion matrix görselleri üretir."
@@ -182,10 +237,17 @@ def main(argv: list[str] | None = None) -> None:
                       help="outputs/runs/<run_id>/<split>_predictions.csv")
     mode.add_argument("--compare", type=Path, nargs="+", metavar="RUN",
                       help="outputs/runs/<run_id> klasörleri (yalnız val sonuçları karşılaştırılır)")
+    mode.add_argument("--errors", type=Path, metavar="PREDICTIONS",
+                      help="yalnız val_predictions.csv: en sık karışmalar ve yanlış örnek ızgarası")
+    parser.add_argument("--data-root", type=Path, help="--errors için görüntü klasörü (aptos_512)")
     parser.add_argument("--out-dir", type=Path,
                         help="çıktı klasörü (varsayılan: --predictions için tahmin dosyasının klasörü, "
                              "--compare için outputs/figures)")
     args = parser.parse_args(argv)
+
+    if args.errors:
+        run_errors(args.errors, args.data_root, args.out_dir or Path("outputs/figures"), parser)
+        return
 
     if args.compare:
         table = compare_runs(args.compare, args.out_dir or Path("outputs/figures"))
