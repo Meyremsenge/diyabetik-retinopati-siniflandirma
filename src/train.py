@@ -44,6 +44,15 @@ def load_config(path: Path) -> dict:
     return config
 
 
+def compute_class_weights(labels: list[int], num_classes: int = 5) -> torch.Tensor:
+    """Sınıf ağırlıklarını hesaplar: w_c = N / (num_classes * n_c). Az görülen sınıf daha ağır olur."""
+    class_counts = torch.bincount(torch.tensor(labels), minlength=num_classes)
+    for class_index, count in enumerate(class_counts.tolist()):
+        if count == 0:
+            raise ValueError(f"train'de sınıf {class_index} yok")
+    return len(labels) / (num_classes * class_counts.float())
+
+
 def make_run_dir(output_dir: Path, model_name: str, run_label: str) -> Path:
     """<tarih-saat>_<model>_<etiket> klasörünü oluşturur; varsa sonuna _2, _3 ekler."""
     base_name = f"{datetime.now():%Y%m%d-%H%M}_{model_name}_{run_label}"
@@ -154,22 +163,31 @@ def main(argv: list[str] | None = None) -> None:
         config["output_dir"] = args.output_dir
     if args.epochs:
         config["epochs"] = args.epochs
-    if config["loss"] != "ce":
-        raise ValueError(f"Desteklenmeyen loss: {config['loss']!r} (şimdilik yalnız 'ce')")
+    if config["loss"] not in ("ce", "weighted_ce"):
+        raise ValueError(f"Desteklenmeyen loss: {config['loss']!r} ('ce' veya 'weighted_ce' olmalı)")
 
     set_seed(config["seed"])
     device = get_device()
 
     train_frame = load_split_frame(Path(config["data_root"]), Path(config["splits_csv"]), "train")
     val_frame = load_split_frame(Path(config["data_root"]), Path(config["splits_csv"]), "val")
+    # Ağırlıklar yalnız train etiketlerinden ve --limit'ten önce hesaplanır (küçük örnekte sınıf eksik kalmasın)
+    class_weights = None
+    if config["loss"] == "weighted_ce":
+        class_weights = compute_class_weights(train_frame["diagnosis"].tolist(), config["num_classes"])
+        config["computed_class_weights"] = class_weights.tolist()
+        print(f"Sınıf ağırlıkları: {[round(weight, 3) for weight in config['computed_class_weights']]}")
     if args.limit:
-        train_frame = train_frame.sample(n=min(args.limit, len(train_frame)), random_state=config["seed"])
+        train_frame =train_frame.sample(n=min(args.limit, len(train_frame)), random_state=config["seed"])
         val_frame = val_frame.sample(n=min(args.limit, len(val_frame)), random_state=config["seed"])
     train_loader = make_loader(train_frame, config, "train", device)
     val_loader = make_loader(val_frame, config, "val", device)
 
     model = build_model(config["model"], config["num_classes"], config["pretrained"]).to(device)
-    criterion = torch.nn.CrossEntropyLoss()
+    weight = class_weights.to(device) if class_weights is not None else None
+    criterion = torch.nn.CrossEntropyLoss(weight=weight)
+    # Val loss her zaman ağırlıksız: epoch'lar ve deneyler arası karşılaştırılabilir kalır
+    val_criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=config["lr"], weight_decay=config["weight_decay"]
     )
@@ -191,7 +209,7 @@ def main(argv: list[str] | None = None) -> None:
         learning_rate = optimizer.param_groups[0]["lr"]
         train_loss = train_one_epoch(model, train_loader, criterion, optimizer, device, scaler)
         scheduler.step()
-        val_loss = evaluate_loss(model, val_loader, criterion, device)
+        val_loss = evaluate_loss(model, val_loader, val_criterion, device)
         predictions = predict_loader(model, val_loader, device)
         metrics = compute_metrics(predictions["y_true"], predictions["y_pred"])
 

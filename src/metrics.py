@@ -74,3 +74,24 @@ def compute_metrics(y_true, y_pred) -> dict:
         ).tolist(),
         "n": int(len(y_true)),
     }
+
+
+def severe_recall(metrics: dict) -> float:
+    """Ağır sınıfların (3 ve 4) recall ortalaması; D-17 eşitlik kuralında kullanılır."""
+    recalls = metrics["recall_per_class"]
+    return (recalls[3] + recalls[4]) / 2
+
+
+def pick_best(candidates: list[dict], tie_margin: float = 0.01) -> str:
+    """D-17: en yüksek QWK; ikinciyle fark tie_margin'den küçükse severe_recall büyük olan.
+
+    candidates: [{"run_id": str, "qwk": float, "severe_recall": float}, ...]
+    """
+    ranked = sorted(candidates, key=lambda item: item["qwk"], reverse=True)
+    first = ranked[0]
+    if len(ranked) == 1:
+        return first["run_id"]
+    second = ranked[1]
+    if first["qwk"] - second["qwk"] < tie_margin and second["severe_recall"] > first["severe_recall"]:
+        return second["run_id"]
+    return first["run_id"]

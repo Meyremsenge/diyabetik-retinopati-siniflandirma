@@ -11,7 +11,7 @@ import pytest
 import yaml
 from PIL import Image
 
-from src.train import REQUIRED_KEYS, load_config, main, make_run_dir
+from src.train import REQUIRED_KEYS, compute_class_weights, load_config, main, make_run_dir
 
 ROOT = Path(__file__).resolve().parent.parent
 PREDICTION_COLUMNS = ["image_id", "y_true", "y_pred",
@@ -101,3 +101,33 @@ def test_epochs_override(tiny_config):
     main(["--config", str(config_path), "--epochs", "1"])
     history = pd.read_csv(single_run_dir(runs_dir) / "history.csv")
     assert len(history) == 1
+
+
+def test_class_weights_values():
+    weights = compute_class_weights([0, 0, 1, 2, 3, 4])
+    assert weights.tolist() == pytest.approx([0.6, 1.2, 1.2, 1.2, 1.2])
+
+
+def test_class_weights_missing_class():
+    with pytest.raises(ValueError, match="2"):
+        compute_class_weights([0, 0, 1])
+
+
+def test_unknown_loss_raises(tiny_config, tmp_path):
+    config_path, _ = tiny_config
+    config = yaml.safe_load(config_path.read_text())
+    config["loss"] = "focal"
+    config_path.write_text(yaml.safe_dump(config))
+    with pytest.raises(ValueError, match="focal"):
+        main(["--config", str(config_path)])
+
+
+def test_tiny_run_weighted_ce(tiny_config):
+    config_path, runs_dir = tiny_config
+    config = yaml.safe_load(config_path.read_text())
+    config["loss"] = "weighted_ce"
+    config_path.write_text(yaml.safe_dump(config))
+    main(["--config", str(config_path)])
+
+    saved_config = yaml.safe_load((single_run_dir(runs_dir) / "config.yaml").read_text())
+    assert len(saved_config["computed_class_weights"]) == 5

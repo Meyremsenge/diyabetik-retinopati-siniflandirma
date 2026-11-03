@@ -1,0 +1,20 @@
+# E4 — Ben Graham ön işleme (TEKNIK_TASARIM §8; E3 ile aynı ayarlar, yalnız ön işleme ve data_root farklı. Taban: E3, D-17 sınıf 3+4 recall ortalaması)
+experiment: E4
+run_label: ben_graham
+model: efficientnet_b3
+pretrained: true
+preprocessing: crop_ben_graham      # crop | crop_ben_graham (E4). Eğitim kodu kullanmaz; demo ve IDRiD hazırlığı hangi ön işlemeyi yapacağını buradan okur
+num_classes: 5
+image_size: 384
+batch_size: 16
+epochs: 15
+early_stopping_patience: 4
+lr: 1.0e-4
+weight_decay: 1.0e-4
+loss: weighted_ce
+mixed_precision: true
+num_workers: 2
+seed: 42
+data_root: data/processed/aptos_512_bg
+splits_csv: splits/aptos_splits.csv
+output_dir: outputs/runs

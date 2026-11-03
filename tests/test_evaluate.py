@@ -9,7 +9,8 @@ import pandas as pd
 import pytest
 
 from src.evaluate import (
-    evaluate_file, load_predictions, main, normalize_rows, split_from_filename,
+    compare_runs, evaluate_file, load_predictions, main, normalize_rows,
+    split_from_filename, summarize_run,
 )
 from src.metrics import compute_metrics
 
@@ -69,3 +70,50 @@ def test_main_cli(tmp_path, capsys):
     csv_path = write_fake_predictions(tmp_path / "val_predictions.csv")
     main(["--predictions", str(csv_path)])
     assert "QWK: 0.929" in capsys.readouterr().out
+
+
+def make_fake_run(run_dir: Path, experiment: str, perfect: bool) -> Path:
+    """Sahte koşu klasörü: config.yaml, 3 satırlık history.csv ve val_predictions.csv."""
+    run_dir.mkdir()
+    (run_dir / "config.yaml").write_text(
+        f"experiment: {experiment}\nmodel: resnet18\nloss: ce\npreprocessing: crop\nimage_size: 64\n")
+    pd.DataFrame({"epoch": [1, 2, 3], "val_qwk": [0.5, 0.9, 0.7], "seconds": [60.0, 60.0, 60.0]}
+                 ).to_csv(run_dir / "history.csv", index=False)
+    write_fake_predictions(run_dir / "val_predictions.csv")
+    if perfect:
+        predictions = pd.read_csv(run_dir / "val_predictions.csv")
+        predictions["y_pred"] = predictions["y_true"]
+        predictions.to_csv(run_dir / "val_predictions.csv", index=False)
+    return run_dir
+
+
+def test_summarize_run_creates_metrics_if_missing(tmp_path):
+    run_dir = make_fake_run(tmp_path / "run_a", "EA", perfect=False)
+    summary = summarize_run(run_dir)
+    assert (run_dir / "metrics_val.json").exists()
+    assert summary["best_epoch"] == 2
+    assert summary["train_minutes"] == pytest.approx(3.0)
+
+
+def test_compare_writes_outputs(tmp_path):
+    runs = [make_fake_run(tmp_path / "run_a", "EA", perfect=False),
+            make_fake_run(tmp_path / "run_b", "EB", perfect=True)]
+    out_dir = tmp_path / "figures"
+    table = compare_runs(runs, out_dir)
+    for name in ("comparison.csv", "comparison.md", "comparison_bar.png", "learning_curves.png"):
+        assert (out_dir / name).exists()
+    assert len(table) == 2
+    assert len(pd.read_csv(out_dir / "comparison.csv")) == 2
+
+
+def test_compare_prints_leader(tmp_path, capsys):
+    run_a = make_fake_run(tmp_path / "run_a", "EA", perfect=False)
+    run_b = make_fake_run(tmp_path / "run_b", "EB", perfect=True)
+    main(["--compare", str(run_a), str(run_b), "--out-dir", str(tmp_path / "figures")])
+    assert "önde: run_b" in capsys.readouterr().out
+
+
+def test_predictions_and_compare_exclusive(tmp_path):
+    csv_path = write_fake_predictions(tmp_path / "val_predictions.csv")
+    with pytest.raises(SystemExit):
+        main(["--predictions", str(csv_path), "--compare", str(tmp_path)])
