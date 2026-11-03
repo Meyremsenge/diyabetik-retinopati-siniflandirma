@@ -4,6 +4,11 @@
 > Çalışmayan veya yarıda kalan deney **"başarısız"** ya da **"çalıştırılmadı"** diye yazılır. Tahmini/uydurma değer yazılmaz.
 > Test ve IDRiD sütunları yalnız H4'teki final model için doldurulur.
 
+## Koşu çıktıları (Drive)
+
+E1–E3 koşu çıktıları (`best.pt` dışındakiler: `metrics_val.json`, `history.csv`, `val_predictions.csv`, `config.yaml`, karışıklık matrisleri) ekip Drive klasöründedir: https://drive.google.com/drive/folders/1h7SURldpb3U_TDq9yLbF3M4r9rhUdN_J?usp=drive_link
+Zip'i açıp koşu klasörlerini `outputs/runs/` altına koyun (git'e girmez). `best.pt` gerekirse Büşra'dan istenir.
+
 ## Ortak koşullar
 
 | Ayar | Değer |
