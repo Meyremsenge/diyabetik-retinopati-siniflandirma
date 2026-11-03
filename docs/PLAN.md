@@ -94,7 +94,7 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 - [x] 3.4 `[R]` IDRiD hazırlığı (`src/prepare_idrid.py`) → [kart](planlar/H3.md#m3-4)
 - [ ] 3.5 `[M]` Karşılaştırma tablosu + grafikler → [kart](planlar/H3.md#m3-5)
 - [ ] 3.6 `[M]` Val hata analizi → [kart](planlar/H3.md#m3-6)
-- [ ] 3.7 `[M]` `src/gradcam.py` prototipi (kod ve 7 test hazır; E1 `best.pt` ile 3 val görüntüsünde gerçek deneme bekliyor) → [kart](planlar/H3.md#m3-7)
+- [x] 3.7 `[M]` `src/gradcam.py` prototipi (E1 ile 3 val görüntüsünde denendi: ısı retina üzerinde, siyah kenarlarda değil) → [kart](planlar/H3.md#m3-7)
 - [ ] 3.8 `[E]` H3 haftalık rapor → [kart](planlar/H3.md#m3-8)
 
 ---
