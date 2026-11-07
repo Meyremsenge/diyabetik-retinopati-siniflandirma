@@ -147,3 +147,4 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 *(Plan dışında yapılan her iş buraya eklenir — sessizce geçilmez.)*
 
 - **Çalışma kuralı (Meyrem, 1 Kasım 2026):** Önemsiz bir ayrıntı (tarih, küçük not, biçim) yüzünden kimse bekletilmez ve iş durdurulmaz; ayrıntı boş bırakılır veya makul varsayılır, iş ilerler. Yalnız ciddi bir durumda (yanlış sonuç, veri sızıntısı, kırılan test, başkasının işini bozma) durup sorulur.
+- **Durum notu (Meyrem, 7 Kasım 2026):** 4.1–4.4 beklemede. E4'ün `best.pt` dosyası, `aptos_512_bg` ve IDRiD kopyaları yerelde yok; Kaggle işi gerektirdiği için Büşra ve Rümeysa'nın (bu hafta sınavları var) dönmesi beklenecek. Kural (D-17) gereği val'de önde olan E4 (QWK 0,913); dondurma kaydı checkpoint ve SHA-256 gelince yapılır. Test/IDRiD tahmini yapılmadı.
