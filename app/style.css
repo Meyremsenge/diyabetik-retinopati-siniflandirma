@@ -1,0 +1,218 @@
+/* VisionDx demo görünümü (PLAN 5.2). Yalnız biçim; davranış app/streamlit_app.py'dedir.
+   Dış yazı tipi yüklenmez: demo internetsiz çalışmalı. */
+
+:root {
+  --vd-bg: #F4F3EF;
+  --vd-surface: #FFFFFF;
+  --vd-ink: #14211F;
+  --vd-muted: #5E6B68;
+  --vd-faint: #8A9592;
+  --vd-line: #E4E1D9;
+  --vd-accent: #0E5E57;
+  --vd-accent-soft: #E4EFEC;
+}
+
+html, body, [data-testid="stAppViewContainer"] {
+  font-family: "Inter", "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  color: var(--vd-ink);
+}
+
+[data-testid="stAppViewContainer"] { background: var(--vd-bg); }
+[data-testid="stHeader"] { background: transparent; }
+[data-testid="stDecoration"], footer { display: none !important; }
+
+[data-testid="stMainBlockContainer"] {
+  max-width: 1180px;
+  padding-top: 2.2rem;
+  padding-bottom: 3rem;
+}
+
+/* ---------- Üst bant ---------- */
+.vd-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+}
+.vd-brand { display: flex; align-items: center; gap: 0.85rem; }
+.vd-brand svg { flex: none; }
+.vd-wordmark {
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.vd-tagline { color: var(--vd-muted); font-size: 0.9rem; margin-top: 0.15rem; }
+
+[data-testid="stCaptionContainer"] p {
+  color: var(--vd-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.01em;
+}
+
+/* ---------- Uyarı bandı (kalıcı) ---------- */
+[data-testid="stAlert"] { border-radius: 12px; }
+
+/* ---------- Kart başlıkları ---------- */
+.vd-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vd-muted);
+  margin: 0 0 0.85rem 0;
+}
+.vd-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  background: var(--vd-accent-soft);
+  color: var(--vd-accent);
+  font-size: 0.72rem;
+  letter-spacing: 0;
+}
+
+/* ---------- Yükleme alanı ---------- */
+[data-testid="stFileUploaderDropzone"] {
+  background: #FAFAF7;
+  border: 1.5px dashed #CBD3CF;
+  border-radius: 14px;
+  padding: 1.4rem 1rem;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+[data-testid="stFileUploaderDropzone"]:hover {
+  border-color: var(--vd-accent);
+  background: var(--vd-accent-soft);
+}
+[data-testid="stFileUploader"] label { display: none; }
+
+.vd-note {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  color: var(--vd-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  margin-top: 0.8rem;
+}
+.vd-note svg { flex: none; margin-top: 0.1rem; }
+
+/* ---------- Boş durum ---------- */
+.vd-empty {
+  text-align: center;
+  padding: 2.6rem 1rem 2.2rem;
+  color: var(--vd-muted);
+}
+.vd-empty h3 {
+  color: var(--vd-ink);
+  font-size: 1.1rem;
+  font-weight: 650;
+  margin: 1rem 0 0.35rem;
+}
+.vd-empty p { font-size: 0.9rem; margin: 0; }
+
+/* ---------- Sonuç ---------- */
+.vd-result { display: flex; align-items: center; gap: 1.2rem; }
+.vd-grade {
+  flex: none;
+  width: 84px;
+  height: 84px;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  font-weight: 750;
+  color: #FFFFFF;
+  letter-spacing: -0.03em;
+}
+.vd-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vd-faint);
+}
+.vd-grade-name {
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0.15rem 0 0.25rem;
+}
+.vd-confidence { color: var(--vd-muted); font-size: 0.92rem; }
+.vd-confidence b { color: var(--vd-ink); font-weight: 650; }
+
+.vd-scale {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin: 1.4rem 0 0.4rem;
+}
+.vd-scale-cell { text-align: center; }
+.vd-scale-bar { height: 6px; border-radius: 999px; background: #E9E7E1; }
+.vd-scale-label { font-size: 0.72rem; color: var(--vd-faint); margin-top: 0.35rem; }
+.vd-scale-cell.is-active .vd-scale-label { color: var(--vd-ink); font-weight: 650; }
+
+.vd-probs { margin-top: 1.3rem; }
+.vd-prob-row {
+  display: grid;
+  grid-template-columns: 1.6rem 8.2rem 1fr 3.4rem;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.42rem 0;
+  font-size: 0.88rem;
+  color: var(--vd-muted);
+}
+.vd-prob-row.is-active { color: var(--vd-ink); font-weight: 650; }
+.vd-prob-num { font-variant-numeric: tabular-nums; color: var(--vd-faint); }
+.vd-prob-track { height: 8px; border-radius: 999px; background: #EFEDE7; overflow: hidden; }
+.vd-prob-fill { height: 100%; border-radius: 999px; }
+.vd-prob-value { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ---------- Görüntüler ---------- */
+[data-testid="stImage"] img { border-radius: 14px; }
+.vd-img-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--vd-muted);
+  margin: 0 0 0.5rem 0.1rem;
+}
+.vd-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.76rem;
+  color: var(--vd-faint);
+  margin-top: 0.9rem;
+}
+.vd-legend-bar {
+  flex: 0 0 140px;
+  height: 7px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #1E3A8A, #22D3EE, #FACC15, #EF4444);
+}
+
+.vd-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--vd-faint);
+  font-size: 0.78rem;
+  margin-top: 1.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--vd-line);
+}
+
+@media (max-width: 760px) {
+  .vd-top { flex-direction: column; align-items: flex-start; }
+  .vd-prob-row { grid-template-columns: 1.4rem 6.5rem 1fr 3rem; }
+  .vd-grade { width: 68px; height: 68px; font-size: 2.1rem; }
+}

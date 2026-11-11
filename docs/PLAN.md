@@ -115,7 +115,7 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 ## H5 (16–22 Kasım) — Demo, açıklanabilirlik, rapor → teknik bitiş
 
 - [ ] 5.1 `[M]` Grad-CAM örnek galerisi → [kart](planlar/H5.md#m5-1)
-- [ ] 5.2 `[M]` Streamlit son hâli + CPU yanıt süresi → [kart](planlar/H5.md#m5-2)
+- [x] 5.2 `[M]` Streamlit son hâli + CPU yanıt süresi (CPU ort. 0,58 sn, en kötü 0,65 sn; RAPOR §10) → [kart](planlar/H5.md#m5-2)
 - [ ] 5.3 `[R]` Temiz Mac'te uçtan uca kurulum denemesi → [kart](planlar/H5.md#m5-3)
 - [ ] 5.4 `[B]` Tekrarlanabilirlik (2. eğitim, aynı seed) → [kart](planlar/H5.md#m5-4)
 - [ ] 5.5 `[E]` Rapor taslağı tüm bölümler → [kart](planlar/H5.md#m5-5)
@@ -145,5 +145,7 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 ## Plan dışı eklenen maddeler
 
 *(Plan dışında yapılan her iş buraya eklenir — sessizce geçilmez.)*
+
+- **Demo görsel tasarımı (Meyrem, 11 Kasım 2026, 5.2 kapsamında):** 5.2 kartı "tema yok" diyordu; Meyrem açıkça yeni görünüm istedi. Yalnız Streamlit + CSS (`app/style.css`, `.streamlit/config.toml`); yeni kütüphane, dış yazı tipi veya yeni özellik yok. Grad-CAM bindirmesi artık Ben Graham'sız kırpılmış görüntünün üstünde, retina dışı boyanmıyor (`explain_image` imzası aynı).
 
 - **Çalışma kuralı (Meyrem, 1 Kasım 2026):** Önemsiz bir ayrıntı (tarih, küçük not, biçim) yüzünden kimse bekletilmez ve iş durdurulmaz; ayrıntı boş bırakılır veya makul varsayılır, iş ilerler. Yalnız ciddi bir durumda (yanlış sonuç, veri sızıntısı, kırılan test, başkasının işini bozma) durup sorulur.
