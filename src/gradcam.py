@@ -20,7 +20,7 @@ from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 
 from src.data import get_transforms
 from src.predict import load_run
-from src.preprocessing import ben_graham, prepare_image
+from src.preprocessing import BLACK_THRESHOLD, ben_graham, prepare_image
 from src.utils import get_device
 
 
@@ -66,12 +66,13 @@ def explain_image(
 
     Dosya okumaz veya yazmaz; demo bunu yüklenen görüntüyle doğrudan çağırır.
     """
-    prepared = prepare_image(image, 512)
+    cropped = prepare_image(image, 512)
+    model_input = cropped
     if config.get("preprocessing") == "crop_ben_graham":
-        prepared = ben_graham(prepared)
+        model_input = ben_graham(cropped)
 
     transform = get_transforms("demo", config["image_size"])
-    input_tensor = transform(prepared).unsqueeze(0).to(device)
+    input_tensor = transform(model_input).unsqueeze(0).to(device)
 
     with torch.no_grad():
         probabilities = torch.softmax(model(input_tensor), dim=1)[0]
@@ -79,7 +80,13 @@ def explain_image(
 
     # Gradyan gerektiği için no_grad dışında, tahmin edilen sınıf için
     cam = compute_gradcam(model, config["model"], input_tensor, target_class=prediction)
-    heatmap = overlay(prepared, cam)
+    # Ben Graham geometriyi değiştirmez; harita, okunması kolay olsun diye kırpılmış
+    # (Ben Graham'sız) görüntünün üstüne çizilir. Retina dışındaki siyah alan boyanmaz.
+    heatmap = overlay(cropped, cam)
+    height, width = cam.shape
+    small = cropped.resize((width, height), Image.Resampling.LANCZOS)
+    outside_retina = np.asarray(small.convert("L")) <= BLACK_THRESHOLD
+    heatmap[outside_retina] = np.asarray(small)[outside_retina]
     return prediction, probabilities.tolist(), heatmap
 
 

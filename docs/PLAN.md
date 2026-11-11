@@ -146,4 +146,6 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 
 *(Plan dışında yapılan her iş buraya eklenir — sessizce geçilmez.)*
 
+- **Demo görsel tasarımı (Meyrem, 11 Kasım 2026, 5.2 kapsamında):** 5.2 kartı "tema yok" diyordu; Meyrem açıkça yeni görünüm istedi. Yalnız Streamlit + CSS (`app/style.css`, `.streamlit/config.toml`); yeni kütüphane, dış yazı tipi veya yeni özellik yok. Grad-CAM bindirmesi artık Ben Graham'sız kırpılmış görüntünün üstünde, retina dışı boyanmıyor (`explain_image` imzası aynı).
+
 - **Çalışma kuralı (Meyrem, 1 Kasım 2026):** Önemsiz bir ayrıntı (tarih, küçük not, biçim) yüzünden kimse bekletilmez ve iş durdurulmaz; ayrıntı boş bırakılır veya makul varsayılır, iş ilerler. Yalnız ciddi bir durumda (yanlış sonuç, veri sızıntısı, kırılan test, başkasının işini bozma) durup sorulur.
