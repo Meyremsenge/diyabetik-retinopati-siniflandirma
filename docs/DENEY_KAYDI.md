@@ -34,7 +34,7 @@ Zip'i açıp koşu klasörlerini `outputs/runs/` altına koyun (git'e girmez). `
 | Alan | Değer |
 |---|---|
 | Seçilen deney | E4 — run `20261103-1104_efficientnet_b3_ben_graham` (efficientnet_b3, crop_ben_graham, weighted_ce, 384 px, seed 42) |
-| Seçim gerekçesi (D-17'ye göre) | En yüksek val QWK: E4 0,913 > E3 0,898 > E2 0,896 (fark ≥ 0,01, sınıf 3+4 recall kuralı gerekmedi). Karar D-19 |
+| Seçim gerekçesi (D-17'ye göre) | En yüksek val QWK: E4 0,9126; ikinci E1 0,9030, fark 0,0096 < 0,01 → sınıf 3+4 recall ortalaması: E4 0,560 > E1 0,385. Karar D-19 |
 | Checkpoint konumu (Drive) | Ekip Drive'ı, `VisionDx-final/20261103-1104_efficientnet_b3_ben_graham/` (bağlantı ekip kanalında). Yerelde: `outputs/final/<run_id>/` |
 | `best.pt` SHA-256 | `476f3883760d1c2b6b30aff934d73eeda5ec05a784d4d68740869a3861dec2ae` |
 | Git commit | `357e92f` (koşunun env.txt'si) |
@@ -42,8 +42,10 @@ Zip'i açıp koşu klasörlerini `outputs/runs/` altına koyun (git'e girmez). `
 | Değerlendirme | n | QWK | Macro F1 | Accuracy | Recall (0/1/2/3/4) |
 |---|---|---|---|---|---|
 | APTOS val | 522 | 0.913 | 0.672 | 0.818 | 0.974 / 0.686 / 0.681 / 0.520 / 0.600 |
-| APTOS test (tek sefer) | | | | | |
-| IDRiD (tek sefer) | | | | | |
+| APTOS test (tek sefer) | 522 | 0.923 | 0.702 | 0.835 | 0.985 / 0.863 / 0.659 / 0.560 / 0.575 |
+| IDRiD (tek sefer) | 516 | 0.703 | 0.433 | 0.467 | 0.518 / 0.680 / 0.524 / 0.172 / 0.532 |
+
+> Test ve IDRiD değerleri `outputs/final/20261103-1104_efficientnet_b3_ben_graham/metrics_test.json` ve `metrics_idrid.json` dosyalarından (3 ondalık). Tahminler `--final` ile birer kez üretildi: test Büşra (4.2), IDRiD Rümeysa (4.3; görüntüler `idrid_512_bg`, Ben Graham). Metrikler `python -m src.evaluate --predictions ...` ile Meyrem tarafından hesaplandı (4.4, 2026-11-12). Sonuçlar görüldükten sonra model, eşik veya ön işleme değiştirilmedi (D-08).
 
 ## 5-fold (Should)
 
@@ -60,7 +62,7 @@ Zip'i açıp koşu klasörlerini `outputs/runs/` altına koyun (git'e girmez). `
 
 ## Karşılaştırma (val, E1–E4)
 
-> `python -m src.evaluate --compare outputs/runs/<e1> ... <e4>` çıktısıdır (`outputs/figures/comparison.md`); değerler `metrics_val.json` ve `history.csv` dosyalarından gelir. D-17 kuralına göre önde: E4 (QWK 0,913; ikincisi E1 0,903, fark ≥ 0,01). Tek koşu, tek seed.
+> `python -m src.evaluate --compare outputs/runs/<e1> ... <e4>` çıktısıdır (`outputs/figures/comparison.md`); değerler `metrics_val.json` ve `history.csv` dosyalarından gelir. D-17 kuralına göre önde: E4 (QWK 0,9126; ikincisi E1 0,9030, fark 0,0096 < 0,01 olduğu için sınıf 3+4 recall ortalamasına bakıldı: E4 0,560 > E1 0,385). Tek koşu, tek seed.
 
 | run_id | experiment | model | loss | preprocessing | image_size | val_qwk | val_macro_f1 | recall_3 | recall_4 | severe_recall | epochs_run | best_epoch | train_minutes |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
