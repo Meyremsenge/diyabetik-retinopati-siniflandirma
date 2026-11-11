@@ -29,18 +29,19 @@ Zip'i açıp koşu klasörlerini `outputs/runs/` altına koyun (git'e girmez). `
 | E3 | 20261102-1049_efficientnet_b3_weighted_ce | B | Kaggle Tesla T4 | efficientnet_b3 | kırp+512 | ağırlıklı CE | 11,5 dk | 0.898 | 0.687 | 0.981 / 0.667 / 0.717 / 0.480 / 0.650 | Tamamlandı. 13. epoch'ta erken durdurma, en iyi epoch 9 (metrics_val.json, n=522). Taban: E2 (D-17: QWK farkı <0,01, sınıf 3+4 recall ortalaması E2 0,480 > E1 0,385). Ağırlıklar [0.389, 2.062, 0.754, 4.124, 2.645]. Kaggle torch 2.11.0+cu128, commit 28d0285 |
 | E4 | 20261103-1104_efficientnet_b3_ben_graham | B | Kaggle Tesla T4 | efficientnet_b3 | + Ben Graham | ağırlıklı CE | 15,7 dk | 0.913 | 0.672 | 0.974 / 0.686 / 0.681 / 0.520 / 0.600 | Tamamlandı. 15 epoch koşuldu, en iyi epoch 11 (metrics_val.json, n=522). Taban: E3 (D-17), yalnız ön işleme ve data_root farklı (`aptos_512_bg`). Ağırlıklar E3 ile aynı. Kaggle torch 2.11.0+cu128, commit 357e92f. Tek koşu, tek seed |
 
-## Final model (H4'te doldurulur)
+## Final model
 
 | Alan | Değer |
 |---|---|
-| Seçilen deney | |
-| Seçim gerekçesi (D-17'ye göre) | |
-| Checkpoint konumu (Drive) | |
-| Git commit | |
+| Seçilen deney | E4 — run `20261103-1104_efficientnet_b3_ben_graham` (efficientnet_b3, crop_ben_graham, weighted_ce, 384 px, seed 42) |
+| Seçim gerekçesi (D-17'ye göre) | En yüksek val QWK: E4 0,913 > E3 0,898 > E2 0,896 (fark ≥ 0,01, sınıf 3+4 recall kuralı gerekmedi). Karar D-19 |
+| Checkpoint konumu (Drive) | 4.6'da doldurulur |
+| `best.pt` SHA-256 | `476f3883760d1c2b6b30aff934d73eeda5ec05a784d4d68740869a3861dec2ae` |
+| Git commit | `357e92f` (koşunun env.txt'si) |
 
 | Değerlendirme | n | QWK | Macro F1 | Accuracy | Recall (0/1/2/3/4) |
 |---|---|---|---|---|---|
-| APTOS val | | | | | |
+| APTOS val | 522 | 0.913 | 0.672 | 0.818 | 0.974 / 0.686 / 0.681 / 0.520 / 0.600 |
 | APTOS test (tek sefer) | | | | | |
 | IDRiD (tek sefer) | | | | | |
 
