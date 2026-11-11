@@ -101,7 +101,7 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 
 ## H4 (9–15 Kasım) — Final model, test ve dış doğrulama
 
-- [ ] 4.1 `[E]` Model seçimi toplantısı + dondurma → [kart](planlar/H4.md#m4-1)
+- [x] 4.1 `[E]` Model seçimi + dondurma (E4, D-19; kural D-17, toplantı yerine PR ile ekibe bildirilecek) → [kart](planlar/H4.md#m4-1)
 - [ ] 4.2 `[B]` APTOS test tahmini (`--final`, tek sefer) → [kart](planlar/H4.md#m4-2)
 - [ ] 4.3 `[R]` IDRiD tahmini (`--final`, tek sefer) → [kart](planlar/H4.md#m4-3)
 - [ ] 4.4 `[M]` Test + IDRiD metrikleri ve yorum → [kart](planlar/H4.md#m4-4)
