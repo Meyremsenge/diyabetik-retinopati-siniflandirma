@@ -35,7 +35,7 @@ Zip'i açıp koşu klasörlerini `outputs/runs/` altına koyun (git'e girmez). `
 |---|---|
 | Seçilen deney | E4 — run `20261103-1104_efficientnet_b3_ben_graham` (efficientnet_b3, crop_ben_graham, weighted_ce, 384 px, seed 42) |
 | Seçim gerekçesi (D-17'ye göre) | En yüksek val QWK: E4 0,913 > E3 0,898 > E2 0,896 (fark ≥ 0,01, sınıf 3+4 recall kuralı gerekmedi). Karar D-19 |
-| Checkpoint konumu (Drive) | 4.6'da doldurulur |
+| Checkpoint konumu (Drive) | Ekip Drive'ı, `VisionDx-final/20261103-1104_efficientnet_b3_ben_graham/` (bağlantı ekip kanalında). Yerelde: `outputs/final/<run_id>/` |
 | `best.pt` SHA-256 | `476f3883760d1c2b6b30aff934d73eeda5ec05a784d4d68740869a3861dec2ae` |
 | Git commit | `357e92f` (koşunun env.txt'si) |
 

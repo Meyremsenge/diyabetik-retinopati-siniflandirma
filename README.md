@@ -50,6 +50,14 @@ python -c "import torch; print(torch.backends.mps.is_available())"
 
 Veri ve model ağırlıkları bu repoda **yoktur** (lisans ve boyut). Nasıl edinileceği: [data/README.md](data/README.md).
 
+## Model ağırlıkları ve demo
+
+Final model: E4 (efficientnet_b3) · run `20261103-1104_efficientnet_b3_ben_graham` · SHA-256 `476f3883760d…` (tam değer: docs/DENEY_KAYDI.md)
+
+1. Ekip Drive'ından `VisionDx-final/20261103-1104_efficientnet_b3_ben_graham/` klasörünü indir → `outputs/final/20261103-1104_efficientnet_b3_ben_graham/` altına koy (git'e girmez). Bağlantı ekip kanalındadır.
+2. Windows: `$env:VISIONDX_CHECKPOINT = "outputs/final/20261103-1104_efficientnet_b3_ben_graham/best.pt"` · macOS: `export VISIONDX_CHECKPOINT=outputs/final/20261103-1104_efficientnet_b3_ben_graham/best.pt`
+3. `streamlit run app/streamlit_app.py`
+
 ## Belgeler
 
 | Belge | İçerik |
