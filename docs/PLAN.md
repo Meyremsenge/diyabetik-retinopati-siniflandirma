@@ -104,7 +104,7 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 - [x] 4.1 `[E]` Model seçimi + dondurma (E4, D-19; kural D-17, toplantı yerine PR ile ekibe bildirilecek) → [kart](planlar/H4.md#m4-1)
 - [x] 4.2 `[B]` APTOS test tahmini (`--final`, tek sefer; 522 satır, `test_predictions.csv` Drive'da, metriğe bakılmadı) → [kart](planlar/H4.md#m4-2)
 - [x] 4.3 `[R]` IDRiD tahmini (`--final`, tek sefer) → [kart](planlar/H4.md#m4-3)
-- [ ] 4.4 `[M]` Test + IDRiD metrikleri ve yorum → [kart](planlar/H4.md#m4-4)
+- [x] 4.4 `[M]` Test + IDRiD metrikleri ve yorum (test QWK 0,923, IDRiD 0,703; DENEY_KAYDI + RAPOR §8) → [kart](planlar/H4.md#m4-4)
 - [x] 4.5 `[M]` `app/streamlit_app.py` v1 (E1 checkpoint'iyle denendi; tarayıcıda dosya yükleme tıklanarak denenmedi, yükleme yolu betikle denendi) → [kart](planlar/H4.md#m4-5)
 - [x] 4.6 `[B]` Final checkpoint paylaşımı + README notu (SHA-256 ekipte doğrulandı) → [kart](planlar/H4.md#m4-6)
 - [ ] 4.7 `[B]` *(Should)* 5-fold çapraz doğrulama (E5) → [kart](planlar/H4.md#m4-7)
