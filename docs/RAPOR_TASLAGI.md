@@ -109,7 +109,19 @@ _Deneyler tamamlandıktan sonra DENEY_KAYDI'ndan doldurulacak: karşılaştırma
 **Grad-CAM:** E1 ile 3 val görüntüsünde ısı haritası retina üzerinde yoğunlaştı (siyah kenarlarda değil); örneklerin biri lazer izi bölgesini vurguladı. Galeri H5'te (PLAN 5.1) hazırlanacaktır. Isı haritası lezyon tespiti değil, modelin dikkat ettiği bölgelerdir.
 
 ## 10. Arayüz *[Meyrem]*
-_Ekran görüntüsü, kullanım adımları, yanıt süresi ölçümü._
+Final model (E4), Streamlit ile hazırlanan tek sayfalık bir arayüze bağlandı (`app/streamlit_app.py`). Kullanıcı bir göz dibi fotoğrafı (PNG/JPG) yükler; sayfa tahmin edilen dereceyi, beş derecenin olasılıklarını 0–4 sırasıyla ve Grad-CAM ısı haritasını kırpılmış görüntünün yanında gösterir. Açılamayan veya 224 pikselden küçük dosyalar için hata mesajı verilir. "Akademik prototiptir; tıbbi teşhis yerine geçmez." uyarısı her ekranda görünür; yüklenen görüntü yalnız bellekte işlenir, diske yazılmaz. Arayüz internet bağlantısı gerektirmez. Çalıştırma: README "Model ağırlıkları ve demo".
+
+**GPU'suz yanıt süresi (FOG-5, hedef ≤ 10 sn).** Ölçüm 12 Kasım 2026'da, GPU gizlenerek (`CUDA_VISIBLE_DEVICES=-1`) AMD Ryzen 7 6800H (8 çekirdek / 16 iş parçacığı), 15,3 GB RAM'li bir dizüstü bilgisayarda yapıldı. Süre, arayüzün çağırdığı `explain_image` fonksiyonunun (ön işleme + tahmin + Grad-CAM) süresidir; her sınıftan bir val görüntüsü kullanıldı, ilk (ısınma) çalıştırma ortalamaya katılmadı. Ölçüm arayüze tıklanarak değil, aynı fonksiyonu çağıran bir betikle yapıldı; sayfa çizimi bu süreye dahil değildir.
+
+| Ölçüm | Gerçek sınıf | Süre |
+|---|---|---|
+| 1 | 0 | 0,65 sn |
+| 2 | 1 | 0,60 sn |
+| 3 | 2 | 0,59 sn |
+| 4 | 3 | 0,59 sn |
+| 5 | 4 | 0,47 sn |
+
+Ortalama 0,58 sn, en kötü 0,65 sn; hedef karşılandı. Model dosyasının yüklenmesi ayrıca 0,2 sn sürdü (arayüzde bir kez yapılır).
 
 ## 11. Sınırlılıklar ve Etik *[Ekip]*
 - APTOS ve IDRiD Hindistan kaynaklı; popülasyon çeşitliliği sınırlı.
