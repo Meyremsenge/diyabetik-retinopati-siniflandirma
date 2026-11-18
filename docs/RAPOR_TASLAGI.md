@@ -44,15 +44,39 @@ _Gulshan [2], Ting [3], Krause [4], ResNet [16], EfficientNet [17], Ben Graham [
 ![Şekil 4.1 — Her sınıftan bir örnek (sınıf 0–4)](../outputs/figures/ornek_goruntuler.png)
 
 - **Şekil 4.1** — Her sınıftan bir örnek (dosya: `outputs/figures/ornek_goruntuler.png`; APTOS lisansı nedeniyle görüntü git'e girmez, yalnız yerelde bulunur ve final rapora eklenir).
-- **Tekrar görüntü analizi:** _PLAN 2.3 çıktısı: grup sayısı, çıkarılan görüntü, çelişkili grup._
+- **Tekrar görüntü analizi** (PLAN 2.3, `src/find_duplicates.py`): 3.662 görüntüde birebir aynı (MD5) 134 çift ve pHash mesafesi 0 olan 158 çift bulundu. Bu çiftler birleştirilince **139 tekrar grubu** (toplam 287 görüntü) oluştu; bunların **37'sinde** grup içindeki etiketler birbirini tutmuyor (çelişkili etiket). Çelişkili gruplar, aynı görüntünün farklı derecelerle etiketlenebildiğini, yani etiket gürültüsünü gösterir. Bu görüntülerin nasıl elendiği §5.3'te anlatılmıştır.
 
 ## 5. Yöntem
 ### 5.1 Ön işleme *[Rümeysa]*
-Siyah kenar kırpma, 512×512 önbellek, eğitimde 384 px. Augmentation (çevirme, ±30° döndürme, parlaklık/kontrast) yalnız eğitim verisine uygulanır. Ben Graham ön işlemesi ayrı bir deney olarak (E4) değerlendirilir.
+Ön işleme iki aşamada yapılır.
+
+**Tek seferlik önbellek** (`src/preprocess_images.py`): Her görüntü RGB'ye çevrilir, gri tonda eşik değeri 7'nin altında kalan siyah kenarlar kırpılır, kısa kenar siyahla doldurularak en-boy oranı korunur ve görüntü 512×512 piksele küçültülüp JPEG (kalite 95) olarak kaydedilir. Böylece §4'te görülen 17 farklı boyut tek bir boyuta iner ve eğitim sırasında büyük PNG dosyalarının tekrar tekrar okunması önlenir.
+
+**Ben Graham dönüşümü** (E4 ve final model): Görüntüden Gauss bulanıklığıyla elde edilen arka plan çıkarılır (`4·görüntü − 4·bulanık + 128`, σ = yarıçap/30) ve retina dışında kalan bölge gri bir dairesel maskeyle örtülür [19]. Amaç, aydınlatma farklarını azaltıp mikroanevrizma ve kanama gibi küçük ayrıntıları belirginleştirmektir. Bu dönüşüm JPEG kaydından **önce** uygulanır ve ayrı bir önbellek (`aptos_512_bg`) olarak saklanır. Dönüşüm OpenCV kullanılmadan Pillow ve NumPy ile yazılmıştır.
+
+**Eğitim sırasında** (`src/data.py`): Görüntüler 384×384'e boyutlandırılır ve ImageNet ortalama/standart sapmasıyla normalize edilir. Yalnız eğitim kümesine veri artırma uygulanır: yatay ve dikey çevirme, ±30° döndürme, %20 parlaklık ve kontrast değişimi. Doğrulama, test, IDRiD ve demo aynı deterministik zinciri kullanır (veri artırma yok). IDRiD görüntüleri de aynı kırpma, 512 önbellek ve Ben Graham adımlarından geçirilmiştir (`src/prepare_idrid.py`).
 ### 5.2 Model *[Büşra]*
 ImageNet ağırlıklı ResNet50 [16] ve EfficientNet-B3 [17]. Son katman 5 sınıfa uyarlanır ve tüm ağ ince ayarlanır.
 ### 5.3 Veri bölme ve sızıntı önleme *[Rümeysa]*
-Tekrar politikası (TEKNIK_TASARIM §3), ardından tabakalı 70/15/15 bölme. Test kümesi yalnız final modelle bir kez kullanılır.
+Aynı görüntünün hem eğitim hem test kümesine düşmesi, modelin ezberini başarı gibi gösterir (veri sızıntısı). Bunu önlemek için bölmeden **önce** tekrar analizi yapılmıştır (§4).
+
+**Tekrar tespiti:** Birebir aynı dosyalar MD5 içerik özetiyle, çok benzer görüntüler 64 bitlik algısal özet (pHash) ile bulunur ve birleşim-bul (union-find) yöntemiyle gruplanır. pHash için başlangıçta Hamming mesafesi ≤ 4 eşiği planlanmıştı. Ancak gerçek veride bu eşik zincirleme yanlış eşleşmelere yol açtı: tek bir grupta 248 görüntü toplandı (toplam 249 grup, 1.384 görüntü). Eşik 0'a çekildiğinde 139 grup, 287 görüntü ve 37 çelişkili grup elde edildi; bu sayılar literatürdeki beklentiyle uyumludur. Bu nedenle eşik 0 seçilmiştir (karar D-18).
+
+**Tekrar politikası** (karar D-07): Etiketleri aynı olan grupta yalnız bir temsilci (en küçük `id_code`) tutulur, diğerleri çıkarılır. Etiketleri çelişkili grubun tamamı çıkarılır, çünkü hangi etiketin doğru olduğu bilinemez. Sonuçta 185 görüntü elenmiştir: 106 tekrar, 79 çelişkili etiket.
+
+**Bölme:** Kalan 3.477 görüntü, sınıf oranları korunarak (tabakalı) %70 eğitim, %15 doğrulama ve %15 test olarak bölünmüştür (seed 42):
+
+| Küme | Sınıf 0 | 1 | 2 | 3 | 4 | Toplam |
+|---|---|---|---|---|---|---|
+| Eğitim | 1250 | 236 | 645 | 118 | 184 | 2433 |
+| Doğrulama | 268 | 51 | 138 | 25 | 40 | 522 |
+| Test | 268 | 51 | 138 | 25 | 40 | 522 |
+
+Bölme `splits/aptos_splits.csv` dosyasına bir kez yazılmış ve sonra değiştirilmemiştir; dosya etiket içermez, yalnız `id_code`, küme ve not sütunlarını tutar. Tüm deneyler aynı bölmeyi kullanır.
+
+**Kullanım kuralı:** Model seçimi, erken durdurma ve hiperparametre kararları yalnız doğrulama kümesiyle verilmiştir. Test kümesi ve IDRiD, dondurulmuş final modelle (E4) birer kez kullanılmıştır (karar D-08); sonuçlar görüldükten sonra model veya ön işleme değiştirilmemiştir.
+
+**Sınırlılık:** APTOS'ta hasta kimliği bulunmadığından, aynı hastanın farklı görüntülerinin farklı kümelere düşmesi tamamen önlenemez (§11).
 
 ## 6. Deney Düzeneği *[Büşra]*
 _Donanım (Kaggle P100/T4, RTX 3060), yazılım sürümleri (env.txt), hiperparametre tablosu, deney listesi E1–E4._
