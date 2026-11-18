@@ -99,7 +99,9 @@ Claude Code kullanmayan ekip üyesi aynı düzeni elle uygular: PLAN.md'den madd
 4. PLAN.md'de `[x]`, gerekiyorsa DENEY_KAYDI / RAPOR_TASLAGI güncel.
 5. Sahibi dışında biri PR'ı inceledi.
 
-## 6. Haftalık toplantı (30 dk, sabit gün)
+## 6. Haftalık toplantı (zorunlu değil)
+
+*(Ekip sürekli yazıştığı için toplantı şartı kaldırıldı, Meyrem 19 Kasım 2026. Bir şey olursa doğrudan sorulur. Aşağıdaki liste yalnız ihtiyaç olursa kontrol listesi olarak kullanılır.)*
 
 1. Her kişi 3 dk: ne bitti, hangi komut, gerçek çıktı ne? (PLAN'dan)
 2. Engeller — kim kimden ne bekliyor?
