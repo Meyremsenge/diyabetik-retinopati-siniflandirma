@@ -114,12 +114,12 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 
 ## H5 (16–22 Kasım) — Demo, açıklanabilirlik, rapor → teknik bitiş
 
-- [ ] 5.0 `[R]` **Önce bu (5.1'i bekletiyor):** Ben Graham'lı APTOS 512 kopyasını (`aptos_512_bg`) Drive'a yükle → [kart](planlar/H5.md#m5-0)
+- [x] 5.0 `[R]` Ben Graham'lı APTOS 512 kopyası Drive'da: `Veri seti bilgileri/aptos_512_bg.zip` (3662 görüntü, 512×512, Ben Graham doğrulandı; Meyrem'le paylaşıldı) → [kart](planlar/H5.md#m5-0)
 - [ ] 5.1 `[M]` Grad-CAM örnek galerisi (5.0'ı bekliyor) → [kart](planlar/H5.md#m5-1)
 - [x] 5.2 `[M]` Streamlit son hâli + CPU yanıt süresi (CPU ort. 0,58 sn, en kötü 0,65 sn; RAPOR §10) → [kart](planlar/H5.md#m5-2)
-- [ ] 5.3 `[R]` Temiz Mac'te uçtan uca kurulum denemesi → [kart](planlar/H5.md#m5-3)
-- [ ] 5.4 `[B]` (üstlenen: Rümeysa) Tekrarlanabilirlik (2. eğitim, aynı seed) → [kart](planlar/H5.md#m5-4)
-- [ ] 5.5 `[E]` Rapor taslağı tüm bölümler (Büşra'nın §5.2 ve §6 bölümleri üstlenen: Rümeysa; yazılanlar: §4, §5.1, §5.2, §5.3, §6) → [kart](planlar/H5.md#m5-5)
+- [x] 5.3 `[R]` Temiz Mac'te uçtan uca kurulum denemesi (temiz klon, README harfiyen: 115 test geçti, demo açıldı; yükleme yolu 2 val görüntüsü + geçersiz dosyayla betikle denendi, takılan adım yok) → [kart](planlar/H5.md#m5-3)
+- [x] 5.4 `[B]` (üstlenen: Rümeysa) Tekrarlanabilirlik (2. eğitim, aynı seed; val QWK 0,9126 → 0,9182, fark 0,0056 ≤ 0,01; DENEY_KAYDI) → [kart](planlar/H5.md#m5-4)
+- [ ] 5.5 `[E]` Rapor taslağı tüm bölümler (Büşra'nın §5.2 ve §6 bölümleri üstlenen: Rümeysa; yazılanlar: §4, §5.1, §5.2, §5.3, §6; ekip taslakları: Özet, §3, §11, §12 — toplantıda okunacak) → [kart](planlar/H5.md#m5-5)
 - [ ] 5.6 `[E]` H5 haftalık rapor + K5 kontrolü → [kart](planlar/H5.md#m5-6)
 
 ---
