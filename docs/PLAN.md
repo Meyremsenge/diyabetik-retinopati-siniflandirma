@@ -81,7 +81,7 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 - [x] 2.8 `[B]` (üstlenen: Rümeysa) `src/predict.py` → [kart](planlar/H2.md#m2-8)
 - [x] 2.9 `[B]` (üstlenen: Rümeysa) E1: ResNet50 baseline tam eğitim → [kart](planlar/H2.md#m2-9)
 - [x] 2.10 `[M]` (üstlenen: Rümeysa) `src/evaluate.py` → [kart](planlar/H2.md#m2-10)
-- [ ] 2.11 ⏸ `[M]` E1'i yerel GPU'da çalıştır, süreyi ölç (ertelendi: E1 Kaggle T4'te ölçüldü, 5,5 dk; yerel 512 veri kopyası yok, `visiondx-aptos-512` arşivi indirilemiyor) → [kart](planlar/H2.md#m2-11)
+- [x] 2.11 ✖ `[M]` E1'i yerel GPU'da çalıştır, süreyi ölç (YAPILMAYACAK, Meyrem 19 Kasım 2026: okul projesi için yerel GPU'yu yormaya gerek yok; süre Kaggle T4'te ölçüldü, rapora yeter. Önceki not: E1 Kaggle T4'te ölçüldü, 5,5 dk; yerel 512 veri kopyası yok, `visiondx-aptos-512` arşivi indirilemiyor) → [kart](planlar/H2.md#m2-11)
 - [x] 2.12 `[E]` H2 haftalık rapor (PR #21) → [kart](planlar/H2.md#m2-12)
 
 ---
