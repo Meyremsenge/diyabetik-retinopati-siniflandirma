@@ -28,7 +28,7 @@
 | K2 | H2 | Veri bölmesi sabit, **ilk ResNet50 baseline doğrulama sonucu kayıtlı** | ✅ |
 | K3 | H3 | EfficientNet-B3 karşılaştırması + 2 ek deney, IDRiD hazır | ✅ |
 | K4 | H4 | Final model seçildi ve donduruldu, test + dış test **bir kez** yapıldı | ✅ |
-| K5 | H5 | Streamlit + Grad-CAM demo çalışıyor, rapor taslağı tam → **proje teknik olarak bitti** | ⬜ (yalnız 2.11 eksik; H5 raporu §2) |
+| K5 | H5 | Streamlit + Grad-CAM demo çalışıyor, rapor taslağı tam → **proje teknik olarak bitti** | ✅ |
 | K6 | H6 | Tampon / "Could" işleri / rapor cilası | ⬜ |
 | K7 | H7 | Final rapor, sunum, demo provası, `v1.0` etiketi | ⬜ |
 
@@ -120,7 +120,7 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 - [x] 5.3 `[R]` Temiz Mac'te uçtan uca kurulum denemesi (temiz klon, README harfiyen: 115 test geçti, demo açıldı; yükleme yolu 2 val görüntüsü + geçersiz dosyayla betikle denendi, takılan adım yok) → [kart](planlar/H5.md#m5-3)
 - [x] 5.4 `[B]` (üstlenen: Rümeysa) Tekrarlanabilirlik (2. eğitim, aynı seed; val QWK 0,9126 → 0,9182, fark 0,0056 ≤ 0,01; DENEY_KAYDI) → [kart](planlar/H5.md#m5-4)
 - [x] 5.5 `[E]` Rapor taslağı tüm bölümler (tüm bölümler dolu; Büşra'nın §5.2 ve §6'sı üstlenen: Rümeysa; Meyrem Özet, §3, §8, §9, §11, §12'deki sayıları DENEY_KAYDI ve `metrics_*.json` ile kontrol etti, tutarlı — PR #49, #50) → [kart](planlar/H5.md#m5-5)
-- [x] 5.6 `[E]` H5 haftalık rapor + K5 kontrolü (`docs/haftalik/H5.md`; K5 ⬜: tek eksik Must 2.11 → 6.1) → [kart](planlar/H5.md#m5-6)
+- [x] 5.6 `[E]` H5 haftalık rapor + K5 kontrolü (`docs/haftalik/H5.md`; H1–H5 Must maddeleri tamam, 2.11 yapılmayacak olarak kapatıldı → K5 ✅) → [kart](planlar/H5.md#m5-6)
 
 ---
 
