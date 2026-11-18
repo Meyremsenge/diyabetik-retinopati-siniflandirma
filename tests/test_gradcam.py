@@ -55,6 +55,17 @@ def test_explain_image():
     assert heatmap.shape == (64, 64, 3)
 
 
+def test_explain_image_with_preprocessed_input():
+    config = {"model": "resnet18", "image_size": 64, "preprocessing": "crop_ben_graham"}
+    image = Image.fromarray(np.random.randint(60, 255, (300, 300, 3), dtype=np.uint8))
+    ready = Image.fromarray(np.random.randint(0, 255, (512, 512, 3), dtype=np.uint8))
+    prediction, _, heatmap = explain_image(
+        make_model(), config, image, torch.device("cpu"), preprocessed=ready
+    )
+    assert 0 <= prediction <= 4
+    assert heatmap.shape == (64, 64, 3)
+
+
 def make_predictions(rows: list[tuple[int, int]]) -> pd.DataFrame:
     """(y_true, y_pred) çiftlerinden val_predictions.csv biçiminde sahte tablo kurar."""
     table = pd.DataFrame(rows, columns=["y_true", "y_pred"])

@@ -69,15 +69,23 @@ def overlay(rgb_image: Image.Image, cam: np.ndarray) -> np.ndarray:
 
 
 def explain_image(
-    model: torch.nn.Module, config: dict, image: Image.Image, device: torch.device
+    model: torch.nn.Module,
+    config: dict,
+    image: Image.Image,
+    device: torch.device,
+    preprocessed: Image.Image | None = None,
 ) -> tuple[int, list[float], np.ndarray]:
     """Bellekteki bir görüntü için (tahmin, 5 sınıf olasılığı, Grad-CAM bindirmesi) döndürür.
 
     Dosya okumaz veya yazmaz; demo bunu yüklenen görüntüyle doğrudan çağırır.
+    `preprocessed` verilirse (eğitimdeki Ben Graham'lı 512 kopya) model girdisi olarak
+    olduğu gibi kullanılır, Ben Graham tekrar uygulanmaz; `image` yalnız bindirme içindir.
     """
     cropped = prepare_image(image, 512)
     model_input = cropped
-    if config.get("preprocessing") == "crop_ben_graham":
+    if preprocessed is not None:
+        model_input = preprocessed
+    elif config.get("preprocessing") == "crop_ben_graham":
         model_input = ben_graham(cropped)
 
     transform = get_transforms("demo", config["image_size"])
@@ -125,7 +133,7 @@ def side_by_side(image: Image.Image, heatmap: np.ndarray) -> np.ndarray:
     return np.concatenate([original, heatmap], axis=1)
 
 
-def make_gallery(run_dir: Path, data_root: Path, out_dir: Path) -> None:
+def make_gallery(run_dir: Path, data_root: Path, out_dir: Path, bg_root: Path | None = None) -> None:
     """Val tahminlerinden örnek seçer, her biri için PNG ve hepsi için gallery.png üretir."""
     out_dir.mkdir(parents=True, exist_ok=True)
     predictions = pd.read_csv(run_dir / "val_predictions.csv")
@@ -142,7 +150,10 @@ def make_gallery(run_dir: Path, data_root: Path, out_dir: Path) -> None:
 
     for row in rows.itertuples():
         image = Image.open(data_root / f"{row.image_id}.jpg").convert("RGB")
-        prediction, _, heatmap = explain_image(model, config, image, device)
+        bg_image = None
+        if bg_root is not None:
+            bg_image = Image.open(bg_root / f"{row.image_id}.jpg").convert("RGB")
+        prediction, _, heatmap = explain_image(model, config, image, device, preprocessed=bg_image)
         if prediction != row.y_pred:
             # Önbellekteki tahminle anlık tahmin farklıysa uyar (başlık CSV'deki tahmini gösterir)
             print(f"Uyarı: {row.image_id} için anlık tahmin {prediction}, CSV'de {row.y_pred}")
@@ -179,6 +190,11 @@ def main(argv: list[str] | None = None) -> None:
         help="512 önbellek klasörü (varsayılan data/processed/aptos_512)",
     )
     parser.add_argument(
+        "--bg-root",
+        type=Path,
+        help="--gallery için Ben Graham'lı 512 kopya (aptos_512_bg); verilirse model girdisi buradan okunur",
+    )
+    parser.add_argument(
         "--out",
         type=Path,
         help="--image için PNG (varsayılan outputs/figures/gradcam_<ad>.png); "
@@ -187,7 +203,7 @@ def main(argv: list[str] | None = None) -> None:
     args = parser.parse_args(argv)
 
     if args.gallery:
-        make_gallery(args.run, args.data_root, args.out or Path("outputs/figures/gallery"))
+        make_gallery(args.run, args.data_root, args.out or Path("outputs/figures/gallery"), args.bg_root)
         return
 
     out_path = args.out or Path("outputs/figures") / f"gradcam_{args.image.stem}.png"
