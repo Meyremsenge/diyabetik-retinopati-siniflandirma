@@ -113,7 +113,7 @@ Bölme `splits/aptos_splits.csv` dosyasına bir kez yazılmış ve sonra değiş
 | E3 | EfficientNet-B3 | Kırpma + 512 | Ağırlıklı CE | Sınıf dengesizliği (E2'ye göre) |
 | E4 | EfficientNet-B3 | Kırpma + 512 + Ben Graham | Ağırlıklı CE | Ön işleme (E3'e göre) |
 
-Model seçimi, erken durdurma ve tüm karşılaştırmalar yalnız doğrulama kümesiyle (n = 522) yapılmıştır. Her deney tek seed ile bir kez koşulmuştur; aynı ayarlarla tekrar eğitimdeki değişkenlik ayrıca ölçülmüştür (§8, tekrarlanabilirlik). Eğitim süreleri ve sonuçlar §8'dedir.
+Model seçimi, erken durdurma ve tüm karşılaştırmalar yalnız doğrulama kümesiyle (n = 522) yapılmıştır. Her deney tek seed ile bir kez koşulmuştur. Bu yüzden aynı ayarlarla yeniden eğitimin sonucu ne kadar değiştirdiği ayrıca ölçülmüştür: final config (E4) aynı kod, veri ve seed (42) ile Kaggle T4'te ikinci kez eğitilmiş, doğrulama QWK'si 0,9126'dan 0,9182'ye çıkmıştır (fark **0,0056**; hedef ≤ 0,01). Fark, GPU işlemlerinin tam belirlenimci olmamasından ve Kaggle'daki CUDA sürüm değişikliğinden (12.8 → 13.0) kaynaklanabilir. Bu nedenle deneyler arasındaki yaklaşık 0,006'dan küçük QWK farkları anlamlı kabul edilmemelidir. İkinci eğitim yalnız ölçüm içindir; final model değiştirilmemiştir. Eğitim süreleri ve sonuçlar §8'dedir.
 
 ## 7. Değerlendirme Metrikleri *[Meyrem]*
 Model her görüntü için beş seviyeden (0–4) birini tahmin eder. Başarıyı tek bir sayıyla değil, birbirini tamamlayan ölçülerle değerlendiriyoruz.
