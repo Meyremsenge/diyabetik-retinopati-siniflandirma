@@ -1,0 +1,21 @@
+# VisionDx demo ayarları (PLAN 5.2). Streamlit bu dosyayı proje kökünden çalıştırınca okur.
+
+[theme]
+base = "light"
+primaryColor = "#0E5E57"
+backgroundColor = "#F4F3EF"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#14211F"
+font = "sans serif"
+
+[client]
+# "Deploy" gibi geliştirici seçeneklerini gizler; yazdırma (PDF) menüsü kalır
+toolbarMode = "viewer"
+
+[browser]
+# Kullanım istatistiği dış servise gönderilmez
+gatherUsageStats = false
+
+[server]
+# Yüklenebilecek en büyük dosya (MB)
+maxUploadSize = 20

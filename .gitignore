@@ -12,6 +12,8 @@ kaggle.json
 # Kişisel bilgi içeren notlar (öğrenci numaraları)
 gptilekonuşma.md
 gptilekonusma.md
+# Ders raporu kopyaları (dosya adında öğrenci numarası var)
+*Proje raporu*
 
 # Editör / Claude yerel ayarları
 .vscode/

@@ -56,7 +56,10 @@ Final model: E4 (efficientnet_b3) · run `20261103-1104_efficientnet_b3_ben_grah
 
 1. Ekip Drive'ından `VisionDx-final/20261103-1104_efficientnet_b3_ben_graham/` klasörünü indir → `outputs/final/20261103-1104_efficientnet_b3_ben_graham/` altına koy (git'e girmez). Bağlantı ekip kanalındadır.
 2. Windows: `$env:VISIONDX_CHECKPOINT = "outputs/final/20261103-1104_efficientnet_b3_ben_graham/best.pt"` · macOS: `export VISIONDX_CHECKPOINT=outputs/final/20261103-1104_efficientnet_b3_ben_graham/best.pt`
-3. `streamlit run app/streamlit_app.py`
+3. `streamlit run app/streamlit_app.py` (proje kökünden; tema ayarı `.streamlit/config.toml`'dan okunur)
+   - Ortam değişkeni yerine: `streamlit run app/streamlit_app.py -- --checkpoint outputs/final/20261103-1104_efficientnet_b3_ben_graham/best.pt`
+
+Demo internet bağlantısı olmadan çalışır; yüklenen görüntü diske yazılmaz. GPU yoksa CPU'da çalışır (ölçüm: görüntü başına ortalama 0,58 sn, RAPOR_TASLAGI §10).
 
 ## Belgeler
 

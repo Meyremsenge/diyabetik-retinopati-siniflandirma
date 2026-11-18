@@ -104,18 +104,19 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 - [x] 4.1 `[E]` Model seçimi + dondurma (E4, D-19; kural D-17, toplantı yerine PR ile ekibe bildirilecek) → [kart](planlar/H4.md#m4-1)
 - [x] 4.2 `[B]` APTOS test tahmini (`--final`, tek sefer; 522 satır, `test_predictions.csv` Drive'da, metriğe bakılmadı) → [kart](planlar/H4.md#m4-2)
 - [x] 4.3 `[R]` IDRiD tahmini (`--final`, tek sefer) → [kart](planlar/H4.md#m4-3)
-- [ ] 4.4 `[M]` Test + IDRiD metrikleri ve yorum → [kart](planlar/H4.md#m4-4)
+- [x] 4.4 `[M]` Test + IDRiD metrikleri ve yorum (test QWK 0,923, IDRiD 0,703; DENEY_KAYDI + RAPOR §8) → [kart](planlar/H4.md#m4-4)
 - [x] 4.5 `[M]` `app/streamlit_app.py` v1 (E1 checkpoint'iyle denendi; tarayıcıda dosya yükleme tıklanarak denenmedi, yükleme yolu betikle denendi) → [kart](planlar/H4.md#m4-5)
 - [x] 4.6 `[B]` Final checkpoint paylaşımı + README notu (SHA-256 ekipte doğrulandı) → [kart](planlar/H4.md#m4-6)
 - [ ] 4.7 `[B]` *(Should)* 5-fold çapraz doğrulama (E5) → [kart](planlar/H4.md#m4-7)
-- [ ] 4.8 `[E]` H4 haftalık rapor → [kart](planlar/H4.md#m4-8)
+- [x] 4.8 `[E]` H4 haftalık rapor (`docs/haftalik/H4.md`; ders raporu 6. hafta hazırlandı) → [kart](planlar/H4.md#m4-8)
 
 ---
 
 ## H5 (16–22 Kasım) — Demo, açıklanabilirlik, rapor → teknik bitiş
 
-- [ ] 5.1 `[M]` Grad-CAM örnek galerisi → [kart](planlar/H5.md#m5-1)
-- [ ] 5.2 `[M]` Streamlit son hâli + CPU yanıt süresi → [kart](planlar/H5.md#m5-2)
+- [ ] 5.0 `[R]` **Önce bu (5.1'i bekletiyor):** Ben Graham'lı APTOS 512 kopyasını (`aptos_512_bg`) Drive'a yükle → [kart](planlar/H5.md#m5-0)
+- [ ] 5.1 `[M]` Grad-CAM örnek galerisi (5.0'ı bekliyor) → [kart](planlar/H5.md#m5-1)
+- [x] 5.2 `[M]` Streamlit son hâli + CPU yanıt süresi (CPU ort. 0,58 sn, en kötü 0,65 sn; RAPOR §10) → [kart](planlar/H5.md#m5-2)
 - [ ] 5.3 `[R]` Temiz Mac'te uçtan uca kurulum denemesi → [kart](planlar/H5.md#m5-3)
 - [ ] 5.4 `[B]` Tekrarlanabilirlik (2. eğitim, aynı seed) → [kart](planlar/H5.md#m5-4)
 - [ ] 5.5 `[E]` Rapor taslağı tüm bölümler → [kart](planlar/H5.md#m5-5)
@@ -145,5 +146,7 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 ## Plan dışı eklenen maddeler
 
 *(Plan dışında yapılan her iş buraya eklenir — sessizce geçilmez.)*
+
+- **Demo görsel tasarımı (Meyrem, 11 Kasım 2026, 5.2 kapsamında):** 5.2 kartı "tema yok" diyordu; Meyrem açıkça yeni görünüm istedi. Yalnız Streamlit + CSS (`app/style.css`, `.streamlit/config.toml`); yeni kütüphane, dış yazı tipi veya yeni özellik yok. Grad-CAM bindirmesi artık Ben Graham'sız kırpılmış görüntünün üstünde, retina dışı boyanmıyor (`explain_image` imzası aynı).
 
 - **Çalışma kuralı (Meyrem, 1 Kasım 2026):** Önemsiz bir ayrıntı (tarih, küçük not, biçim) yüzünden kimse bekletilmez ve iş durdurulmaz; ayrıntı boş bırakılır veya makul varsayılır, iş ilerler. Yalnız ciddi bir durumda (yanlış sonuç, veri sızıntısı, kırılan test, başkasının işini bozma) durup sorulur.
