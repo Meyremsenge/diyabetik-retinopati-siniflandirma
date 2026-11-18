@@ -9,7 +9,7 @@
 > - Her bölümün sorumlusu köşeli parantezde belirtilmiştir.
 
 ## Özet *[Ekip — en son yazılır]*
-*(Taslak — ekip toplantısında gözden geçirilecek; sayılar §8'den.)*
+*(Taslak — sayılar §8'den; Meyrem DENEY_KAYDI ve veri raporuyla doğruladı.)*
 
 Diyabetik retinopati (DR), tedavi edilmediğinde görme kaybına yol açabilen bir diyabet komplikasyonudur. Bu çalışmada retina fundus görüntülerini beş DR derecesinden (0–4) birine atayan bir derin öğrenme prototipi geliştirilmiştir. APTOS 2019 verisindeki 3.662 görüntüde algısal özetle 139 tekrar grubu bulunmuş, tekrarlar ve çelişkili etiketli gruplar çıkarıldıktan sonra kalan 3.477 görüntü tabakalı olarak %70/15/15 eğitim, doğrulama ve test kümelerine ayrılmıştır. ImageNet ağırlıklı ResNet50 ve EfficientNet-B3 modelleri transfer öğrenmeyle eğitilmiş; ağırlıklı çapraz entropi ve Ben Graham ön işlemesinin etkisi ayrı deneylerle incelenmiştir. Doğrulama kümesine göre önceden belirlenen kuralla seçilen EfficientNet-B3 + ağırlıklı çapraz entropi + Ben Graham modeli, APTOS test kümesinde 0,923 QWK, 0,702 macro F1 ve 0,835 doğruluk elde etmiştir. Aynı model, farklı bir klinikten toplanan IDRiD verisinde 0,703 QWK'ye düşmüş; bu, tek merkezli veriyle eğitilen modelin genelleme sınırını göstermektedir. Modelin kararları Grad-CAM ile görselleştirilmiş ve GPU'suz bir bilgisayarda çalışan bir Streamlit arayüzüyle sunulmuştur. Sistem akademik bir prototiptir; tıbbi teşhis yerine geçmez.
 
@@ -30,7 +30,7 @@ Bu projede, retinal fundus görüntülerinin 0–4 arasındaki beş DR derecesin
 **Kapsam dışı:** klinik kullanım, ensemble, çoklu mimari taraması, hasta düzeyinde analiz.
 
 ## 3. İlgili Çalışmalar *[Ekip]*
-*(Taslak — ekip toplantısında gözden geçirilecek.)*
+*(Taslak — içerdiği sayılar Meyrem tarafından DENEY_KAYDI ile doğrulandı.)*
 
 **Derin öğrenmeyle DR tespiti.** Gulshan ve ark. [2], fundus görüntülerinden DR tespitinde derin öğrenme tabanlı bir algoritmanın etkili olabildiğini gösteren öncü çalışmalardandır. Ting ve ark. [3], benzer bir sistemi farklı etnik kökenden hastaları içeren çok merkezli veride doğrulamış ve bir modelin eğitildiği topluluk dışında da sınanması gerektiğini vurgulamıştır. Bu, projemizde final modelin hiç görmediği IDRiD verisinde ayrıca test edilmesinin gerekçesidir.
 
@@ -224,7 +224,7 @@ Ortalama 0,58 sn, en kötü 0,65 sn; hedef karşılandı. Model dosyasının yü
 - Sistem klinik olarak doğrulanmamıştır, tanı amacıyla kullanılamaz. Arayüz yüklenen görüntüyü saklamaz.
 
 ## 12. Sonuç ve Gelecek Çalışmalar *[Ekip]*
-*(Taslak — ekip toplantısında gözden geçirilecek.)*
+*(Taslak — içerdiği sayılar Meyrem tarafından DENEY_KAYDI ile doğrulandı.)*
 
 Bu projede APTOS 2019 verisi tekrar ve çelişkili etiket kontrolünden geçirilip sızıntıya karşı korunarak bölünmüş, ImageNet ağırlıklı ResNet50 ve EfficientNet-B3 modelleri aynı koşullarda eğitilmiştir. Önceden belirlenen kurala göre doğrulama kümesinde seçilen final model (EfficientNet-B3 + ağırlıklı CE + Ben Graham ön işlemesi), APTOS test kümesinde **0,923 QWK** ile 0,85 hedefini aşmıştır. Hataların çoğu komşu dereceler arasındadır; az örnekli ağır sınıflarda (3 ve 4) recall 0,56–0,58 düzeyinde kalmıştır. Aynı model hiç görmediği IDRiD verisinde **0,703 QWK** elde etmiştir. Bu 0,220'lik düşüş, farklı bir klinik ve kamerayla toplanan veride başarının belirgin biçimde azaldığını ve tek merkezli bir veriyle eğitilen modelin genellenmesinin sınırlı olduğunu göstermektedir. Aynı ayarlarla tekrar eğitimde QWK farkı 0,0056 bulunmuştur; bu yüzden deneyler arasındaki çok küçük farklar dikkatle yorumlanmalıdır. Model, Grad-CAM ısı haritasıyla birlikte, GPU'suz bir bilgisayarda görüntü başına yaklaşık 0,6 saniyede yanıt veren bir Streamlit arayüzüyle sunulmuştur. Sistem akademik bir prototiptir ve klinik kullanım için doğrulanmamıştır.
 
