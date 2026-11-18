@@ -56,7 +56,16 @@ _Gulshan [2], Ting [3], Krause [4], ResNet [16], EfficientNet [17], Ben Graham [
 
 **Eğitim sırasında** (`src/data.py`): Görüntüler 384×384'e boyutlandırılır ve ImageNet ortalama/standart sapmasıyla normalize edilir. Yalnız eğitim kümesine veri artırma uygulanır: yatay ve dikey çevirme, ±30° döndürme, %20 parlaklık ve kontrast değişimi. Doğrulama, test, IDRiD ve demo aynı deterministik zinciri kullanır (veri artırma yok). IDRiD görüntüleri de aynı kırpma, 512 önbellek ve Ben Graham adımlarından geçirilmiştir (`src/prepare_idrid.py`).
 ### 5.2 Model *[Büşra]*
-ImageNet ağırlıklı ResNet50 [16] ve EfficientNet-B3 [17]. Son katman 5 sınıfa uyarlanır ve tüm ağ ince ayarlanır.
+Sıfırdan eğitim için 2.433 eğitim görüntüsü azdır. Bu yüzden ImageNet üzerinde önceden eğitilmiş iki evrişimli ağ, transfer öğrenmeyle kullanılmıştır (`src/models.py`, torchvision):
+
+- **ResNet50** [16] (baseline, torchvision `IMAGENET1K_V2` ağırlıkları): Artık (residual) bağlantılarla derin ağların eğitimini kolaylaştıran, yaygın kullanılan bir mimari. Son tam bağlı katman (`fc`) 5 çıkışlı yeni bir katmanla değiştirilmiştir.
+- **EfficientNet-B3** [17] (karşılaştırma, `IMAGENET1K_V1` ağırlıkları): Derinlik, genişlik ve çözünürlüğü birlikte ölçekleyen, ResNet50'den daha az parametreli bir mimari. Sınıflandırıcının son doğrusal katmanı (`classifier[1]`) 5 çıkışlı yeni bir katmanla değiştirilmiştir.
+
+Her iki modelde hiçbir katman dondurulmamış, ağın tamamı ince ayarlanmıştır (fine-tuning). Model çıkışı 5 sınıf için olasılıktır; tahmin en yüksek olasılıklı sınıftır (ek eşik ayarı yapılmamıştır). ResNet18 yalnız kodun çalıştığını göstermek için duman testinde kullanılmış, sonuçları raporlanmamıştır.
+
+**Kayıp fonksiyonu:** E1 ve E2'de çapraz entropi (CE), E3 ve E4'te sınıf dengesizliğini telafi etmek için **ağırlıklı çapraz entropi** kullanılmıştır. Ağırlıklar eğitim kümesinden `w_c = N / (5 · n_c)` ile hesaplanır (N: eğitim görüntüsü sayısı, n_c: c sınıfındaki görüntü sayısı). Böylece az görülen sınıflardaki hata daha çok cezalandırılır. Eğitim kümesi için hesaplanan ağırlıklar: sınıf 0: 0,389 · 1: 2,062 · 2: 0,754 · 3: 4,124 · 4: 2,645.
+
+**Final model:** Doğrulama sonuçlarına göre önceden belirlenmiş kural (§7.5, karar D-17) ile E4 (EfficientNet-B3 + ağırlıklı CE + Ben Graham) seçilmiş ve dondurulmuştur (karar D-19).
 ### 5.3 Veri bölme ve sızıntı önleme *[Rümeysa]*
 Aynı görüntünün hem eğitim hem test kümesine düşmesi, modelin ezberini başarı gibi gösterir (veri sızıntısı). Bunu önlemek için bölmeden **önce** tekrar analizi yapılmıştır (§4).
 
@@ -79,7 +88,32 @@ Bölme `splits/aptos_splits.csv` dosyasına bir kez yazılmış ve sonra değiş
 **Sınırlılık:** APTOS'ta hasta kimliği bulunmadığından, aynı hastanın farklı görüntülerinin farklı kümelere düşmesi tamamen önlenemez (§11).
 
 ## 6. Deney Düzeneği *[Büşra]*
-_Donanım (Kaggle P100/T4, RTX 3060), yazılım sürümleri (env.txt), hiperparametre tablosu, deney listesi E1–E4._
+**Donanım ve yazılım:** Raporlanan tüm eğitimler Kaggle'ın ücretsiz **NVIDIA Tesla T4** (16 GB) GPU'sunda yapılmıştır. Kaggle ortamında PyTorch 2.11.0 (CUDA 12.8) kullanılmıştır; final koşunun (E4) ortamı: Python 3.13, PyTorch 2.11.0+cu128, torchvision 0.26.0, commit 357e92f. Her koşu kendi klasörüne kodun git commit'ini, kütüphane sürümlerini ve cihazı (`env.txt`) ile kullanılan ayarları (`config.yaml`) yazar. Böylece her sonuç, hangi kodla üretildiğine kadar izlenebilir. Proje kodu yerelde Python 3.12 ve PyTorch 2.14 ile de test edilmiştir.
+
+**Ortak hiperparametreler** (tüm deneylerde aynı, `configs/*.yaml`):
+
+| Ayar | Değer |
+|---|---|
+| Girdi boyutu | 384 × 384 |
+| Batch boyutu | 16 |
+| En çok epoch | 15 |
+| Optimizer | AdamW, öğrenme oranı 1·10⁻⁴, ağırlık azaltma (weight decay) 1·10⁻⁴ |
+| Öğrenme oranı takvimi | Kosinüs azalma (15 epoch) |
+| Karışık hassasiyet | Açık (float16, yalnız GPU) |
+| Erken durdurma | Doğrulama QWK'si 4 epoch boyunca iyileşmezse durur; en iyi QWK'li epoch saklanır |
+| Seed | 42 (`src.utils.set_seed`) |
+| Bölme | Aynı `splits/aptos_splits.csv` (§5.3) |
+
+**Deneyler:** Her deney bir öncekinden **tek bir şeyi** değiştirir, böylece farkın nedeni yorumlanabilir.
+
+| Deney | Model | Ön işleme | Kayıp | Neyi sınar |
+|---|---|---|---|---|
+| E1 | ResNet50 | Kırpma + 512 | CE | Baseline |
+| E2 | EfficientNet-B3 | Kırpma + 512 | CE | Mimari farkı (E1'e göre) |
+| E3 | EfficientNet-B3 | Kırpma + 512 | Ağırlıklı CE | Sınıf dengesizliği (E2'ye göre) |
+| E4 | EfficientNet-B3 | Kırpma + 512 + Ben Graham | Ağırlıklı CE | Ön işleme (E3'e göre) |
+
+Model seçimi, erken durdurma ve tüm karşılaştırmalar yalnız doğrulama kümesiyle (n = 522) yapılmıştır. Her deney tek seed ile bir kez koşulmuştur; aynı ayarlarla tekrar eğitimdeki değişkenlik ayrıca ölçülmüştür (§8, tekrarlanabilirlik). Eğitim süreleri ve sonuçlar §8'dedir.
 
 ## 7. Değerlendirme Metrikleri *[Meyrem]*
 Model her görüntü için beş seviyeden (0–4) birini tahmin eder. Başarıyı tek bir sayıyla değil, birbirini tamamlayan ölçülerle değerlendiriyoruz.

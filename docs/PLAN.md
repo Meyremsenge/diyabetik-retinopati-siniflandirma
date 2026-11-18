@@ -118,8 +118,8 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 - [ ] 5.1 `[M]` Grad-CAM örnek galerisi (5.0'ı bekliyor) → [kart](planlar/H5.md#m5-1)
 - [x] 5.2 `[M]` Streamlit son hâli + CPU yanıt süresi (CPU ort. 0,58 sn, en kötü 0,65 sn; RAPOR §10) → [kart](planlar/H5.md#m5-2)
 - [ ] 5.3 `[R]` Temiz Mac'te uçtan uca kurulum denemesi → [kart](planlar/H5.md#m5-3)
-- [ ] 5.4 `[B]` Tekrarlanabilirlik (2. eğitim, aynı seed) → [kart](planlar/H5.md#m5-4)
-- [ ] 5.5 `[E]` Rapor taslağı tüm bölümler → [kart](planlar/H5.md#m5-5)
+- [ ] 5.4 `[B]` (üstlenen: Rümeysa) Tekrarlanabilirlik (2. eğitim, aynı seed) → [kart](planlar/H5.md#m5-4)
+- [ ] 5.5 `[E]` Rapor taslağı tüm bölümler (Büşra'nın §5.2 ve §6 bölümleri üstlenen: Rümeysa; yazılanlar: §4, §5.1, §5.2, §5.3, §6) → [kart](planlar/H5.md#m5-5)
 - [ ] 5.6 `[E]` H5 haftalık rapor + K5 kontrolü → [kart](planlar/H5.md#m5-6)
 
 ---
