@@ -55,10 +55,12 @@ Zip'i açıp koşu klasörlerini `outputs/runs/` altına koyun (git'e girmez). `
 
 ## Tekrarlanabilirlik (PLAN 5.4)
 
-| Koşu | Val QWK | Fark |
-|---|---|---|
-| Final config — 1 | | |
-| Final config — 2 (aynı seed) | | |
+| Koşu | Run ID | Kim | Donanım / ortam | Commit | Val QWK | Val macro F1 | Val recall (0/1/2/3/4) | Fark |
+|---|---|---|---|---|---|---|---|---|
+| Final config — 1 (E4) | 20261103-1104_efficientnet_b3_ben_graham | B | Kaggle Tesla T4 · Python 3.13.15 · torch 2.11.0+cu128 | 357e92f | 0.9126 | 0.672 | 0.974 / 0.686 / 0.681 / 0.520 / 0.600 | — |
+| Final config — 2 (aynı seed 42) | 20261118-2006_efficientnet_b3_ben_graham | R (B adına) | Kaggle Tesla T4 · Python 3.13.16 · torch 2.11.0+cu130 | 357e92f | 0.9182 | 0.696 | 0.97 / 0.69 / 0.76 / 0.44 / 0.65 | **0.0056** |
+
+> Değerler iki koşunun `metrics_val.json` dosyalarından (n=522); 2. koşu `python -m src.evaluate` çıktısı, recall 2 basamak. Aynı kod (commit 357e92f), config (`configs/e4_ben_graham.yaml`), seed ve veri (`visiondx-aptos-512-bg`); 2. koşu `--output-dir /kaggle/working/outputs/runs_repro` ile ayrı klasöre yazıldı. Fark |QWK₁ − QWK₂| = 0.0056 → FOG-3 hedefi (≤ 0,01) karşılandı. Olası nedenler: GPU işlemlerinin tam belirlenimci olmaması (D-16) ve Kaggle ortamındaki değişiklik (CUDA 12.8 → 13.0); hangisinin ne kadar etkilediği ayrıca ölçülmedi. Sınıf ağırlıkları iki koşuda aynı. İki koşu da 15 epoch'un tamamını koştu; en iyi epoch 1. koşuda 11, 2. koşuda 14 (eğitim çıktısı). Epoch eğrileri de yakın ama aynı değil (ör. epoch 1 val QWK 0.8551 / 0.8558). 2. koşu ölçüm içindir; final model **değişmedi** (D-19, `outputs/final/`).
 
 ## Karşılaştırma (val, E1–E4)
 
