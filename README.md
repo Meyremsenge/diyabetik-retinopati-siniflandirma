@@ -43,6 +43,7 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 python -c "import torch; print(torch.backends.mps.is_available())"
 ```
+`python3.12: command not found` görürsen önce `brew install python@3.12`. Mac'te `--index-url ... cu126` satırı **kullanılmaz** (yalnız NVIDIA). Demo Mac'te `mps` yerine CPU'da çalışır (Grad-CAM için); bu beklenen durumdur.
 
 **Kontrol:** `python -c "import torch, torchvision, sklearn, imagehash, streamlit; print(torch.__version__)"` → `2.14.1...`. Testler yazıldıktan sonra: `python -m pytest -q`
 
