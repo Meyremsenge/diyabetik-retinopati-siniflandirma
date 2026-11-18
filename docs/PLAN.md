@@ -26,9 +26,9 @@
 |---|---|---|---|
 | K1 | H1 | Ortam kuruldu, APTOS doğrulandı, metrik modülü testli | ✅ |
 | K2 | H2 | Veri bölmesi sabit, **ilk ResNet50 baseline doğrulama sonucu kayıtlı** | ✅ |
-| K3 | H3 | EfficientNet-B3 karşılaştırması + 2 ek deney, IDRiD hazır | ⬜ |
-| K4 | H4 | Final model seçildi ve donduruldu, test + dış test **bir kez** yapıldı | ⬜ |
-| K5 | H5 | Streamlit + Grad-CAM demo çalışıyor, rapor taslağı tam → **proje teknik olarak bitti** | ⬜ |
+| K3 | H3 | EfficientNet-B3 karşılaştırması + 2 ek deney, IDRiD hazır | ✅ |
+| K4 | H4 | Final model seçildi ve donduruldu, test + dış test **bir kez** yapıldı | ✅ |
+| K5 | H5 | Streamlit + Grad-CAM demo çalışıyor, rapor taslağı tam → **proje teknik olarak bitti** | ✅ |
 | K6 | H6 | Tampon / "Could" işleri / rapor cilası | ⬜ |
 | K7 | H7 | Final rapor, sunum, demo provası, `v1.0` etiketi | ⬜ |
 
@@ -119,8 +119,8 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 - [x] 5.2 `[M]` Streamlit son hâli + CPU yanıt süresi (CPU ort. 0,58 sn, en kötü 0,65 sn; RAPOR §10) → [kart](planlar/H5.md#m5-2)
 - [x] 5.3 `[R]` Temiz Mac'te uçtan uca kurulum denemesi (temiz klon, README harfiyen: 115 test geçti, demo açıldı; yükleme yolu 2 val görüntüsü + geçersiz dosyayla betikle denendi, takılan adım yok) → [kart](planlar/H5.md#m5-3)
 - [x] 5.4 `[B]` (üstlenen: Rümeysa) Tekrarlanabilirlik (2. eğitim, aynı seed; val QWK 0,9126 → 0,9182, fark 0,0056 ≤ 0,01; DENEY_KAYDI) → [kart](planlar/H5.md#m5-4)
-- [ ] 5.5 `[E]` Rapor taslağı tüm bölümler (Büşra'nın §5.2 ve §6 bölümleri üstlenen: Rümeysa; yazılanlar: §4, §5.1, §5.2, §5.3, §6; ekip taslakları: Özet, §3, §11, §12 — toplantı gerekmez; Meyrem Özet, §3, §11, §12'deki sayıları ve atıfları kontrol etti, tutarlı; Meyrem §8–§9'u DENEY_KAYDI ve `metrics_*.json` ile karşılaştırdı, tutarlı) → [kart](planlar/H5.md#m5-5)
-- [ ] 5.6 `[E]` H5 haftalık rapor + K5 kontrolü → [kart](planlar/H5.md#m5-6)
+- [x] 5.5 `[E]` Rapor taslağı tüm bölümler (tüm bölümler dolu; Büşra'nın §5.2 ve §6'sı üstlenen: Rümeysa; Meyrem Özet, §3, §8, §9, §11, §12'deki sayıları DENEY_KAYDI ve `metrics_*.json` ile kontrol etti, tutarlı — PR #49, #50) → [kart](planlar/H5.md#m5-5)
+- [x] 5.6 `[E]` H5 haftalık rapor + K5 kontrolü (`docs/haftalik/H5.md`; H1–H5 Must maddeleri tamam, 2.11 yapılmayacak olarak kapatıldı → K5 ✅) → [kart](planlar/H5.md#m5-6)
 
 ---
 
