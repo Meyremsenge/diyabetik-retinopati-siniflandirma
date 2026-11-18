@@ -9,7 +9,11 @@
 > - Her bölümün sorumlusu köşeli parantezde belirtilmiştir.
 
 ## Özet *[Ekip — en son yazılır]*
-_Deneyler tamamlanınca yazılacak._
+*(Taslak — ekip toplantısında gözden geçirilecek; sayılar §8'den.)*
+
+Diyabetik retinopati (DR), tedavi edilmediğinde görme kaybına yol açabilen bir diyabet komplikasyonudur. Bu çalışmada retina fundus görüntülerini beş DR derecesinden (0–4) birine atayan bir derin öğrenme prototipi geliştirilmiştir. APTOS 2019 verisindeki 3.662 görüntüde algısal özetle 139 tekrar grubu bulunmuş, tekrarlar ve çelişkili etiketli gruplar çıkarıldıktan sonra kalan 3.477 görüntü tabakalı olarak %70/15/15 eğitim, doğrulama ve test kümelerine ayrılmıştır. ImageNet ağırlıklı ResNet50 ve EfficientNet-B3 modelleri transfer öğrenmeyle eğitilmiş; ağırlıklı çapraz entropi ve Ben Graham ön işlemesinin etkisi ayrı deneylerle incelenmiştir. Doğrulama kümesine göre önceden belirlenen kuralla seçilen EfficientNet-B3 + ağırlıklı çapraz entropi + Ben Graham modeli, APTOS test kümesinde 0,923 QWK, 0,702 macro F1 ve 0,835 doğruluk elde etmiştir. Aynı model, farklı bir klinikten toplanan IDRiD verisinde 0,703 QWK'ye düşmüş; bu, tek merkezli veriyle eğitilen modelin genelleme sınırını göstermektedir. Modelin kararları Grad-CAM ile görselleştirilmiş ve GPU'suz bir bilgisayarda çalışan bir Streamlit arayüzüyle sunulmuştur. Sistem akademik bir prototiptir; tıbbi teşhis yerine geçmez.
+
+**Anahtar kelimeler:** diyabetik retinopati, fundus görüntüsü, transfer öğrenme, EfficientNet, QWK, Grad-CAM
 
 ## 1. Giriş ve Problem Tanımı *[Ekip]*
 Diyabetik retinopati (DR), diyabetin retina dokusunda yol açtığı değişikliklerle ortaya çıkan ve ilerleyen aşamalarda görme kaybına neden olabilen bir göz hastalığıdır. Şiddeti, Uluslararası Klinik DR Ölçeği'ne göre bulgusuz durumdan proliferatif DR'ye kadar beş seviyede değerlendirilir [1]. Fundus görüntülerinin uzmanlarca incelenmesi zaman alır. Derin öğrenme tabanlı yöntemlerin bu görüntülerden DR'yi tespit etmede etkili olabildiği gösterilmiş [2], farklı popülasyonlarda doğrulamanın önemi de vurgulanmıştır [3].
@@ -26,7 +30,17 @@ Bu projede, retinal fundus görüntülerinin 0–4 arasındaki beş DR derecesin
 **Kapsam dışı:** klinik kullanım, ensemble, çoklu mimari taraması, hasta düzeyinde analiz.
 
 ## 3. İlgili Çalışmalar *[Ekip]*
-_Gulshan [2], Ting [3], Krause [4], ResNet [16], EfficientNet [17], Ben Graham [19], Grad-CAM [21]. Her biri için 2–3 cümle._
+*(Taslak — ekip toplantısında gözden geçirilecek.)*
+
+**Derin öğrenmeyle DR tespiti.** Gulshan ve ark. [2], fundus görüntülerinden DR tespitinde derin öğrenme tabanlı bir algoritmanın etkili olabildiğini gösteren öncü çalışmalardandır. Ting ve ark. [3], benzer bir sistemi farklı etnik kökenden hastaları içeren çok merkezli veride doğrulamış ve bir modelin eğitildiği topluluk dışında da sınanması gerektiğini vurgulamıştır. Bu, projemizde final modelin hiç görmediği IDRiD verisinde ayrıca test edilmesinin gerekçesidir.
+
+**Etiket güvenilirliği.** Krause ve ark. [4], uzmanlar arasındaki derecelendirme farklılığının yüksek olduğunu ve birden fazla uzmanın uzlaşısıyla elde edilen etiketlerin model değerlendirmesini belirgin biçimde değiştirdiğini göstermiştir. APTOS'ta aynı görüntünün farklı derecelerle etiketlendiği çelişkili tekrar grupları (§4) bu bulguyla uyumludur.
+
+**Mimariler.** ResNet [16], artık (residual) bağlantılarla çok derin ağların eğitilebilmesini sağlamış ve görüntü sınıflandırmada yaygın bir baseline olmuştur. EfficientNet [17], ağın derinliğini, genişliğini ve girdi çözünürlüğünü birlikte ölçekleyerek benzer doğruluğa daha az parametreyle ulaşır. APTOS üzerinde tek bir ResNet50 için bildirilen QWK değerleri, kullanılan bölme ve ön işlemeye göre yaklaşık 0,86–0,92 arasındadır [14][15]; bu çalışmalar farklı bölmeler kullandığından sonuçlarımızla doğrudan karşılaştırılamaz.
+
+**Ön işleme.** Ben Graham [19], 2015 Kaggle DR yarışmasında görüntüden Gauss bulanıklığıyla tahmin edilen arka planı çıkararak aydınlatma farklarını azaltan bir ön işleme kullanmış ve yarışmayı kazanmıştır. Projede bu yöntem E4 deneyinde sınanmıştır.
+
+**Açıklanabilirlik.** Grad-CAM [21], son evrişim katmanının gradyanlarından sınıfa özgü bir ısı haritası üreterek modelin karar verirken görüntünün hangi bölgelerine ağırlık verdiğini gösterir. Bu harita lezyon tespiti değildir; projede modelin dikkatini görselleştirmek için kullanılmıştır (§9).
 
 ## 4. Veri Seti *[Rümeysa]*
 - **APTOS 2019** [5]: Hindistan'daki Aravind Eye Hospital'dan toplanan ve 2019 Kaggle yarışmasıyla yayımlanan 3.662 etiketli fundus görüntüsü. Etiketler 0–4 ICDR derecesidir. Sınıf dağılımı PLAN 1.6 çıktısıdır (Kaggle, `src/inspect_dataset.py`; notebook: https://www.kaggle.com/code/rmeysaakbulut/notebookb9fd0088e2). Satır sayısı 3.662, tekrarlanan `id_code` 0, geçersiz etiket yok, eksik görüntü dosyası 0:
@@ -204,10 +218,22 @@ Ortalama 0,58 sn, en kötü 0,65 sn; hedef karşılandı. Model dosyasının yü
 - APTOS ve IDRiD Hindistan kaynaklı; popülasyon çeşitliliği sınırlı.
 - APTOS'ta hasta kimliği yok, hasta düzeyinde sızıntı tamamen dışlanamaz.
 - Etiketlerde uzmanlar arası farklılık var [4]; çelişkili tekrarlar bunun göstergesi.
+- Tekrar görüntüler yalnız birebir (MD5) ve pHash mesafesi 0 olan eşleşmelerle bulundu (D-18). Daha gevşek eşik zincirleme yanlış eşleşme ürettiği için kullanılmadı; bu yüzden çok benzer ama birebir olmayan bazı tekrarlar veride kalmış olabilir.
+- Final model IDRiD'de APTOS testine göre belirgin biçimde düşük başarı gösterdi (QWK 0,923 → 0,703, §8). Model farklı klinik ve kameralardan gelen görüntülere iyi genellenmeyebilir; düşüşün nedeni ayrıca incelenmedi.
+- Her deney tek seed ile bir kez koşuldu; tekrar eğitimde QWK 0,0056 değişti (§6). Sınıf 3 ve 4 test kümesinde yalnız 25 ve 40 görüntü olduğundan bu sınıfların recall değerlerinin belirsizliği yüksektir.
 - Sistem klinik olarak doğrulanmamıştır, tanı amacıyla kullanılamaz. Arayüz yüklenen görüntüyü saklamaz.
 
 ## 12. Sonuç ve Gelecek Çalışmalar *[Ekip]*
-_Sonuçlara göre. Aday konular: Messidor-2, regresyon + eşik, daha yüksek çözünürlük._
+*(Taslak — ekip toplantısında gözden geçirilecek.)*
+
+Bu projede APTOS 2019 verisi tekrar ve çelişkili etiket kontrolünden geçirilip sızıntıya karşı korunarak bölünmüş, ImageNet ağırlıklı ResNet50 ve EfficientNet-B3 modelleri aynı koşullarda eğitilmiştir. Önceden belirlenen kurala göre doğrulama kümesinde seçilen final model (EfficientNet-B3 + ağırlıklı CE + Ben Graham ön işlemesi), APTOS test kümesinde **0,923 QWK** ile 0,85 hedefini aşmıştır. Hataların çoğu komşu dereceler arasındadır; az örnekli ağır sınıflarda (3 ve 4) recall 0,56–0,58 düzeyinde kalmıştır. Aynı model hiç görmediği IDRiD verisinde **0,703 QWK** elde etmiştir. Bu 0,220'lik düşüş, farklı bir klinik ve kamerayla toplanan veride başarının belirgin biçimde azaldığını ve tek merkezli bir veriyle eğitilen modelin genellenmesinin sınırlı olduğunu göstermektedir. Aynı ayarlarla tekrar eğitimde QWK farkı 0,0056 bulunmuştur; bu yüzden deneyler arasındaki çok küçük farklar dikkatle yorumlanmalıdır. Model, Grad-CAM ısı haritasıyla birlikte, GPU'suz bir bilgisayarda görüntü başına yaklaşık 0,6 saniyede yanıt veren bir Streamlit arayüzüyle sunulmuştur. Sistem akademik bir prototiptir ve klinik kullanım için doğrulanmamıştır.
+
+**Gelecek çalışmalar:**
+- **Farklı topluluklarda dış test:** Fransa'dan gelen ve uzman uzlaşısıyla etiketlenmiş Messidor-2 [7][8] üzerinde test, IDRiD'deki düşüşün farklı bir topluluktaki karşılığını gösterebilir.
+- **Sıralı çıkış:** Dereceler sıralı olduğu için regresyon çıkışı ve doğrulama kümesinde belirlenen sınıf eşikleri, komşu sınıf hatalarını azaltabilir.
+- **Daha yüksek çözünürlük:** Mikroanevrizma gibi küçük lezyonlar için 384 pikselden yüksek girdi boyutları denenebilir.
+- **Daha güvenilir ölçüm:** 5 katlı çapraz doğrulama ve birden fazla seed ile sonuçların değişkenliği daha iyi tahmin edilebilir.
+- **Alan uyumu:** Farklı kamera ve kliniklere genellemeyi artırmak için farklı kaynaklardan veriyle eğitim değerlendirilebilir.
 
 ## Kaynakça
 ARASTIRMA.md → "Kaynaklar" listesinden yalnız metinde atıf yapılanlar alınır.
