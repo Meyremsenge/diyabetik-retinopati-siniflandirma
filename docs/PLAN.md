@@ -114,8 +114,8 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 
 ## H5 (16–22 Kasım) — Demo, açıklanabilirlik, rapor → teknik bitiş
 
-- [ ] 5.0 `[R]` **Önce bu (5.1'i bekletiyor):** Ben Graham'lı APTOS 512 kopyasını (`aptos_512_bg`) Drive'a yükle → [kart](planlar/H5.md#m5-0)
-- [ ] 5.1 `[M]` Grad-CAM örnek galerisi (5.0'ı bekliyor) → [kart](planlar/H5.md#m5-1)
+- [x] 5.0 `[R]` Ben Graham'lı APTOS 512 kopyasını (`aptos_512_bg`) Drive'a yükle (Rümeysa yükledi, Meyrem Drive'dan aldı) → [kart](planlar/H5.md#m5-0)
+- [x] 5.1 `[M]` Grad-CAM örnek galerisi (E4 + `aptos_512_bg` ile üretildi, 10/10 tahmin CSV ile uyumlu; RAPOR §9) → [kart](planlar/H5.md#m5-1)
 - [x] 5.2 `[M]` Streamlit son hâli + CPU yanıt süresi (CPU ort. 0,58 sn, en kötü 0,65 sn; RAPOR §10) → [kart](planlar/H5.md#m5-2)
 - [ ] 5.3 `[R]` Temiz Mac'te uçtan uca kurulum denemesi → [kart](planlar/H5.md#m5-3)
 - [ ] 5.4 `[B]` Tekrarlanabilirlik (2. eğitim, aynı seed) → [kart](planlar/H5.md#m5-4)
