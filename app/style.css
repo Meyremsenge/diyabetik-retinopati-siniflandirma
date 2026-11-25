@@ -45,6 +45,8 @@ html, body, [data-testid="stAppViewContainer"] {
 }
 .vd-tagline { color: var(--vd-muted); font-size: 0.9rem; margin-top: 0.15rem; }
 
+/* Uyarı niteliğindeki alt yazılar okunur kalsın (varsayılan saydamlık çok soluk) */
+[data-testid="stCaptionContainer"] { opacity: 1; }
 [data-testid="stCaptionContainer"] p {
   color: var(--vd-muted);
   font-size: 0.8rem;
@@ -54,16 +56,23 @@ html, body, [data-testid="stAppViewContainer"] {
 /* ---------- Uyarı bandı (kalıcı) ---------- */
 [data-testid="stAlert"] { border-radius: 12px; }
 
+/* ---------- Kartlar ---------- */
+[class*="st-key-card-"] {
+  background: var(--vd-surface);
+  border-color: var(--vd-line);
+  border-radius: 16px;
+}
+/* Streamlit'in -1rem alt boşluğu, kartın son öğesini kenarlıktan taşırıyordu */
+[data-testid="stMarkdownContainer"]:has(.vd-note, .vd-probs, .vd-empty) { margin-bottom: 0; }
+
 /* ---------- Kart başlıkları ---------- */
 .vd-card-title {
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  font-size: 0.78rem;
+  font-size: 0.95rem;
   font-weight: 650;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--vd-muted);
+  color: var(--vd-ink);
   margin: 0 0 0.85rem 0;
 }
 .vd-step {
@@ -92,6 +101,15 @@ html, body, [data-testid="stAppViewContainer"] {
   background: var(--vd-accent-soft);
 }
 [data-testid="stFileUploader"] label { display: none; }
+/* Streamlit'in İngilizce yükleme metinleri Türkçesiyle değiştirilir.
+   20 MB sınırı .streamlit/config.toml (maxUploadSize) ile aynı olmalı. */
+[data-testid="stFileUploaderDropzone"] button p { font-size: 0; }
+[data-testid="stFileUploaderDropzone"] button p::after { content: "Dosya seç"; font-size: 0.9rem; }
+[data-testid="stFileUploaderDropzoneInstructions"] span { font-size: 0; }
+[data-testid="stFileUploaderDropzoneInstructions"] span::after {
+  content: "PNG veya JPG · en fazla 20 MB";
+  font-size: 0.85rem;
+}
 
 .vd-note {
   display: flex;
@@ -134,11 +152,9 @@ html, body, [data-testid="stAppViewContainer"] {
   letter-spacing: -0.03em;
 }
 .vd-eyebrow {
-  font-size: 0.75rem;
-  font-weight: 650;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--vd-faint);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--vd-muted);
 }
 .vd-grade-name {
   font-size: 1.65rem;
