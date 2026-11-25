@@ -43,21 +43,21 @@ Bu projede, retinal fundus görüntülerinin 0–4 arasındaki beş DR derecesin
 **Açıklanabilirlik.** Grad-CAM [21], son evrişim katmanının gradyanlarından sınıfa özgü bir ısı haritası üreterek modelin karar verirken görüntünün hangi bölgelerine ağırlık verdiğini gösterir. Bu harita lezyon tespiti değildir; projede modelin dikkatini görselleştirmek için kullanılmıştır (§9).
 
 ## 4. Veri Seti *[Rümeysa]*
-- **APTOS 2019** [5]: Hindistan'daki Aravind Eye Hospital'dan toplanan ve 2019 Kaggle yarışmasıyla yayımlanan 3.662 etiketli fundus görüntüsü. Etiketler 0–4 ICDR derecesidir. Sınıf dağılımı PLAN 1.6 çıktısıdır (Kaggle, `src/inspect_dataset.py`; notebook: https://www.kaggle.com/code/rmeysaakbulut/notebookb9fd0088e2). Satır sayısı 3.662, tekrarlanan `id_code` 0, geçersiz etiket yok, eksik görüntü dosyası 0:
+- **APTOS 2019** [5]: Hindistan'daki Aravind Eye Hospital'dan toplanan ve 2019 Kaggle yarışmasıyla yayımlanan 3.662 etiketli fundus görüntüsü. Etiketler 0–4 ICDR derecesidir. Veri raporu (`src/inspect_dataset.py`) satır sayısını 3.662, sınıf dağılımını aşağıdaki gibi verir; tekrarlanan `id_code` 0, geçersiz etiket yok, eksik görüntü dosyası 0:
 
 | Sınıf | 0 | 1 | 2 | 3 | 4 | Toplam |
 |---|---|---|---|---|---|---|
 | Görüntü | 1805 | 370 | 999 | 193 | 295 | 3662 |
 | Oran | %49,3 | %10,1 | %27,3 | %5,3 | %8,1 | |
 
-- **IDRiD** [6]: 516 görüntü, yalnız dış test. Sınıf dağılımı PLAN 3.4 çıktısıdır (`src/prepare_idrid.py`; train 413 + test 103): sınıf 0: 168, sınıf 1: 25, sınıf 2: 168, sınıf 3: 93, sınıf 4: 62.
-- Lisans ve kullanım koşulları: APTOS için Kaggle yarışma kuralları (ticari olmayan kullanım, yeniden dağıtım yok) [9], IDRiD için CC BY 4.0.
+- **IDRiD** [6]: Hindistan'da Nanded'deki tek bir göz kliniğinde toplanan 516 görüntü (orijinal eğitim 413 + test 103), yalnız dış test olarak kullanılmıştır. Sınıf dağılımı: sınıf 0: 168, sınıf 1: 25, sınıf 2: 168, sınıf 3: 93, sınıf 4: 62.
+- Lisans ve kullanım koşulları: APTOS için Kaggle yarışma kuralları (ticari olmayan kullanım, yeniden dağıtım yok) [9], IDRiD için CC BY 4.0 [6].
 - **Görüntü özellikleri:** APTOS görüntüleri PNG biçimindedir ve boyutları tekdüze değildir: 17 farklı boyut vardır; en küçüğü 474×358, en büyüğü 4288×2848 pikseldir. En sık görülen boyutlar 1050×1050 (974), 2416×1736 (638), 2588×1958 (533), 3216×2136 (410) ve 2048×1536 (351) pikseldir. Bu nedenle görüntüler eğitimden önce kareye getirilip yeniden boyutlandırılır (§5.1).
 - **Kullanılmayan veri:** APTOS'un etiketsiz 1.928 görüntülük yarışma test seti kullanılmamıştır.
 - **Sınıf dengesizliği:** Sınıf 0 verinin yaklaşık %49,3'ünü, sınıf 3 ise yalnızca %5,3'ünü oluşturur. Bu yüzden accuracy tek başına yanıltıcıdır; QWK, macro F1 ve sınıf bazlı recall raporlanır (§7).
 ![Şekil 4.1 — Her sınıftan bir örnek (sınıf 0–4)](../outputs/figures/ornek_goruntuler.png)
 
-- **Şekil 4.1** — Her sınıftan bir örnek (dosya: `outputs/figures/ornek_goruntuler.png`; APTOS lisansı nedeniyle görüntü git'e girmez, yalnız yerelde bulunur ve final rapora eklenir).
+**Şekil 4.1** — APTOS'tan her sınıftan bir örnek görüntü. Lisans gereği görüntüler depoda bulunmaz; şekil yalnızca teslim edilen rapor kopyasına eklenir.
 - **Tekrar görüntü analizi** (PLAN 2.3, `src/find_duplicates.py`): 3.662 görüntüde birebir aynı (MD5) 134 çift ve pHash mesafesi 0 olan 158 çift bulundu. Bu çiftler birleştirilince **139 tekrar grubu** (toplam 287 görüntü) oluştu; bunların **37'sinde** grup içindeki etiketler birbirini tutmuyor (çelişkili etiket). Çelişkili gruplar, aynı görüntünün farklı derecelerle etiketlenebildiğini, yani etiket gürültüsünü gösterir. Bu görüntülerin nasıl elendiği §5.3'te anlatılmıştır.
 
 ## 5. Yöntem
@@ -83,7 +83,7 @@ Her iki modelde hiçbir katman dondurulmamış, ağın tamamı ince ayarlanmış
 ### 5.3 Veri bölme ve sızıntı önleme *[Rümeysa]*
 Aynı görüntünün hem eğitim hem test kümesine düşmesi, modelin ezberini başarı gibi gösterir (veri sızıntısı). Bunu önlemek için bölmeden **önce** tekrar analizi yapılmıştır (§4).
 
-**Tekrar tespiti:** Birebir aynı dosyalar MD5 içerik özetiyle, çok benzer görüntüler 64 bitlik algısal özet (pHash) ile bulunur ve birleşim-bul (union-find) yöntemiyle gruplanır. pHash için başlangıçta Hamming mesafesi ≤ 4 eşiği planlanmıştı. Ancak gerçek veride bu eşik zincirleme yanlış eşleşmelere yol açtı: tek bir grupta 248 görüntü toplandı (toplam 249 grup, 1.384 görüntü). Eşik 0'a çekildiğinde 139 grup, 287 görüntü ve 37 çelişkili grup elde edildi; bu sayılar literatürdeki beklentiyle uyumludur. Bu nedenle eşik 0 seçilmiştir (karar D-18).
+**Tekrar tespiti:** Birebir aynı dosyalar MD5 içerik özetiyle, çok benzer görüntüler 64 bitlik algısal özet (pHash) ile bulunur ve birleşim-bul (union-find) yöntemiyle gruplanır. pHash için başlangıçta Hamming mesafesi ≤ 4 eşiği planlanmıştı. Ancak gerçek veride bu eşik zincirleme yanlış eşleşmelere yol açtı: tek bir grupta 248 görüntü toplandı (toplam 249 grup, 1.384 görüntü). Eşik 0'a çekildiğinde 139 grup, 287 görüntü ve 37 çelişkili grup elde edildi; bu sayılar bağımsız bir denetimde bildirilenlerle (131 grup, 270 görüntü, 37 çelişkili grup) uyumludur [12]. Bu nedenle eşik 0 seçilmiştir (karar D-18).
 
 **Tekrar politikası** (karar D-07): Etiketleri aynı olan grupta yalnız bir temsilci (en küçük `id_code`) tutulur, diğerleri çıkarılır. Etiketleri çelişkili grubun tamamı çıkarılır, çünkü hangi etiketin doğru olduğu bilinemez. Sonuçta 185 görüntü elenmiştir: 106 tekrar, 79 çelişkili etiket.
 
@@ -95,7 +95,7 @@ Aynı görüntünün hem eğitim hem test kümesine düşmesi, modelin ezberini 
 | Doğrulama | 268 | 51 | 138 | 25 | 40 | 522 |
 | Test | 268 | 51 | 138 | 25 | 40 | 522 |
 
-Bölme `splits/aptos_splits.csv` dosyasına bir kez yazılmış ve sonra değiştirilmemiştir; dosya etiket içermez, yalnız `id_code`, küme ve not sütunlarını tutar. Tüm deneyler aynı bölmeyi kullanır.
+Bölme `splits/aptos_splits.csv` dosyasına bir kez yazılmış ve sonra değiştirilmemiştir; dosya etiket içermez, yalnız `id_code`, küme ve not sütunlarını tutar. Tüm deneyler aynı bölmeyi kullanır; yalnız 5 katlı çapraz doğrulama (E5), test kümesi dışında kalan eğitim + doğrulama birleşimini kendi parçalarına böler (§6).
 
 **Kullanım kuralı:** Model seçimi, erken durdurma ve hiperparametre kararları yalnız doğrulama kümesiyle verilmiştir. Test kümesi ve IDRiD, dondurulmuş final modelle (E4) birer kez kullanılmıştır (karar D-08); sonuçlar görüldükten sonra model veya ön işleme değiştirilmemiştir.
 
@@ -243,6 +243,7 @@ Bu projede APTOS 2019 verisi tekrar ve çelişkili etiket kontrolünden geçiril
 **Gelecek çalışmalar:**
 - **Farklı topluluklarda dış test:** Fransa'dan gelen ve uzman uzlaşısıyla etiketlenmiş Messidor-2 [7][8] üzerinde test, IDRiD'deki düşüşün farklı bir topluluktaki karşılığını gösterebilir.
 - **Sıralı çıkış:** Dereceler sıralı olduğu için regresyon çıkışı ve doğrulama kümesinde belirlenen sınıf eşikleri, komşu sınıf hatalarını azaltabilir.
+- **Başka ön işleme yöntemleri:** CLAHE (sınırlı kontrastlı uyarlamalı histogram eşitleme) gibi, Ben Graham dönüşümüne alternatif kontrast artırma yöntemleri doğrulama kümesinde karşılaştırılabilir; bu çalışmada denenmemiştir.
 - **Daha yüksek çözünürlük:** Mikroanevrizma gibi küçük lezyonlar için 384 pikselden yüksek girdi boyutları denenebilir.
 - **Daha güvenilir ölçüm:** Birden fazla seed ile eğitim, sonuçların değişkenliğinin daha iyi tahmin edilmesini sağlayabilir.
 - **Alan uyumu:** Farklı kamera ve kliniklere genellemeyi artırmak için farklı kaynaklardan veriyle eğitim değerlendirilebilir.
@@ -265,6 +266,8 @@ Bu projede APTOS 2019 verisi tekrar ve çelişkili etiket kontrolünden geçiril
 [8] Messidor-2 DR Grades (Google Brain), Kaggle: https://baselight.app/u/kaggle/dataset/google_brain_messidor2_dr_grades
 
 [9] APTOS 2019 kuralları: https://www.kaggle.com/competitions/aptos2019-blindness-detection/rules · lisans özeti: https://arxiv.org/pdf/2605.13015
+
+[12] aptos-leakage-audit (GitHub, resmî olmayan bağımsız denetim): https://github.com/Fire-Dev2/aptos-leakage-audit
 
 [14] IJSR v15i8: https://www.ijsr.net/archive/v15i8/SR26812222953.pdf
 
