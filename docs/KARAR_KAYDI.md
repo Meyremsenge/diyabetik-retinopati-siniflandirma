@@ -23,6 +23,7 @@
 | D-17 | 2026-10-18 | Final model seçim kuralı: en yüksek val QWK; fark < 0,01 ise sınıf 3+4 recall ortalaması | Kural sonuçlar görülmeden sabitlendi | Kesin |
 | D-18 | 2026-10-28 | Tekrar tespitinde pHash eşiği **0** (varsayılan 4 değil) | Gerçek APTOS'ta eşik 4 tek bir grupta 248 görüntü topladı (zincirleme yanlış eşleşme; 249 grup / 1384 görüntü). Eşik 0: 139 grup / 287 görüntü / 37 çelişkili, literatürdeki beklentiyle (~130/~270/~37) uyumlu. Hesap `candidate_pairs.csv`'den | Kesin |
 | D-19 | 2026-11-11 | Final model = E4 (efficientnet_b3, crop_ben_graham, weighted_ce), run `20261103-1104_efficientnet_b3_ben_graham` | D-17: val QWK 0,9126 (ikinci E1: 0,9030; fark 0,0096 < 0,01 → sınıf 3+4 recall ortalaması: E4 0,560 > E1 0,385). Seçimde test/IDRiD kullanılmadı. *(2026-11-12 düzeltme: ilk kayıtta ikinci model E3 ve fark ≥ 0,01 yazılmıştı; seçim değişmedi.)* | Kesin |
+| D-20 | 2026-11-25 | Regresyon + eşik optimizasyonu (E6, PLAN 6.3) **yapılmayacak** | *Could* öncelikli; model ve tahmin kodu ile CSV sözleşmesi değişikliği ve yeni GPU eğitimi ister, teslime az kaldı, final model donduruldu. Raporda gelecek çalışma (§12) | Kesin — D-11 kapandı; FG-7 yapılmadı |
 
 ## 2. hafta gereksinimlerine etkisi (haftalık rapora yazılacak)
 
