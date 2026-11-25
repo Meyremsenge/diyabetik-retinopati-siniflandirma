@@ -1,7 +1,7 @@
 """VisionDx demo arayüzü (PLAN 4.5, 5.2).
 
 Ne yapar: Yüklenen retina görüntüsü için DR derecesini, 5 sınıf olasılığını ve Grad-CAM ısı
-haritasını gösterir. Yüklenen görüntü yalnız bellekte tutulur, diske yazılmaz.
+haritasını gösterir. Sabit tanıtım bölümleri app/landing.py'dedir. Yüklenen görüntü yalnız bellekte tutulur, diske yazılmaz.
 Görünüm app/style.css'ten, tema .streamlit/config.toml'dan gelir; internet bağlantısı gerekmez.
 
 Nasıl çalıştırılır (proje kökünden):
@@ -20,9 +20,10 @@ from PIL import Image, UnidentifiedImageError
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from app.landing import grade_guide_html, hero_html, results_html, steps_html
 from src.gradcam import explain_image
 from src.models import build_model
-from src.preprocessing import prepare_image
+from src.preprocessing import ben_graham, prepare_image
 from src.utils import get_device
 
 CLASS_NAMES = {0: "DR yok", 1: "Hafif NPDR", 2: "Orta NPDR", 3: "Ağır NPDR", 4: "Proliferatif DR"}
@@ -31,6 +32,7 @@ CLASS_COLORS = {0: "#3F8F6B", 1: "#8DA338", 2: "#D39B2A", 3: "#D0652E", 4: "#B23
 MODEL_NAMES = {"resnet18": "ResNet18", "resnet50": "ResNet50", "efficientnet_b3": "EfficientNet-B3"}
 DISCLAIMER = "Akademik prototiptir; tıbbi teşhis yerine geçmez."
 MIN_SIDE = 224
+PREVIEW_SIZE = 150  # önizleme (px); app/style.css'teki .vd-preview-empty yüksekliğiyle aynı olmalı
 STYLE_FILE = Path(__file__).with_name("style.css")
 
 LOGO_SVG = """<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
@@ -61,7 +63,7 @@ def get_checkpoint_path(argv: list[str]) -> Path | None:
     return Path(from_env) if from_env else None
 
 
-@st.cache_resource
+@st.cache_resource(show_spinner="Model yükleniyor (ilk açılışta ~30 sn sürebilir)…")
 def load_checkpoint(path: str) -> tuple[torch.nn.Module, dict, torch.device]:
     """Modeli bir kez yükler. pretrained=False: demo internetsiz çalışmalı."""
     device = get_device()
@@ -95,15 +97,6 @@ def model_caption(config: dict, device: torch.device) -> str:
 def html(markup: str) -> None:
     """Biçimli HTML parçası basar (yalnız sabit metin ve sayı; kullanıcı girdisi yok)."""
     st.markdown(markup, unsafe_allow_html=True)
-
-
-def header_html() -> str:
-    return (
-        '<div class="vd-top"><div class="vd-brand">' + LOGO_SVG
-        + '<div><div class="vd-wordmark">VisionDx</div>'
-        + '<div class="vd-tagline">Retina fotoğrafından diyabetik retinopati derecelendirme</div>'
-        + "</div></div></div>"
-    )
 
 
 def turkish_number(value: float, digits: int) -> str:
@@ -150,8 +143,8 @@ def main() -> None:
     if STYLE_FILE.exists():
         html(f"<style>{STYLE_FILE.read_text(encoding='utf-8')}</style>")
 
-    html(header_html())
-    st.warning(DISCLAIMER)
+    html(hero_html(LOGO_SVG))
+    st.warning(DISCLAIMER, icon=":material/info:")
 
     checkpoint_path = get_checkpoint_path(sys.argv[1:])
     if checkpoint_path is None or not checkpoint_path.exists():
@@ -159,65 +152,97 @@ def main() -> None:
         st.stop()
 
     model, config, device = load_checkpoint(str(checkpoint_path))
-    st.caption(model_caption(config, device))
+    prediction, elapsed = show_analysis(model, config, device)
 
+    # Sayılar yalnız final modele aittir; başka bir checkpoint ile gösterilmez
+    if (config["model"], config["preprocessing"]) == ("efficientnet_b3", "crop_ben_graham"):
+        html(results_html())
+    html(grade_guide_html(CLASS_COLORS, prediction))
+    html(steps_html())
+
+    model_name = MODEL_NAMES.get(config["model"], config["model"])
+    duration = f"Son tahmin {turkish_number(elapsed, 1)} sn · " if elapsed is not None else ""
+    html(
+        f'<div class="vd-footer"><span>VisionDx · {model_name} · akademik prototip</span>'
+        f"<span>{duration}{model_caption(config, device)}</span></div>"
+    )
+
+
+def show_analysis(
+    model: torch.nn.Module, config: dict, device: torch.device
+) -> tuple[int | None, float | None]:
+    """Yükleme, sonuç ve ısı haritası kartlarını çizer; tahmin yapıldıysa (derece, süre sn) döndürür."""
     left, right = st.columns([5, 7], gap="large")
 
     with left:
         with st.container(border=True, key="card-upload"):
             html('<div class="vd-card-title"><span class="vd-step">1</span>Görüntü yükle</div>')
             uploaded = st.file_uploader("Fundus görüntüsü yükle", type=["png", "jpg", "jpeg"])
+            image = None
+            error_message = None
+            if uploaded is not None:
+                try:
+                    image = validate_image(uploaded.getvalue())
+                except ValueError as error:
+                    error_message = str(error)
+            if image is not None:
+                st.image(prepare_image(image, 512), width=PREVIEW_SIZE)  # küçük önizleme, yalnız bellekte
+            else:
+                html('<div class="vd-preview-empty">Önizleme burada görünecek</div>')
             html(
-                f'<div class="vd-note">{LOCK_SVG}<span>En az {MIN_SIDE} piksel. '
-                "Görüntü yalnız bellekte işlenir, diske kaydedilmez.</span></div>"
+                f'<div class="vd-note">{LOCK_SVG}<span>Yalnız bellekte işlenir, diske kaydedilmez.</span></div>'
             )
-
-    image = None
-    error_message = None
-    if uploaded is not None:
-        try:
-            image = validate_image(uploaded.getvalue())
-        except ValueError as error:
-            error_message = str(error)
 
     with right:
         with st.container(border=True, key="card-result"):
             html('<div class="vd-card-title"><span class="vd-step">2</span>Sonuç</div>')
             if error_message is not None:
                 st.error(error_message)
-                return
+                return None, None
             if image is None:
                 html(
                     f'<div class="vd-empty">{EMPTY_SVG}<h3>Sonuç burada görünecek</h3>'
                     "<p>Soldan bir göz dibi fotoğrafı yükleyin. Derece, olasılıklar ve ısı haritası birkaç saniyede hazırlanır.</p></div>"
                 )
-                return
+                return None, None
 
-            start = time.perf_counter()
-            with st.spinner("Görüntü inceleniyor…"):
-                prediction, probabilities, heatmap = explain_image(model, config, image, device)
-            elapsed = time.perf_counter() - start
+            # Kaydırıcı oynatılınca sayfa yeniden çalışır; aynı dosya için tahmin tekrar hesaplanmaz.
+            # Sonuç yalnız bellekte (session_state) tutulur, diske yazılmaz.
+            if st.session_state.get("analysis_id") != uploaded.file_id:
+                start = time.perf_counter()
+                with st.spinner("Görüntü inceleniyor…"):
+                    result = explain_image(model, config, image, device)
+                st.session_state["analysis"] = (result, time.perf_counter() - start)
+                st.session_state["analysis_id"] = uploaded.file_id
+            (prediction, probabilities, heatmap), elapsed = st.session_state["analysis"]
             html(result_html(prediction, probabilities))
 
+    cropped = prepare_image(image, 512)
+    shows_ben_graham = config.get("preprocessing") == "crop_ben_graham"
     with st.container(border=True, key="card-heatmap"):
         html('<div class="vd-card-title"><span class="vd-step">3</span>Modelin dikkat ettiği bölgeler</div>')
-        original_column, heatmap_column = st.columns(2, gap="medium")
-        with original_column:
+        # 0 = yalnız kırpılmış görüntü, 100 = tam ısı haritası
+        opacity = st.slider("Isı haritası yoğunluğu (%)", 0, 100, 100, step=5)
+        blended = Image.blend(
+            cropped.resize((heatmap.shape[1], heatmap.shape[0])), Image.fromarray(heatmap), opacity / 100
+        )
+        columns = st.columns(3 if shows_ben_graham else 2, gap="medium")
+        with columns[0]:
             html('<div class="vd-img-label">Kırpılmış görüntü</div>')
-            st.image(prepare_image(image, 512), width="stretch")
-        with heatmap_column:
+            st.image(cropped, width="stretch")
+        with columns[1]:
             html('<div class="vd-img-label">Grad-CAM ısı haritası</div>')
-            st.image(heatmap, width="stretch")
+            st.image(blended, width="stretch")
+        if shows_ben_graham:
+            with columns[2]:
+                html('<div class="vd-img-label">Modelin gördüğü görüntü (Ben Graham)</div>')
+                st.image(ben_graham(cropped), width="stretch")
         html(
             '<div class="vd-legend"><span>düşük</span><div class="vd-legend-bar"></div><span>yüksek dikkat</span></div>'
         )
         st.caption("Isı haritası modelin dikkat ettiği bölgeleri gösterir; lezyon tespiti değildir.")
 
-    model_name = MODEL_NAMES.get(config["model"], config["model"])
-    html(
-        f'<div class="vd-footer"><span>VisionDx · {model_name} · akademik prototip</span>'
-        f"<span>Süre: {turkish_number(elapsed, 1)} sn · {device.type}</span></div>"
-    )
+    return prediction, elapsed
 
 
 if __name__ == "__main__":
