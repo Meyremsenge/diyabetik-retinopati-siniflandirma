@@ -50,7 +50,7 @@ def test_train_has_augmentation_eval_does_not():
     train_names = transform_names("train")
     assert "RandomHorizontalFlip" in train_names
     assert "ColorJitter" in train_names
-    for split in ("val", "test", "idrid", "demo"):
+    for split in ("val", "test", "idrid", "messidor", "demo"):
         names = transform_names(split)
         assert "RandomHorizontalFlip" not in names
         assert "ColorJitter" not in names

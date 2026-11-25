@@ -11,6 +11,7 @@ numpy==2.5.4             # dizi işlemleri (Ben Graham, kırpma)
 pandas==3.0.6            # CSV okuma/yazma (etiketler, bölme, tahminler)
 pillow==12.3.0           # görüntü okuma, kırpma, yeniden boyutlandırma, Gauss bulanıklaştırma (streamlit <13 istiyor)
 imagehash==4.3.2         # perceptual hash ile tekrar görüntü tespiti (FG-2)
+scikit-image==0.26.0     # CLAHE (E7, PLAN 6.4, D-21): Pillow/NumPy'de yok, OpenCV yasak
 
 # --- Değerlendirme ve görselleştirme ---
 scikit-learn==1.9.1      # QWK, F1, recall, confusion matrix, tabakalı bölme

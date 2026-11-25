@@ -132,7 +132,8 @@ Her koşu `outputs/runs/<YYYYMMDD-HHMM>_<model>_<etiket>/` altına yazar:
 |---|---|---|
 | `splits/aptos_splits.csv` | `id_code, split, note` | R → B |
 | `data/processed/idrid_512/idrid_labels.csv` | `image_id, diagnosis` | R → B, M |
-| `outputs/runs/<run>/{val,test,idrid}_predictions.csv` | `image_id, y_true, y_pred, prob_0, prob_1, prob_2, prob_3, prob_4` | B → M |
+| `data/processed/messidor_512/messidor_labels.csv` *(Could, PLAN 6.2, D-22; görüntü gelirse)* | `image_id, diagnosis` | R → B, M |
+| `outputs/runs/<run>/{val,test,idrid,messidor}_predictions.csv` | `image_id, y_true, y_pred, prob_0, prob_1, prob_2, prob_3, prob_4` | B → M |
 | `outputs/runs/<run>/metrics_<split>.json` | `accuracy, macro_f1, qwk, recall_per_class[5], confusion_matrix[5][5], n` | M → rapor |
 
 Fonksiyon imzaları: `set_seed(seed:int)`, `get_device() -> torch.device`, `build_model(name:str, num_classes:int=5, pretrained:bool=True)`, `RetinaDataset(df, image_dir, transform)` (`__getitem__ → (tensor, label, image_id)`), `get_transforms(split:str, image_size:int)`, `compute_metrics(y_true, y_pred) -> dict`.

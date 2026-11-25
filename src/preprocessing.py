@@ -13,6 +13,7 @@ Test: python -m pytest tests/test_preprocessing.py -q
 
 import numpy as np
 from PIL import Image, ImageFilter
+from skimage import exposure
 
 BLACK_THRESHOLD = 7
 
@@ -72,3 +73,15 @@ def ben_graham(
     result[distance > mask_ratio * radius] = 128
 
     return Image.fromarray(result.astype(np.uint8), mode="RGB")
+
+
+def clahe(img: Image.Image, clip_limit: float = 0.01) -> Image.Image:
+    """CLAHE: görüntüyü küçük bölgelere ayırıp her bölgede kontrastı sınırlı biçimde artırır (E7).
+
+    Girdi `prepare_image` çıktısı (kare RGB) olmalı. scikit-image `equalize_adapthist` her renk
+    kanalını 0-1 aralığında işler ve 0-1 döndürür; sonuç 0-255 uint8'e çevrilir (D-21).
+    """
+    rgb_array = np.asarray(img.convert("RGB"), dtype=np.float32) / 255.0
+    equalized = exposure.equalize_adapthist(rgb_array, clip_limit=clip_limit)
+    return Image.fromarray((equalized * 255).round().astype(np.uint8), mode="RGB")
+

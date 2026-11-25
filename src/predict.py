@@ -1,13 +1,14 @@
 """Eğitilmiş modelle tahmin dosyası üretir (PLAN 2.8).
 
-Ne yapar: Bir koşu klasöründeki `best.pt` ile val, test veya IDRiD görüntülerini tahmin edip
-`<run>/<split>_predictions.csv` yazar. Test ve IDRiD "sınav kağıdı" gibidir: yalnız `--final`
+Ne yapar: Bir koşu klasöründeki `best.pt` ile val, test, IDRiD veya Messidor-2 görüntülerini tahmin edip
+`<run>/<split>_predictions.csv` yazar. Test, IDRiD ve Messidor-2 "sınav kağıdı" gibidir: yalnız `--final`
 bayrağıyla ve bir kez çalışır (D-08); dosya zaten varsa ikinci kez çalışmayı reddeder.
 
 Nasıl çalıştırılır (proje kökünden):
     python -m src.predict --run outputs/runs/<run_id> --split val
     python -m src.predict --run outputs/runs/<run_id> --split test --final
     python -m src.predict --run outputs/runs/<run_id> --split idrid --final --data-root data/processed/idrid_512
+    python -m src.predict --run outputs/final/<run_id> --split messidor --final --data-root data/processed/messidor_512
 """
 import argparse
 from pathlib import Path
@@ -21,7 +22,8 @@ from src.models import build_model
 from src.train import make_loader, predict_loader
 from src.utils import get_device
 
-FINAL_SPLITS = ("test", "idrid")
+FINAL_SPLITS = ("test", "idrid", "messidor")
+EXTERNAL_SPLITS = ("idrid", "messidor")  # kendi etiket CSV'si olan dış kümeler
 
 
 def load_run(run_dir: Path, device: torch.device) -> tuple[torch.nn.Module, dict]:
@@ -34,9 +36,9 @@ def load_run(run_dir: Path, device: torch.device) -> tuple[torch.nn.Module, dict
 
 
 def load_frame(split: str, data_root: Path, splits_csv: Path) -> pd.DataFrame:
-    """image_id ve diagnosis sütunlu tabloyu verir (val/test bölme dosyasından, idrid kendi CSV'sinden)."""
-    if split == "idrid":
-        return pd.read_csv(data_root / "idrid_labels.csv", dtype={"image_id": str})
+    """image_id ve diagnosis sütunlu tabloyu verir (val/test bölme dosyasından, idrid ve messidor kendi CSV'sinden)."""
+    if split in EXTERNAL_SPLITS:
+        return pd.read_csv(data_root / f"{split}_labels.csv", dtype={"image_id": str})
     return load_split_frame(data_root, splits_csv, split)
 
 
@@ -45,25 +47,25 @@ def main(argv: list[str] | None = None) -> None:
         description="Eğitilmiş modelle tahmin dosyası üretir: <run>/<split>_predictions.csv"
     )
     parser.add_argument("--run", type=Path, required=True, help="outputs/runs/<run_id>")
-    parser.add_argument("--split", choices=["val", "test", "idrid"], required=True)
+    parser.add_argument("--split", choices=["val", "test", "idrid", "messidor"], required=True)
     parser.add_argument("--data-root", type=Path,
                         help="val/test için varsayılan: run config'indeki data_root; "
-                             "idrid için zorunlu (data/processed/idrid_512)")
+                             "idrid ve messidor için zorunlu (data/processed/idrid_512, messidor_512)")
     parser.add_argument("--final", action="store_true",
-                        help="test ve idrid için zorunlu: dondurulmuş final modelle tek seferlik değerlendirme")
+                        help="test, idrid ve messidor için zorunlu: dondurulmuş final modelle tek seferlik değerlendirme")
     args = parser.parse_args(argv)
 
     # Bu kontroller model yüklenmeden önce yapılır; test/IDRiD yanlışlıkla açılmasın
     output_path = args.run / f"{args.split}_predictions.csv"
     if args.split in FINAL_SPLITS:
         if not args.final:
-            parser.error("test/idrid yalnız --final ile çalışır (dondurulmuş final model, tek seferlik).")
+            parser.error("test/idrid/messidor yalnız --final ile çalışır (dondurulmuş final model, tek seferlik).")
         if output_path.exists():
             raise SystemExit(
                 f"{args.split} tahmini zaten yapılmış; bu küme bir kez kullanılır (D-08)."
             )
-    if args.split == "idrid" and args.data_root is None:
-        parser.error("idrid için --data-root zorunlu (ör. data/processed/idrid_512).")
+    if args.split in EXTERNAL_SPLITS and args.data_root is None:
+        parser.error(f"{args.split} için --data-root zorunlu (ör. data/processed/{args.split}_512).")
 
     device = get_device()
     model, config = load_run(args.run, device)

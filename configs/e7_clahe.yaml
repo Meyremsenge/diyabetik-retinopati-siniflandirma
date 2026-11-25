@@ -1,0 +1,20 @@
+# E7 — CLAHE ön işleme (PLAN 6.4, D-21; ek deney, final model D-19 değişmez). E3 ile aynı ayarlar, yalnız ön işleme ve data_root farklı; E4 ile (Ben Graham) karşılaştırılır.
+experiment: E7
+run_label: clahe
+model: efficientnet_b3
+pretrained: true
+preprocessing: crop_clahe      # crop | crop_ben_graham | crop_clahe (E7). Eğitim kodu kullanmaz; demo hangi ön işlemeyi yapacağını buradan okur
+num_classes: 5
+image_size: 384
+batch_size: 16
+epochs: 15
+early_stopping_patience: 4
+lr: 1.0e-4
+weight_decay: 1.0e-4
+loss: weighted_ce
+mixed_precision: true
+num_workers: 2
+seed: 42
+data_root: data/processed/aptos_512_clahe
+splits_csv: splits/aptos_splits.csv
+output_dir: outputs/runs

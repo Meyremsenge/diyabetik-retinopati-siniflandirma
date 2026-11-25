@@ -27,7 +27,7 @@ from src.metrics import CLASS_LABELS, compute_metrics, pick_best, severe_recall
 
 PREDICTION_COLUMNS = ["image_id", "y_true", "y_pred",
                       "prob_0", "prob_1", "prob_2", "prob_3", "prob_4"]
-VALID_SPLITS = ("val", "test", "idrid")
+VALID_SPLITS = ("val", "test", "idrid", "messidor")
 FILENAME_SUFFIX = "_predictions.csv"
 
 

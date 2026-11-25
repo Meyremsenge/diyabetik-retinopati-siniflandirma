@@ -6,7 +6,7 @@
 import numpy as np
 from PIL import Image
 
-from src.preprocessing import ben_graham, crop_black_borders, prepare_image, resize_square
+from src.preprocessing import ben_graham, clahe, crop_black_borders, prepare_image, resize_square
 
 
 def test_crop_finds_bright_region():
@@ -87,3 +87,24 @@ def test_ben_graham_deterministic():
     rng = np.random.default_rng(1)
     noisy = Image.fromarray(rng.integers(0, 256, size=(64, 64, 3), dtype=np.uint8))
     assert np.array_equal(np.array(ben_graham(noisy)), np.array(ben_graham(noisy)))
+
+
+def test_clahe_keeps_size_and_mode():
+    img = Image.new("RGB", (64, 64), (90, 60, 30))
+
+    result = clahe(img)
+
+    assert result.size == (64, 64)
+    assert result.mode == "RGB"
+
+
+def test_clahe_increases_contrast():
+    # Düşük kontrastlı gradyan: değerler yalnız 100-140 arasında
+    row = np.linspace(100, 140, 64).astype(np.uint8)
+    pixels = np.stack([np.tile(row, (64, 1))] * 3, axis=-1)
+    img = Image.fromarray(pixels, mode="RGB")
+
+    result = clahe(img)
+
+    assert np.asarray(result, dtype=np.float32).std() > np.asarray(img, dtype=np.float32).std()
+
