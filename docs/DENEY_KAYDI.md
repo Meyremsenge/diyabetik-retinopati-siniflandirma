@@ -49,7 +49,9 @@ Zip'i açıp koşu klasörlerini `outputs/runs/` altına koyun (git'e girmez). `
 
 | Fold | 1 | 2 | 3 | 4 | 5 | Ort. ± std |
 |---|---|---|---|---|---|---|
-| QWK | | | | | | |
+| QWK | 0.921 | 0.896 | 0.886 | 0.888 | 0.919 | 0.902 ± 0.017 |
+
+> E5: final config (E4, `configs/e4_ben_graham.yaml`) ile, `train+val` birleşiminde `--fold 0..4` (Fold 1 = `--fold 0`). Kaggle T4 x2, toplam 54 dk 47 sn. Değerler her fold'un `metrics_val.json` dosyasındandır; std örneklem std. Test kümesi kullanılmadı, final model değişmedi.
 
 ## Tekrarlanabilirlik (PLAN 5.4)
 
