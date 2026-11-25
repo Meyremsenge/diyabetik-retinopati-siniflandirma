@@ -1,4 +1,4 @@
-"""app/streamlit_app.py testleri (PLAN 4.5). Çalıştır: python -m pytest tests/test_app.py -q"""
+"""app/streamlit_app.py testleri (PLAN 4.5, 5.2). Çalıştır: python -m pytest tests/test_app.py -q"""
 import io
 import sys
 from pathlib import Path
@@ -10,7 +10,7 @@ from streamlit.testing.v1 import AppTest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from app.streamlit_app import DISCLAIMER, get_checkpoint_path, validate_image
+from app.streamlit_app import DISCLAIMER, get_checkpoint_path, model_caption, validate_image
 from src.models import build_model
 
 APP_FILE = str(Path(__file__).resolve().parents[1] / "app" / "streamlit_app.py")
@@ -64,3 +64,8 @@ def test_app_with_tiny_checkpoint(tmp_path, monkeypatch):
     assert not at.error
     assert at.warning[0].value == DISCLAIMER
     assert len(at.get("file_uploader")) == 1
+
+
+def test_model_caption():
+    config = {"model": "resnet50", "preprocessing": "crop"}
+    assert model_caption(config, torch.device("cpu")) == "Model: resnet50 · Ön işleme: crop · Cihaz: cpu"

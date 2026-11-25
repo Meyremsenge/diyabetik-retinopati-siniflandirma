@@ -9,7 +9,11 @@
 > - Her bölümün sorumlusu köşeli parantezde belirtilmiştir.
 
 ## Özet *[Ekip — en son yazılır]*
-_Deneyler tamamlanınca yazılacak._
+*(Taslak — sayılar §8'den; Meyrem DENEY_KAYDI ve veri raporuyla doğruladı.)*
+
+Diyabetik retinopati (DR), tedavi edilmediğinde görme kaybına yol açabilen bir diyabet komplikasyonudur. Bu çalışmada retina fundus görüntülerini beş DR derecesinden (0–4) birine atayan bir derin öğrenme prototipi geliştirilmiştir. APTOS 2019 verisindeki 3.662 görüntüde algısal özetle 139 tekrar grubu bulunmuş, tekrarlar ve çelişkili etiketli gruplar çıkarıldıktan sonra kalan 3.477 görüntü tabakalı olarak %70/15/15 eğitim, doğrulama ve test kümelerine ayrılmıştır. ImageNet ağırlıklı ResNet50 ve EfficientNet-B3 modelleri transfer öğrenmeyle eğitilmiş; ağırlıklı çapraz entropi ve Ben Graham ön işlemesinin etkisi ayrı deneylerle incelenmiştir. Doğrulama kümesine göre önceden belirlenen kuralla seçilen EfficientNet-B3 + ağırlıklı çapraz entropi + Ben Graham modeli, APTOS test kümesinde 0,923 QWK, 0,702 macro F1 ve 0,835 doğruluk elde etmiştir. Aynı model, farklı bir klinikten toplanan IDRiD verisinde 0,703 QWK'ye düşmüş; bu, tek merkezli veriyle eğitilen modelin genelleme sınırını göstermektedir. Modelin kararları Grad-CAM ile görselleştirilmiş ve GPU'suz bir bilgisayarda çalışan bir Streamlit arayüzüyle sunulmuştur. Sistem akademik bir prototiptir; tıbbi teşhis yerine geçmez.
+
+**Anahtar kelimeler:** diyabetik retinopati, fundus görüntüsü, transfer öğrenme, EfficientNet, QWK, Grad-CAM
 
 ## 1. Giriş ve Problem Tanımı *[Ekip]*
 Diyabetik retinopati (DR), diyabetin retina dokusunda yol açtığı değişikliklerle ortaya çıkan ve ilerleyen aşamalarda görme kaybına neden olabilen bir göz hastalığıdır. Şiddeti, Uluslararası Klinik DR Ölçeği'ne göre bulgusuz durumdan proliferatif DR'ye kadar beş seviyede değerlendirilir [1]. Fundus görüntülerinin uzmanlarca incelenmesi zaman alır. Derin öğrenme tabanlı yöntemlerin bu görüntülerden DR'yi tespit etmede etkili olabildiği gösterilmiş [2], farklı popülasyonlarda doğrulamanın önemi de vurgulanmıştır [3].
@@ -26,7 +30,17 @@ Bu projede, retinal fundus görüntülerinin 0–4 arasındaki beş DR derecesin
 **Kapsam dışı:** klinik kullanım, ensemble, çoklu mimari taraması, hasta düzeyinde analiz.
 
 ## 3. İlgili Çalışmalar *[Ekip]*
-_Gulshan [2], Ting [3], Krause [4], ResNet [16], EfficientNet [17], Ben Graham [19], Grad-CAM [21]. Her biri için 2–3 cümle._
+*(Taslak — içerdiği sayılar Meyrem tarafından DENEY_KAYDI ile doğrulandı.)*
+
+**Derin öğrenmeyle DR tespiti.** Gulshan ve ark. [2], fundus görüntülerinden DR tespitinde derin öğrenme tabanlı bir algoritmanın etkili olabildiğini gösteren öncü çalışmalardandır. Ting ve ark. [3], benzer bir sistemi farklı etnik kökenden hastaları içeren çok merkezli veride doğrulamış ve bir modelin eğitildiği topluluk dışında da sınanması gerektiğini vurgulamıştır. Bu, projemizde final modelin hiç görmediği IDRiD verisinde ayrıca test edilmesinin gerekçesidir.
+
+**Etiket güvenilirliği.** Krause ve ark. [4], uzmanlar arasındaki derecelendirme farklılığının yüksek olduğunu ve birden fazla uzmanın uzlaşısıyla elde edilen etiketlerin model değerlendirmesini belirgin biçimde değiştirdiğini göstermiştir. APTOS'ta aynı görüntünün farklı derecelerle etiketlendiği çelişkili tekrar grupları (§4) bu bulguyla uyumludur.
+
+**Mimariler.** ResNet [16], artık (residual) bağlantılarla çok derin ağların eğitilebilmesini sağlamış ve görüntü sınıflandırmada yaygın bir baseline olmuştur. EfficientNet [17], ağın derinliğini, genişliğini ve girdi çözünürlüğünü birlikte ölçekleyerek benzer doğruluğa daha az parametreyle ulaşır. APTOS üzerinde tek bir ResNet50 için bildirilen QWK değerleri, kullanılan bölme ve ön işlemeye göre yaklaşık 0,86–0,92 arasındadır [14][15]; bu çalışmalar farklı bölmeler kullandığından sonuçlarımızla doğrudan karşılaştırılamaz.
+
+**Ön işleme.** Ben Graham [19], 2015 Kaggle DR yarışmasında görüntüden Gauss bulanıklığıyla tahmin edilen arka planı çıkararak aydınlatma farklarını azaltan bir ön işleme kullanmış ve yarışmayı kazanmıştır. Projede bu yöntem E4 deneyinde sınanmıştır.
+
+**Açıklanabilirlik.** Grad-CAM [21], son evrişim katmanının gradyanlarından sınıfa özgü bir ısı haritası üreterek modelin karar verirken görüntünün hangi bölgelerine ağırlık verdiğini gösterir. Bu harita lezyon tespiti değildir; projede modelin dikkatini görselleştirmek için kullanılmıştır (§9).
 
 ## 4. Veri Seti *[Rümeysa]*
 - **APTOS 2019** [5]: Hindistan'daki Aravind Eye Hospital'dan toplanan ve 2019 Kaggle yarışmasıyla yayımlanan 3.662 etiketli fundus görüntüsü. Etiketler 0–4 ICDR derecesidir. Sınıf dağılımı PLAN 1.6 çıktısıdır (Kaggle, `src/inspect_dataset.py`; notebook: https://www.kaggle.com/code/rmeysaakbulut/notebookb9fd0088e2). Satır sayısı 3.662, tekrarlanan `id_code` 0, geçersiz etiket yok, eksik görüntü dosyası 0:
@@ -44,18 +58,76 @@ _Gulshan [2], Ting [3], Krause [4], ResNet [16], EfficientNet [17], Ben Graham [
 ![Şekil 4.1 — Her sınıftan bir örnek (sınıf 0–4)](../outputs/figures/ornek_goruntuler.png)
 
 - **Şekil 4.1** — Her sınıftan bir örnek (dosya: `outputs/figures/ornek_goruntuler.png`; APTOS lisansı nedeniyle görüntü git'e girmez, yalnız yerelde bulunur ve final rapora eklenir).
-- **Tekrar görüntü analizi:** _PLAN 2.3 çıktısı: grup sayısı, çıkarılan görüntü, çelişkili grup._
+- **Tekrar görüntü analizi** (PLAN 2.3, `src/find_duplicates.py`): 3.662 görüntüde birebir aynı (MD5) 134 çift ve pHash mesafesi 0 olan 158 çift bulundu. Bu çiftler birleştirilince **139 tekrar grubu** (toplam 287 görüntü) oluştu; bunların **37'sinde** grup içindeki etiketler birbirini tutmuyor (çelişkili etiket). Çelişkili gruplar, aynı görüntünün farklı derecelerle etiketlenebildiğini, yani etiket gürültüsünü gösterir. Bu görüntülerin nasıl elendiği §5.3'te anlatılmıştır.
 
 ## 5. Yöntem
 ### 5.1 Ön işleme *[Rümeysa]*
-Siyah kenar kırpma, 512×512 önbellek, eğitimde 384 px. Augmentation (çevirme, ±30° döndürme, parlaklık/kontrast) yalnız eğitim verisine uygulanır. Ben Graham ön işlemesi ayrı bir deney olarak (E4) değerlendirilir.
+Ön işleme iki aşamada yapılır.
+
+**Tek seferlik önbellek** (`src/preprocess_images.py`): Her görüntü RGB'ye çevrilir, gri tonda eşik değeri 7'nin altında kalan siyah kenarlar kırpılır, kısa kenar siyahla doldurularak en-boy oranı korunur ve görüntü 512×512 piksele küçültülüp JPEG (kalite 95) olarak kaydedilir. Böylece §4'te görülen 17 farklı boyut tek bir boyuta iner ve eğitim sırasında büyük PNG dosyalarının tekrar tekrar okunması önlenir.
+
+**Ben Graham dönüşümü** (E4 ve final model): Görüntüden Gauss bulanıklığıyla elde edilen arka plan çıkarılır (`4·görüntü − 4·bulanık + 128`, σ = yarıçap/30) ve retina dışında kalan bölge gri bir dairesel maskeyle örtülür [19]. Amaç, aydınlatma farklarını azaltıp mikroanevrizma ve kanama gibi küçük ayrıntıları belirginleştirmektir. Bu dönüşüm JPEG kaydından **önce** uygulanır ve ayrı bir önbellek (`aptos_512_bg`) olarak saklanır. Dönüşüm OpenCV kullanılmadan Pillow ve NumPy ile yazılmıştır.
+
+**Eğitim sırasında** (`src/data.py`): Görüntüler 384×384'e boyutlandırılır ve ImageNet ortalama/standart sapmasıyla normalize edilir. Yalnız eğitim kümesine veri artırma uygulanır: yatay ve dikey çevirme, ±30° döndürme, %20 parlaklık ve kontrast değişimi. Doğrulama, test, IDRiD ve demo aynı deterministik zinciri kullanır (veri artırma yok). IDRiD görüntüleri de aynı kırpma, 512 önbellek ve Ben Graham adımlarından geçirilmiştir (`src/prepare_idrid.py`).
 ### 5.2 Model *[Büşra]*
-ImageNet ağırlıklı ResNet50 [16] ve EfficientNet-B3 [17]. Son katman 5 sınıfa uyarlanır ve tüm ağ ince ayarlanır.
+Sıfırdan eğitim için 2.433 eğitim görüntüsü azdır. Bu yüzden ImageNet üzerinde önceden eğitilmiş iki evrişimli ağ, transfer öğrenmeyle kullanılmıştır (`src/models.py`, torchvision):
+
+- **ResNet50** [16] (baseline, torchvision `IMAGENET1K_V2` ağırlıkları): Artık (residual) bağlantılarla derin ağların eğitimini kolaylaştıran, yaygın kullanılan bir mimari. Son tam bağlı katman (`fc`) 5 çıkışlı yeni bir katmanla değiştirilmiştir.
+- **EfficientNet-B3** [17] (karşılaştırma, `IMAGENET1K_V1` ağırlıkları): Derinlik, genişlik ve çözünürlüğü birlikte ölçekleyen, ResNet50'den daha az parametreli bir mimari. Sınıflandırıcının son doğrusal katmanı (`classifier[1]`) 5 çıkışlı yeni bir katmanla değiştirilmiştir.
+
+Her iki modelde hiçbir katman dondurulmamış, ağın tamamı ince ayarlanmıştır (fine-tuning). Model çıkışı 5 sınıf için olasılıktır; tahmin en yüksek olasılıklı sınıftır (ek eşik ayarı yapılmamıştır). ResNet18 yalnız kodun çalıştığını göstermek için duman testinde kullanılmış, sonuçları raporlanmamıştır.
+
+**Kayıp fonksiyonu:** E1 ve E2'de çapraz entropi (CE), E3 ve E4'te sınıf dengesizliğini telafi etmek için **ağırlıklı çapraz entropi** kullanılmıştır. Ağırlıklar eğitim kümesinden `w_c = N / (5 · n_c)` ile hesaplanır (N: eğitim görüntüsü sayısı, n_c: c sınıfındaki görüntü sayısı). Böylece az görülen sınıflardaki hata daha çok cezalandırılır. Eğitim kümesi için hesaplanan ağırlıklar: sınıf 0: 0,389 · 1: 2,062 · 2: 0,754 · 3: 4,124 · 4: 2,645.
+
+**Final model:** Doğrulama sonuçlarına göre önceden belirlenmiş kural (§7.5, karar D-17) ile E4 (EfficientNet-B3 + ağırlıklı CE + Ben Graham) seçilmiş ve dondurulmuştur (karar D-19).
 ### 5.3 Veri bölme ve sızıntı önleme *[Rümeysa]*
-Tekrar politikası (TEKNIK_TASARIM §3), ardından tabakalı 70/15/15 bölme. Test kümesi yalnız final modelle bir kez kullanılır.
+Aynı görüntünün hem eğitim hem test kümesine düşmesi, modelin ezberini başarı gibi gösterir (veri sızıntısı). Bunu önlemek için bölmeden **önce** tekrar analizi yapılmıştır (§4).
+
+**Tekrar tespiti:** Birebir aynı dosyalar MD5 içerik özetiyle, çok benzer görüntüler 64 bitlik algısal özet (pHash) ile bulunur ve birleşim-bul (union-find) yöntemiyle gruplanır. pHash için başlangıçta Hamming mesafesi ≤ 4 eşiği planlanmıştı. Ancak gerçek veride bu eşik zincirleme yanlış eşleşmelere yol açtı: tek bir grupta 248 görüntü toplandı (toplam 249 grup, 1.384 görüntü). Eşik 0'a çekildiğinde 139 grup, 287 görüntü ve 37 çelişkili grup elde edildi; bu sayılar literatürdeki beklentiyle uyumludur. Bu nedenle eşik 0 seçilmiştir (karar D-18).
+
+**Tekrar politikası** (karar D-07): Etiketleri aynı olan grupta yalnız bir temsilci (en küçük `id_code`) tutulur, diğerleri çıkarılır. Etiketleri çelişkili grubun tamamı çıkarılır, çünkü hangi etiketin doğru olduğu bilinemez. Sonuçta 185 görüntü elenmiştir: 106 tekrar, 79 çelişkili etiket.
+
+**Bölme:** Kalan 3.477 görüntü, sınıf oranları korunarak (tabakalı) %70 eğitim, %15 doğrulama ve %15 test olarak bölünmüştür (seed 42):
+
+| Küme | Sınıf 0 | 1 | 2 | 3 | 4 | Toplam |
+|---|---|---|---|---|---|---|
+| Eğitim | 1250 | 236 | 645 | 118 | 184 | 2433 |
+| Doğrulama | 268 | 51 | 138 | 25 | 40 | 522 |
+| Test | 268 | 51 | 138 | 25 | 40 | 522 |
+
+Bölme `splits/aptos_splits.csv` dosyasına bir kez yazılmış ve sonra değiştirilmemiştir; dosya etiket içermez, yalnız `id_code`, küme ve not sütunlarını tutar. Tüm deneyler aynı bölmeyi kullanır.
+
+**Kullanım kuralı:** Model seçimi, erken durdurma ve hiperparametre kararları yalnız doğrulama kümesiyle verilmiştir. Test kümesi ve IDRiD, dondurulmuş final modelle (E4) birer kez kullanılmıştır (karar D-08); sonuçlar görüldükten sonra model veya ön işleme değiştirilmemiştir.
+
+**Sınırlılık:** APTOS'ta hasta kimliği bulunmadığından, aynı hastanın farklı görüntülerinin farklı kümelere düşmesi tamamen önlenemez (§11).
 
 ## 6. Deney Düzeneği *[Büşra]*
-_Donanım (Kaggle P100/T4, RTX 3060), yazılım sürümleri (env.txt), hiperparametre tablosu, deney listesi E1–E4._
+**Donanım ve yazılım:** Raporlanan tüm eğitimler Kaggle'ın ücretsiz **NVIDIA Tesla T4** (16 GB) GPU'sunda yapılmıştır. Kaggle ortamında PyTorch 2.11.0 (CUDA 12.8) kullanılmıştır; final koşunun (E4) ortamı: Python 3.13, PyTorch 2.11.0+cu128, torchvision 0.26.0, commit 357e92f. Her koşu kendi klasörüne kodun git commit'ini, kütüphane sürümlerini ve cihazı (`env.txt`) ile kullanılan ayarları (`config.yaml`) yazar. Böylece her sonuç, hangi kodla üretildiğine kadar izlenebilir. Proje kodu yerelde Python 3.12 ve PyTorch 2.14 ile de test edilmiştir.
+
+**Ortak hiperparametreler** (tüm deneylerde aynı, `configs/*.yaml`):
+
+| Ayar | Değer |
+|---|---|
+| Girdi boyutu | 384 × 384 |
+| Batch boyutu | 16 |
+| En çok epoch | 15 |
+| Optimizer | AdamW, öğrenme oranı 1·10⁻⁴, ağırlık azaltma (weight decay) 1·10⁻⁴ |
+| Öğrenme oranı takvimi | Kosinüs azalma (15 epoch) |
+| Karışık hassasiyet | Açık (float16, yalnız GPU) |
+| Erken durdurma | Doğrulama QWK'si 4 epoch boyunca iyileşmezse durur; en iyi QWK'li epoch saklanır |
+| Seed | 42 (`src.utils.set_seed`) |
+| Bölme | Aynı `splits/aptos_splits.csv` (§5.3) |
+
+**Deneyler:** Her deney bir öncekinden **tek bir şeyi** değiştirir, böylece farkın nedeni yorumlanabilir.
+
+| Deney | Model | Ön işleme | Kayıp | Neyi sınar |
+|---|---|---|---|---|
+| E1 | ResNet50 | Kırpma + 512 | CE | Baseline |
+| E2 | EfficientNet-B3 | Kırpma + 512 | CE | Mimari farkı (E1'e göre) |
+| E3 | EfficientNet-B3 | Kırpma + 512 | Ağırlıklı CE | Sınıf dengesizliği (E2'ye göre) |
+| E4 | EfficientNet-B3 | Kırpma + 512 + Ben Graham | Ağırlıklı CE | Ön işleme (E3'e göre) |
+
+Model seçimi, erken durdurma ve tüm karşılaştırmalar yalnız doğrulama kümesiyle (n = 522) yapılmıştır. Her deney tek seed ile bir kez koşulmuştur. Bu yüzden aynı ayarlarla yeniden eğitimin sonucu ne kadar değiştirdiği ayrıca ölçülmüştür: final config (E4) aynı kod, veri ve seed (42) ile Kaggle T4'te ikinci kez eğitilmiş, doğrulama QWK'si 0,9126'dan 0,9182'ye çıkmıştır (fark **0,0056**; hedef ≤ 0,01). Fark, GPU işlemlerinin tam belirlenimci olmamasından ve Kaggle'daki CUDA sürüm değişikliğinden (12.8 → 13.0) kaynaklanabilir. Bu nedenle deneyler arasındaki yaklaşık 0,006'dan küçük QWK farkları anlamlı kabul edilmemelidir. İkinci eğitim yalnız ölçüm içindir; final model değiştirilmemiştir. Eğitim süreleri ve sonuçlar §8'dedir.
 
 ## 7. Değerlendirme Metrikleri *[Meyrem]*
 Model her görüntü için beş seviyeden (0–4) birini tahmin eder. Başarıyı tek bir sayıyla değil, birbirini tamamlayan ölçülerle değerlendiriyoruz.
@@ -94,7 +166,26 @@ Küçük bir örnek, 6 görüntü: gerçek seviyeler 0, 0, 1, 2, 3, 4; model 0, 
 Final model, doğrulama verisinde en yüksek QWK'yı veren modeldir. İki modelin QWK farkı 0,01'den küçükse, seviye 3 ve 4'ün recall ortalaması daha yüksek olan seçilir (karar D-17). Kural sonuçlar görülmeden belirlendi. Seçim yalnız doğrulama verisiyle yapılır; test kümesine ve IDRiD'ye model dondurulduktan sonra yalnız bir kez bakılır.
 
 ## 8. Sonuçlar *[Meyrem]*
-_Deneyler tamamlandıktan sonra DENEY_KAYDI'ndan doldurulacak: karşılaştırma tablosu, confusion matrix, test ve IDRiD sonuçları, iç/dış fark._
+*(Final model E4: `20261103-1104_efficientnet_b3_ben_graham` (EfficientNet-B3, Ben Graham, ağırlıklı CE). Seçim yalnız doğrulama kümesine göre yapıldı (D-17, D-19); APTOS test ve IDRiD dondurulmuş modelle birer kez kullanıldı (D-08). Sayılar [DENEY_KAYDI.md](DENEY_KAYDI.md) "Final model" tablosundandır.)*
+
+**Model seçimi.** Doğrulama QWK'sı en yüksek deney E4'tür (0,913). İkinci sıradaki E1 (0,903) ile farkı yuvarlanmamış değerlerle 0,0096'dır, yani 0,01'den küçüktür; bu yüzden kural gereği sınıf 3 ve 4'ün recall ortalamasına bakıldı: E4 0,560, E1 0,385. Final model E4 olarak seçildi. E1–E4 karşılaştırması: DENEY_KAYDI "Karşılaştırma (val, E1–E4)".
+
+**Final modelin sonuçları**
+
+| Küme | n | QWK | Macro F1 | Doğruluk | Recall 0 / 1 / 2 / 3 / 4 |
+|---|---|---|---|---|---|
+| APTOS doğrulama | 522 | 0,913 | 0,672 | 0,818 | 0,974 / 0,686 / 0,681 / 0,520 / 0,600 |
+| APTOS test (tek sefer) | 522 | 0,923 | 0,702 | 0,835 | 0,985 / 0,863 / 0,659 / 0,560 / 0,575 |
+| IDRiD dış test (tek sefer) | 516 | 0,703 | 0,433 | 0,467 | 0,518 / 0,680 / 0,524 / 0,172 / 0,532 |
+
+![APTOS test karışıklık matrisi (satır normalize)](figures/confusion_matrix_test_normalized.png)
+![IDRiD karışıklık matrisi (satır normalize)](figures/confusion_matrix_idrid_normalized.png)
+
+**Hedef (FOG-1).** APTOS test QWK'sı 0,923'tür; 0,85 hedefine ulaşıldı. Bu tek koşu ve tek seed sonucudur.
+
+**Doğrulama → test.** Test QWK'sı doğrulamadan 0,010 yüksektir. Fark küçüktür; doğrulamaya göre yapılan model seçiminde aşırı uyum işareti görülmemektedir. Tek koşu olduğu için bu kadar küçük bir fark şansa da bağlı olabilir. Sınıf 3 ve 4'ün recall ortalaması doğrulamada 0,560, testte 0,568'dir; testte bu sınıflar yalnız 25 ve 40 görüntü olduğu için bu değerlerin belirsizliği yüksektir. Testte en sık karışmalar (gerçek → tahmin: adet) 2 → 3: 22, 2 → 1: 21, 4 → 3: 10, 3 → 2: 7, 4 → 2: 6'dır; hataların çoğu komşu sınıflar arasındadır.
+
+**APTOS → IDRiD (dış test).** QWK 0,923'ten 0,703'e (0,220 düşüş), doğruluk 0,835'ten 0,467'ye düştü. En sık karışmalar 0 → 1: 71, 2 → 1: 65, 3 → 2: 40'tır: sınıf 0'ın %42'si ve sınıf 2'nin %39'u sınıf 1 olarak tahmin edildi; sınıf 3'ün recall değeri 0,172'dir. Olası bir açıklama alan kaymasıdır: IDRiD tek bir klinikten ve farklı kameralarla toplanmıştır [6], APTOS ise başka bir merkezden gelir [5]. İki veri seti de Hindistan'dan olduğu için bu sonuç farklı bir merkezdeki başarıyı gösterir, farklı bir hasta topluluğundaki başarıyı göstermez (ARASTIRMA §2). IDRiD küçüktür (516 görüntü; sınıf 1 yalnız 25) ve seviye dağılımı APTOS'tan farklıdır (sınıf 3 ve 4 yaklaşık %30), bu yüzden sınıf bazlı değerlerin belirsizliği büyüktür. Düşüşün nedeni ayrıca incelenmedi; sonuçlar görüldükten sonra model, eşik veya ön işleme değiştirilmedi (D-08).
 
 ## 9. Hata Analizi ve Açıklanabilirlik *[Meyrem]*
 *(İlk taslak, yalnız doğrulama kümesi, E4: `20261103-1104_efficientnet_b3_ben_graham`, n=522. Test kümesinde hata analizi yapılmaz, D-08.)*
@@ -106,19 +197,43 @@ _Deneyler tamamlandıktan sonra DENEY_KAYDI'ndan doldurulacak: karşılaştırma
 - Gerçek 4 → tahmin 1 olan örnekte (d1a24527a15d) belirgin bir lezyon seçilemiyor; etiket gürültüsü veya modelin yakalayamadığı ince bulgu olabilir. Bu bir tahmindir, klinik yorum değildir.
 - Yanlış tahminlerin birçoğu yüksek güvenle (p ≥ 0,7) yapılmıştır; model olasılığı hata sinyali olarak güvenilir değildir.
 
-**Grad-CAM:** E1 ile 3 val görüntüsünde ısı haritası retina üzerinde yoğunlaştı (siyah kenarlarda değil); örneklerin biri lazer izi bölgesini vurguladı. Galeri H5'te (PLAN 5.1) hazırlanacaktır. Isı haritası lezyon tespiti değil, modelin dikkat ettiği bölgelerdir.
+**Grad-CAM:** E1 ile 3 val görüntüsünde ısı haritası retina üzerinde yoğunlaştı (siyah kenarlarda değil); örneklerin biri lazer izi bölgesini vurguladı. **Grad-CAM galerisi (E4, val, her sınıftan 1 doğru + 1 yanlış, sabit seed; `outputs/figures/gallery/gallery.png`, git dışı):** Isı haritaları retina içinde kalıyor, siyah kenarlara taşmıyor. Sınıf 2 ve 3'ün doğru örneklerinde ısı, sarı parlak odakların bulunduğu merkez/makula çevresinde yoğunlaşıyor. Sınıf 0'ın doğru örneğinde ısı optik disk kenarında yoğunlaşıyor; sağlam retinada belirgin bir lezyon olmadığından bu, haritanın her zaman lezyonu göstermediğine işaret ediyor. Yanlış örneklerde (0→1, 1→2) ısı geniş ve dağınık; 4→2 örneğinde ise birden fazla bölgeye yayılıyor. Bunlar tek tek 10 örneğe bakışla yapılmış gözlemlerdir, genelleme değildir. Isı haritası lezyon tespiti değil, modelin dikkat ettiği bölgelerdir.
 
 ## 10. Arayüz *[Meyrem]*
-_Ekran görüntüsü, kullanım adımları, yanıt süresi ölçümü._
+Final model (E4), Streamlit ile hazırlanan tek sayfalık bir arayüze bağlandı (`app/streamlit_app.py`). Kullanıcı bir göz dibi fotoğrafı (PNG/JPG) yükler; sayfa tahmin edilen dereceyi, beş derecenin olasılıklarını 0–4 sırasıyla ve Grad-CAM ısı haritasını kırpılmış görüntünün yanında gösterir. Açılamayan veya 224 pikselden küçük dosyalar için hata mesajı verilir. "Akademik prototiptir; tıbbi teşhis yerine geçmez." uyarısı her ekranda görünür; yüklenen görüntü yalnız bellekte işlenir, diske yazılmaz. Arayüz internet bağlantısı gerektirmez. Çalıştırma: README "Model ağırlıkları ve demo".
+
+**GPU'suz yanıt süresi (FOG-5, hedef ≤ 10 sn).** Ölçüm 12 Kasım 2026'da, GPU gizlenerek (`CUDA_VISIBLE_DEVICES=-1`) AMD Ryzen 7 6800H (8 çekirdek / 16 iş parçacığı), 15,3 GB RAM'li bir dizüstü bilgisayarda yapıldı. Süre, arayüzün çağırdığı `explain_image` fonksiyonunun (ön işleme + tahmin + Grad-CAM) süresidir; her sınıftan bir val görüntüsü kullanıldı, ilk (ısınma) çalıştırma ortalamaya katılmadı. Ölçüm arayüze tıklanarak değil, aynı fonksiyonu çağıran bir betikle yapıldı; sayfa çizimi bu süreye dahil değildir.
+
+| Ölçüm | Gerçek sınıf | Süre |
+|---|---|---|
+| 1 | 0 | 0,65 sn |
+| 2 | 1 | 0,60 sn |
+| 3 | 2 | 0,59 sn |
+| 4 | 3 | 0,59 sn |
+| 5 | 4 | 0,47 sn |
+
+Ortalama 0,58 sn, en kötü 0,65 sn; hedef karşılandı. Model dosyasının yüklenmesi ayrıca 0,2 sn sürdü (arayüzde bir kez yapılır).
 
 ## 11. Sınırlılıklar ve Etik *[Ekip]*
 - APTOS ve IDRiD Hindistan kaynaklı; popülasyon çeşitliliği sınırlı.
 - APTOS'ta hasta kimliği yok, hasta düzeyinde sızıntı tamamen dışlanamaz.
 - Etiketlerde uzmanlar arası farklılık var [4]; çelişkili tekrarlar bunun göstergesi.
+- Tekrar görüntüler yalnız birebir (MD5) ve pHash mesafesi 0 olan eşleşmelerle bulundu (D-18). Daha gevşek eşik zincirleme yanlış eşleşme ürettiği için kullanılmadı; bu yüzden çok benzer ama birebir olmayan bazı tekrarlar veride kalmış olabilir.
+- Final model IDRiD'de APTOS testine göre belirgin biçimde düşük başarı gösterdi (QWK 0,923 → 0,703, §8). Model farklı klinik ve kameralardan gelen görüntülere iyi genellenmeyebilir; düşüşün nedeni ayrıca incelenmedi.
+- Her deney tek seed ile bir kez koşuldu; tekrar eğitimde QWK 0,0056 değişti (§6). Sınıf 3 ve 4 test kümesinde yalnız 25 ve 40 görüntü olduğundan bu sınıfların recall değerlerinin belirsizliği yüksektir.
 - Sistem klinik olarak doğrulanmamıştır, tanı amacıyla kullanılamaz. Arayüz yüklenen görüntüyü saklamaz.
 
 ## 12. Sonuç ve Gelecek Çalışmalar *[Ekip]*
-_Sonuçlara göre. Aday konular: Messidor-2, regresyon + eşik, daha yüksek çözünürlük._
+*(Taslak — içerdiği sayılar Meyrem tarafından DENEY_KAYDI ile doğrulandı.)*
+
+Bu projede APTOS 2019 verisi tekrar ve çelişkili etiket kontrolünden geçirilip sızıntıya karşı korunarak bölünmüş, ImageNet ağırlıklı ResNet50 ve EfficientNet-B3 modelleri aynı koşullarda eğitilmiştir. Önceden belirlenen kurala göre doğrulama kümesinde seçilen final model (EfficientNet-B3 + ağırlıklı CE + Ben Graham ön işlemesi), APTOS test kümesinde **0,923 QWK** ile 0,85 hedefini aşmıştır. Hataların çoğu komşu dereceler arasındadır; az örnekli ağır sınıflarda (3 ve 4) recall 0,56–0,58 düzeyinde kalmıştır. Aynı model hiç görmediği IDRiD verisinde **0,703 QWK** elde etmiştir. Bu 0,220'lik düşüş, farklı bir klinik ve kamerayla toplanan veride başarının belirgin biçimde azaldığını ve tek merkezli bir veriyle eğitilen modelin genellenmesinin sınırlı olduğunu göstermektedir. Aynı ayarlarla tekrar eğitimde QWK farkı 0,0056 bulunmuştur; bu yüzden deneyler arasındaki çok küçük farklar dikkatle yorumlanmalıdır. Model, Grad-CAM ısı haritasıyla birlikte, GPU'suz bir bilgisayarda görüntü başına yaklaşık 0,6 saniyede yanıt veren bir Streamlit arayüzüyle sunulmuştur. Sistem akademik bir prototiptir ve klinik kullanım için doğrulanmamıştır.
+
+**Gelecek çalışmalar:**
+- **Farklı topluluklarda dış test:** Fransa'dan gelen ve uzman uzlaşısıyla etiketlenmiş Messidor-2 [7][8] üzerinde test, IDRiD'deki düşüşün farklı bir topluluktaki karşılığını gösterebilir.
+- **Sıralı çıkış:** Dereceler sıralı olduğu için regresyon çıkışı ve doğrulama kümesinde belirlenen sınıf eşikleri, komşu sınıf hatalarını azaltabilir.
+- **Daha yüksek çözünürlük:** Mikroanevrizma gibi küçük lezyonlar için 384 pikselden yüksek girdi boyutları denenebilir.
+- **Daha güvenilir ölçüm:** 5 katlı çapraz doğrulama ve birden fazla seed ile sonuçların değişkenliği daha iyi tahmin edilebilir.
+- **Alan uyumu:** Farklı kamera ve kliniklere genellemeyi artırmak için farklı kaynaklardan veriyle eğitim değerlendirilebilir.
 
 ## Kaynakça
 ARASTIRMA.md → "Kaynaklar" listesinden yalnız metinde atıf yapılanlar alınır.

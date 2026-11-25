@@ -43,6 +43,7 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 python -c "import torch; print(torch.backends.mps.is_available())"
 ```
+`python3.12: command not found` görürsen önce `brew install python@3.12`. Mac'te `--index-url ... cu126` satırı **kullanılmaz** (yalnız NVIDIA). Demo Mac'te `mps` yerine CPU'da çalışır (Grad-CAM için); bu beklenen durumdur.
 
 **Kontrol:** `python -c "import torch, torchvision, sklearn, imagehash, streamlit; print(torch.__version__)"` → `2.14.1...`. Testler yazıldıktan sonra: `python -m pytest -q`
 
@@ -56,7 +57,10 @@ Final model: E4 (efficientnet_b3) · run `20261103-1104_efficientnet_b3_ben_grah
 
 1. Ekip Drive'ından `VisionDx-final/20261103-1104_efficientnet_b3_ben_graham/` klasörünü indir → `outputs/final/20261103-1104_efficientnet_b3_ben_graham/` altına koy (git'e girmez). Bağlantı ekip kanalındadır.
 2. Windows: `$env:VISIONDX_CHECKPOINT = "outputs/final/20261103-1104_efficientnet_b3_ben_graham/best.pt"` · macOS: `export VISIONDX_CHECKPOINT=outputs/final/20261103-1104_efficientnet_b3_ben_graham/best.pt`
-3. `streamlit run app/streamlit_app.py`
+3. `streamlit run app/streamlit_app.py` (proje kökünden; tema ayarı `.streamlit/config.toml`'dan okunur)
+   - Ortam değişkeni yerine: `streamlit run app/streamlit_app.py -- --checkpoint outputs/final/20261103-1104_efficientnet_b3_ben_graham/best.pt`
+
+Demo internet bağlantısı olmadan çalışır; yüklenen görüntü diske yazılmaz. GPU yoksa CPU'da çalışır (ölçüm: görüntü başına ortalama 0,58 sn, RAPOR_TASLAGI §10).
 
 ## Belgeler
 
