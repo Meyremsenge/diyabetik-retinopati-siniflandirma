@@ -20,6 +20,7 @@ import pandas as pd
 import torch
 import torchvision
 import yaml
+from sklearn.model_selection import StratifiedKFold
 from torch.utils.data import DataLoader
 
 from src.data import RetinaDataset, get_transforms, load_split_frame
@@ -51,6 +52,20 @@ def compute_class_weights(labels: list[int], num_classes: int = 5) -> torch.Tens
         if count == 0:
             raise ValueError(f"train'de sınıf {class_index} yok")
     return len(labels) / (num_classes * class_counts.float())
+
+
+def fold_frames(df: pd.DataFrame, fold: int, n_folds: int = 5,
+                seed: int = 42) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """5-fold çapraz doğrulama: df'yi sınıf oranını koruyarak böler, (train, val) döndürür.
+
+    df, train+val birleşimidir (test satırı içermez). `fold`'uncu parça val olur, kalanı train.
+    """
+    if not 0 <= fold < n_folds:
+        raise ValueError(f"fold 0 ile {n_folds - 1} arasında olmalı, gelen: {fold}")
+    ordered = df.sort_values("image_id").reset_index(drop=True)
+    splitter = StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=seed)
+    train_index, val_index = list(splitter.split(ordered, ordered["diagnosis"]))[fold]
+    return ordered.iloc[train_index].reset_index(drop=True), ordered.iloc[val_index].reset_index(drop=True)
 
 
 def make_run_dir(output_dir: Path, model_name: str, run_label: str) -> Path:
@@ -154,6 +169,9 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--limit", type=int,
                         help="duman testi: train ve val'den rastgele en fazla N görüntü")
     parser.add_argument("--epochs", type=int, help="config'teki epochs'u ezer")
+    parser.add_argument("--fold", type=int,
+                        help="verilirse 5-fold modu: train+val birleşiminin bu parçası val olur")
+    parser.add_argument("--n-folds", type=int, default=5, help="fold sayısı (varsayılan 5)")
     args = parser.parse_args(argv)
 
     config = load_config(args.config)
@@ -171,6 +189,13 @@ def main(argv: list[str] | None = None) -> None:
 
     train_frame = load_split_frame(Path(config["data_root"]), Path(config["splits_csv"]), "train")
     val_frame = load_split_frame(Path(config["data_root"]), Path(config["splits_csv"]), "val")
+    if args.fold is not None:
+        # Yalnız train ve val birleştirilir; test satırları hiç okunmaz
+        combined = pd.concat([train_frame, val_frame], ignore_index=True)
+        train_frame, val_frame = fold_frames(combined, args.fold, args.n_folds, config["seed"])
+        config["fold"] = args.fold
+        config["n_folds"] = args.n_folds
+        config["run_label"] = f"{config['run_label']}_fold{args.fold}"
     # Ağırlıklar yalnız train etiketlerinden ve --limit'ten önce hesaplanır (küçük örnekte sınıf eksik kalmasın)
     class_weights = None
     if config["loss"] == "weighted_ce":
