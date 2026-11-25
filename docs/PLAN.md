@@ -127,9 +127,9 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 ## H6 (23–29 Kasım) — Tampon ve isteğe bağlı işler
 
 - [x] 6.1 `[E]` Gecikmiş Must maddeleri (eksik yok: H1–H5 Must maddeleri tamam, 5.6'daki K5 kontrolüyle doğrulandı, 25 Kasım 2026) → [kart](planlar/H6.md#m6-1)
-- [ ] 6.2 `[R]` *(Could)* Messidor-2 dış testi (ekip onayı alındı, D-22, 25 Kasım 2026; lisans başvurusu ve uygulama bekliyor, görüntü gelmezse "yapılmadı: lisans süresi") → [kart](planlar/H6.md#m6-2)
+- [x] 6.2 ✖ `[R]` *(Could)* Messidor-2 dış testi (YAPILMADI, Rümeysa 25 Kasım 2026, D-22: lisans başvurusu yapılmadı, sonuç rapor teslimine yetişmezdi; `predict.py` messidor split'i hazır, raporda gelecek çalışma §12) → [kart](planlar/H6.md#m6-2)
 - [x] 6.3 ✖ `[M]` *(Could)* Regresyon çıkışı + eşik optimizasyonu (YAPILMAYACAK, Meyrem 25 Kasım 2026, D-20: isteğe bağlı iş; teslime az kaldı, kod ve sözleşme değişikliği ile yeni eğitim gerektiriyor; raporda gelecek çalışma) → [kart](planlar/H6.md#m6-3)
-- [ ] 6.4 `[R]` *(Could)* CLAHE deneyi (ekip onayı alındı, D-21, 25 Kasım 2026; uygulama bekliyor) → [kart](planlar/H6.md#m6-4)
+- [ ] 6.4 `[R]` *(Could)* CLAHE deneyi (ekip onayı alındı, D-21, 25 Kasım 2026; kod ve CLAHE önbelleği hazır: Kaggle dataset `visiondx-aptos-512-clahe`, 3662 görüntü; E7 eğitimi Büşra'da bekliyor) → [kart](planlar/H6.md#m6-4)
 - [x] 6.5 `[E]` Rapor dil/biçim cilası (3 çapraz okuma tamam, PR #58 yorumları: Meyrem §4–§5 ve kendi payı, Büşra §4–§5, Rümeysa §5.2 ve §6; kaynakça doğrulandı; 6.2 ve 6.4 onaylı ama yapılmadı, durumu raporda açık, 25 Kasım 2026) → [kart](planlar/H6.md#m6-5)
 
 ---
