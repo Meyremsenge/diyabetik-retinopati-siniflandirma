@@ -128,9 +128,9 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 
 - [ ] 6.1 `[E]` Gecikmiş Must maddeleri → [kart](planlar/H6.md#m6-1)
 - [ ] 6.2 `[R]` *(Could)* Messidor-2 dış testi → [kart](planlar/H6.md#m6-2)
-- [ ] 6.3 `[M]` *(Could)* Regresyon çıkışı + eşik optimizasyonu → [kart](planlar/H6.md#m6-3)
+- [x] 6.3 ✖ `[M]` *(Could)* Regresyon çıkışı + eşik optimizasyonu (YAPILMAYACAK, Meyrem 25 Kasım 2026, D-20: isteğe bağlı iş; teslime az kaldı, kod ve sözleşme değişikliği ile yeni eğitim gerektiriyor; raporda gelecek çalışma) → [kart](planlar/H6.md#m6-3)
 - [ ] 6.4 `[R]` *(Could)* CLAHE deneyi → [kart](planlar/H6.md#m6-4)
-- [ ] 6.5 `[E]` Rapor dil/biçim cilası → [kart](planlar/H6.md#m6-5)
+- [ ] 6.5 `[E]` Rapor dil/biçim cilası (Meyrem'in payı tamam, 25 Kasım: §7–§10 cilası, kaynakça, §8–DENEY_KAYDI karşılaştırması, §4–§5 çapraz okuma PR yorumunda; Rümeysa ve Büşra'nın okuması bekliyor) → [kart](planlar/H6.md#m6-5)
 
 ---
 
