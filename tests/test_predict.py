@@ -90,3 +90,27 @@ def test_idrid_reads_labels(run_dir, tmp_path):
     predictions = pd.read_csv(run_dir / "idrid_predictions.csv")
     assert len(predictions) == 2
     assert predictions["y_true"].tolist() == [2, 0]
+
+
+def test_messidor_requires_final(run_dir, tmp_path):
+    with pytest.raises(SystemExit) as error:
+        predict_main(["--run", str(run_dir), "--split", "messidor",
+                      "--data-root", str(tmp_path)])
+    assert error.value.code == 2
+
+
+def test_messidor_reads_labels_and_runs_once(run_dir, tmp_path):
+    messidor_dir = tmp_path / "messidor"
+    messidor_dir.mkdir()
+    save_random_images(messidor_dir, ["MES_001", "MES_002"])
+    pd.DataFrame({"image_id": ["MES_001", "MES_002"], "diagnosis": [1, 3]}).to_csv(
+        messidor_dir / "messidor_labels.csv", index=False)
+
+    arguments = ["--run", str(run_dir), "--split", "messidor", "--final",
+                 "--data-root", str(messidor_dir)]
+    predict_main(arguments)
+    predictions = pd.read_csv(run_dir / "messidor_predictions.csv")
+    assert predictions["y_true"].tolist() == [1, 3]
+    with pytest.raises(SystemExit):  # ikinci çalıştırma reddedilir (D-08)
+        predict_main(arguments)
+

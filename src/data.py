@@ -2,7 +2,7 @@
 
 Ne yapar: 512 px'lik kopyadan görüntüyü okuyup modele uygun tensöre çevirir.
 Augmentation (aynalama, döndürme, parlaklık) yalnız train dönüşümündedir;
-val, test, idrid ve demo aynı deterministik zinciri kullanır.
+val, test, idrid, messidor ve demo aynı deterministik zinciri kullanır.
 
 Nasıl kullanılır (train.py / predict.py içinden):
     frame = load_split_frame(data_root, Path("splits/aptos_splits.csv"), "train")
@@ -17,7 +17,7 @@ from torchvision.transforms import v2
 
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
-EVAL_SPLITS = ("val", "test", "idrid", "demo")
+EVAL_SPLITS = ("val", "test", "idrid", "messidor", "demo")
 SPLIT_NAMES = ("train", "val", "test")
 
 
