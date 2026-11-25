@@ -107,7 +107,7 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 - [x] 4.4 `[M]` Test + IDRiD metrikleri ve yorum (test QWK 0,923, IDRiD 0,703; DENEY_KAYDI + RAPOR §8) → [kart](planlar/H4.md#m4-4)
 - [x] 4.5 `[M]` `app/streamlit_app.py` v1 (E1 checkpoint'iyle denendi; tarayıcıda dosya yükleme tıklanarak denenmedi, yükleme yolu betikle denendi) → [kart](planlar/H4.md#m4-5)
 - [x] 4.6 `[B]` Final checkpoint paylaşımı + README notu (SHA-256 ekipte doğrulandı) → [kart](planlar/H4.md#m4-6)
-- [ ] 4.7 `[B]` *(Should)* 5-fold çapraz doğrulama (E5) → [kart](planlar/H4.md#m4-7)
+- [x] 4.7 `[B]` *(Should)* 5-fold çapraz doğrulama (E5; QWK 0,902 ± 0,017) → [kart](planlar/H4.md#m4-7)
 - [x] 4.8 `[E]` H4 haftalık rapor (`docs/haftalik/H4.md`; ders raporu 6. hafta hazırlandı) → [kart](planlar/H4.md#m4-8)
 
 ---
@@ -128,9 +128,9 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 
 - [ ] 6.1 `[E]` Gecikmiş Must maddeleri → [kart](planlar/H6.md#m6-1)
 - [ ] 6.2 `[R]` *(Could)* Messidor-2 dış testi → [kart](planlar/H6.md#m6-2)
-- [ ] 6.3 `[M]` *(Could)* Regresyon çıkışı + eşik optimizasyonu → [kart](planlar/H6.md#m6-3)
+- [x] 6.3 ✖ `[M]` *(Could)* Regresyon çıkışı + eşik optimizasyonu (YAPILMAYACAK, Meyrem 25 Kasım 2026, D-20: isteğe bağlı iş; teslime az kaldı, kod ve sözleşme değişikliği ile yeni eğitim gerektiriyor; raporda gelecek çalışma) → [kart](planlar/H6.md#m6-3)
 - [ ] 6.4 `[R]` *(Could)* CLAHE deneyi → [kart](planlar/H6.md#m6-4)
-- [ ] 6.5 `[E]` Rapor dil/biçim cilası → [kart](planlar/H6.md#m6-5)
+- [ ] 6.5 `[E]` Rapor dil/biçim cilası (Meyrem'in payı tamam, 25 Kasım: §7–§10 cilası, kaynakça, §8–DENEY_KAYDI karşılaştırması, §4–§5 çapraz okuma PR yorumunda; Rümeysa ve Büşra'nın okuması bekliyor) → [kart](planlar/H6.md#m6-5)
 
 ---
 

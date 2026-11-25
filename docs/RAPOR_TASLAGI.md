@@ -129,41 +129,43 @@ Bölme `splits/aptos_splits.csv` dosyasına bir kez yazılmış ve sonra değiş
 
 Model seçimi, erken durdurma ve tüm karşılaştırmalar yalnız doğrulama kümesiyle (n = 522) yapılmıştır. Her deney tek seed ile bir kez koşulmuştur. Bu yüzden aynı ayarlarla yeniden eğitimin sonucu ne kadar değiştirdiği ayrıca ölçülmüştür: final config (E4) aynı kod, veri ve seed (42) ile Kaggle T4'te ikinci kez eğitilmiş, doğrulama QWK'si 0,9126'dan 0,9182'ye çıkmıştır (fark **0,0056**; hedef ≤ 0,01). Fark, GPU işlemlerinin tam belirlenimci olmamasından ve Kaggle'daki CUDA sürüm değişikliğinden (12.8 → 13.0) kaynaklanabilir. Bu nedenle deneyler arasındaki yaklaşık 0,006'dan küçük QWK farkları anlamlı kabul edilmemelidir. İkinci eğitim yalnız ölçüm içindir; final model değiştirilmemiştir. Eğitim süreleri ve sonuçlar §8'dedir.
 
+**5 katlı çapraz doğrulama (E5):** Sonucun tek bir bölmeye ne kadar bağlı olduğunu görmek için final ayar (E4), eğitim ve doğrulama kümelerinin birleşimi (2.955 görüntü) üzerinde, sınıf oranları korunarak 5 parçaya bölünmüş (`--fold`, seed 42) ve her parça bir kez doğrulama kümesi olacak şekilde 5 kez eğitilmiştir (Kaggle T4, toplam yaklaşık 55 dk). Test kümesi ve IDRiD kullanılmamıştır; final model değiştirilmemiştir. Doğrulama QWK'leri 0,921 / 0,896 / 0,886 / 0,888 / 0,919, ortalama **0,902 ± 0,017**'dir (örneklem standart sapması; DENEY_KAYDI "5-fold"). Tekrar görüntüler bölmeden önce elendiği için (§5.3) parçalar arasında sızıntı beklenmez. Tek bölmedeki E4 sonucu (0,913) bu aralığın içindedir.
+
 ## 7. Değerlendirme Metrikleri *[Meyrem]*
-Model her görüntü için beş seviyeden (0–4) birini tahmin eder. Başarıyı tek bir sayıyla değil, birbirini tamamlayan ölçülerle değerlendiriyoruz.
+Model her görüntü için beş DR derecesinden birini (sınıf 0–4) tahmin eder. Başarıyı tek bir sayıyla değil, birbirini tamamlayan ölçülerle değerlendiriyoruz.
 
 ### 7.1 Doğruluk (accuracy)
 
-Doğru tahmin edilen görüntülerin tüm görüntülere oranıdır. Anlaşılması kolaydır, ama bu veride yanıltıcıdır: APTOS'un 3.662 görüntüsünün 1.805'i (%49,3) seviye 0'dır. Her görüntüye "0" diyen bir model %49,3 doğruluk alır, oysa hasta olan hiçbir görüntüyü yakalamaz. Aynı model için QWK 0, macro F1 ise 0,132 çıkar (seviye 0'ın F1 değeri 0,660, diğer dört seviyeninki 0'dır; ortalama 0,132). Bu yüzden doğruluk tek başına başarı kanıtı sayılmaz.
+Doğru tahmin edilen görüntülerin tüm görüntülere oranıdır. Anlaşılması kolaydır, ama bu veride yanıltıcıdır: APTOS'un 3.662 görüntüsünün 1.805'i (%49,3) sınıf 0'dır. Her görüntüye "0" diyen bir model %49,3 doğruluk alır, oysa hasta olan hiçbir görüntüyü yakalamaz. Aynı model için QWK 0, macro F1 ise 0,132 çıkar (sınıf 0'ın F1 değeri 0,660, diğer dört sınıfınki 0'dır; ortalama 0,132). Bu yüzden doğruluk tek başına başarı kanıtı sayılmaz.
 
-### 7.2 Seviye bazlı recall ve macro F1
+### 7.2 Sınıf bazlı recall ve macro F1
 
-Recall, bir seviyedeki görüntülerin ne kadarının doğru yakalandığını gösterir. Örneğin seviye 3'teki 20 görüntünün 10'una "3" denmişse seviye 3 için recall 0,5'tir. Precision ise modelin "3" dediği görüntülerin ne kadarının gerçekten seviye 3 olduğudur. F1, bir seviye için recall ile precision'ı tek sayıda birleştirir. Macro F1, beş seviyenin F1 değerlerinin ortalamasıdır ve her seviyeye eşit ağırlık verir.
+Recall, bir sınıftaki görüntülerin ne kadarının doğru yakalandığını gösterir. Örneğin sınıf 3'teki 20 görüntünün 10'una "3" denmişse sınıf 3 için recall 0,5'tir. Precision ise modelin "3" dediği görüntülerin ne kadarının gerçekten sınıf 3 olduğudur. F1, bir sınıf için recall ile precision'ı tek sayıda birleştirir. Macro F1, beş sınıfın F1 değerlerinin ortalamasıdır ve her sınıfa eşit ağırlık verir.
 
-Seviye 3 ve 4 veride azdır (%5,3 ve %8,1) ama en ağır hastaları temsil eder; bunları kaçırmak en pahalı hatadır. Doğruluk bu seviyelerdeki başarısızlığı gizleyebildiği için recall ve macro F1 ayrıca izlenir.
+Sınıf 3 ve 4 veride azdır (%5,3 ve %8,1) ama en ağır hastaları temsil eder; bunları kaçırmak en pahalı hatadır. Doğruluk bu sınıflardaki başarısızlığı gizleyebildiği için recall ve macro F1 ayrıca izlenir.
 
 ### 7.3 Karışıklık matrisi (confusion matrix)
 
-5 × 5'lik bir tablodur: satır gerçek seviyeyi, sütun modelin tahminini gösterir. Köşegen doğru tahminleri, köşegen dışındaki hücreler hangi seviyenin hangisiyle karıştırıldığını gösterir. Satır-normalize hâlinde her satır kendi toplamına bölünür; böylece "seviye 3'teki görüntülerin yüzde kaçına hangi seviye denmiş?" sorusu doğrudan okunur ve az görüntülü seviyeler de görünür kalır.
+5 × 5'lik bir tablodur: satır gerçek sınıfı, sütun modelin tahminini gösterir. Köşegen doğru tahminleri, köşegen dışındaki hücreler hangi sınıfın hangisiyle karıştırıldığını gösterir. Satır-normalize hâlinde her satır kendi toplamına bölünür; böylece "sınıf 3'teki görüntülerin yüzde kaçına hangi sınıf denmiş?" sorusu doğrudan okunur ve az görüntülü sınıflar de görünür kalır.
 
 ### 7.4 QWK (quadratic weighted kappa)
 
-QWK [18], tahminin gerçek seviyeye ne kadar yakın olduğunu ölçer ve APTOS yarışmasının resmî ölçüsüdür. Fikir şudur: seviye 3 olan bir görüntüye 2 demek, 0 demekten daha hafif bir hatadır. Formül:
+QWK [18], tahminin gerçek sınıfa ne kadar yakın olduğunu ölçer ve APTOS yarışmasının resmî ölçüsüdür. Fikir şudur: sınıf 3 olan bir görüntüye 2 demek, 0 demekten daha hafif bir hatadır. Formül:
 
     κ = 1 − ( Σ wij · Oij ) / ( Σ wij · Eij )
-    wij = (i − j)² / (K − 1)²,  K = 5 (seviye sayısı)
+    wij = (i − j)² / (K − 1)²,  K = 5 (sınıf sayısı)
 
-- Oij: gerçek seviyesi i, tahmini j olan görüntü sayısı (karışıklık matrisi).
-- Eij: model rastgele tahmin etseydi beklenen sayı. Eij = (gerçek seviyesi i olanların sayısı) × (tahmini j olanların sayısı) / (toplam görüntü).
-- wij: hata ağırlığı. Bir basamaklık hata 1/16 = 0,0625, iki basamaklık hata 0,25, dört basamaklık hata (örneğin 0 yerine 4) 1 sayılır. Uzak hata, yakın hatadan 16 kat pahalıdır.
+- Oij: gerçek sınıfı i, tahmini j olan görüntü sayısı (karışıklık matrisi).
+- Eij: model rastgele tahmin etseydi beklenen sayı. Eij = (gerçek sınıfı i olanların sayısı) × (tahmini j olanların sayısı) / (toplam görüntü).
+- wij: hata ağırlığı. Bir basamaklık hata 1/16 = 0,0625, iki basamaklık hata 0,25, dört basamaklık hata (örneğin 0 yerine 4) 1 sayılır. Dört basamaklık hata, bir basamaklık hatadan 16 kat pahalıdır.
 
 Tam uyumda κ = 1, tahminler şans düzeyindeyse κ = 0 olur.
 
-Küçük bir örnek, 6 görüntü: gerçek seviyeler 0, 0, 1, 2, 3, 4; model 0, 1, 1, 2, 4, 4 demiş. İki hata var ve ikisi de bir basamaklık (0 yerine 1, 3 yerine 4). Formülün payındaki Σ wij · Oij = 2 × (1/16) = 0,125 olur. Paydadaki Σ wij · Eij ise beklenen sayılarla 1,75 çıkar. Böylece κ = 1 − 0,125 / 1,75 = 1 − 1/14 = 13/14 ≈ 0,929. Aynı iki hata birer basamak değil de dört basamak uzağa düşseydi QWK çok daha düşük olurdu.
+Küçük bir örnek, 6 görüntü: gerçek sınıflar 0, 0, 1, 2, 3, 4; model 0, 1, 1, 2, 4, 4 demiş. İki hata var ve ikisi de bir basamaklık (0 yerine 1, 3 yerine 4). Formülün payındaki Σ wij · Oij = 2 × (1/16) = 0,125 olur. Paydadaki Σ wij · Eij ise beklenen sayılarla 1,75 çıkar. Böylece κ = 1 − 0,125 / 1,75 = 1 − 1/14 = 13/14 ≈ 0,929. Aynı iki hata birer basamak değil de dört basamak uzağa düşseydi QWK çok daha düşük olurdu.
 
 ### 7.5 Final model seçim kuralı
 
-Final model, doğrulama verisinde en yüksek QWK'yı veren modeldir. İki modelin QWK farkı 0,01'den küçükse, seviye 3 ve 4'ün recall ortalaması daha yüksek olan seçilir (karar D-17). Kural sonuçlar görülmeden belirlendi. Seçim yalnız doğrulama verisiyle yapılır; test kümesine ve IDRiD'ye model dondurulduktan sonra yalnız bir kez bakılır.
+Final model, doğrulama kümesinde en yüksek QWK'yı veren modeldir. İki modelin QWK farkı 0,01'den küçükse, sınıf 3 ve 4'ün recall ortalaması daha yüksek olan seçilir (karar D-17). Kural sonuçlar görülmeden belirlendi. Seçim yalnız doğrulama kümesiyle yapılır; test kümesine ve IDRiD'ye model dondurulduktan sonra yalnız bir kez bakılır.
 
 ## 8. Sonuçlar *[Meyrem]*
 *(Final model E4: `20261103-1104_efficientnet_b3_ben_graham` (EfficientNet-B3, Ben Graham, ağırlıklı CE). Seçim yalnız doğrulama kümesine göre yapıldı (D-17, D-19); APTOS test ve IDRiD dondurulmuş modelle birer kez kullanıldı (D-08). Sayılar [DENEY_KAYDI.md](DENEY_KAYDI.md) "Final model" tablosundandır.)*
@@ -181,28 +183,38 @@ Final model, doğrulama verisinde en yüksek QWK'yı veren modeldir. İki modeli
 ![APTOS test karışıklık matrisi (satır normalize)](figures/confusion_matrix_test_normalized.png)
 ![IDRiD karışıklık matrisi (satır normalize)](figures/confusion_matrix_idrid_normalized.png)
 
-**Hedef (FOG-1).** APTOS test QWK'sı 0,923'tür; 0,85 hedefine ulaşıldı. Bu tek koşu ve tek seed sonucudur.
+**Hedef (FOG-1).** APTOS test QWK'sı 0,923'tür; 0,85 hedefine ulaşıldı. Test sonucu tek koşu ve tek seed ile elde edilmiştir. 5 katlı çapraz doğrulamanın ortalaması (aşağıda) da 0,85'in üzerindedir.
+
+**5 katlı çapraz doğrulama (E5).** Final ayar, eğitim ve doğrulama kümelerinin birleşimi üzerinde 5 kez eğitildi (yöntem: §6); test kümesi kullanılmadı.
+
+| Fold | 1 | 2 | 3 | 4 | 5 | Ortalama ± std |
+|---|---|---|---|---|---|---|
+| Doğrulama QWK | 0,921 | 0,896 | 0,886 | 0,888 | 0,919 | 0,902 ± 0,017 |
+
+Her fold'da en iyi epoch o fold'un doğrulama parçasına göre seçildiği ve final ayar daha önce doğrulama kümesine bakılarak belirlendiği için bu değerler bir miktar iyimser olabilir.
 
 **Doğrulama → test.** Test QWK'sı doğrulamadan 0,010 yüksektir. Fark küçüktür; doğrulamaya göre yapılan model seçiminde aşırı uyum işareti görülmemektedir. Tek koşu olduğu için bu kadar küçük bir fark şansa da bağlı olabilir. Sınıf 3 ve 4'ün recall ortalaması doğrulamada 0,560, testte 0,568'dir; testte bu sınıflar yalnız 25 ve 40 görüntü olduğu için bu değerlerin belirsizliği yüksektir. Testte en sık karışmalar (gerçek → tahmin: adet) 2 → 3: 22, 2 → 1: 21, 4 → 3: 10, 3 → 2: 7, 4 → 2: 6'dır; hataların çoğu komşu sınıflar arasındadır.
 
-**APTOS → IDRiD (dış test).** QWK 0,923'ten 0,703'e (0,220 düşüş), doğruluk 0,835'ten 0,467'ye düştü. En sık karışmalar 0 → 1: 71, 2 → 1: 65, 3 → 2: 40'tır: sınıf 0'ın %42'si ve sınıf 2'nin %39'u sınıf 1 olarak tahmin edildi; sınıf 3'ün recall değeri 0,172'dir. Olası bir açıklama alan kaymasıdır: IDRiD tek bir klinikten ve farklı kameralarla toplanmıştır [6], APTOS ise başka bir merkezden gelir [5]. İki veri seti de Hindistan'dan olduğu için bu sonuç farklı bir merkezdeki başarıyı gösterir, farklı bir hasta topluluğundaki başarıyı göstermez (ARASTIRMA §2). IDRiD küçüktür (516 görüntü; sınıf 1 yalnız 25) ve seviye dağılımı APTOS'tan farklıdır (sınıf 3 ve 4 yaklaşık %30), bu yüzden sınıf bazlı değerlerin belirsizliği büyüktür. Düşüşün nedeni ayrıca incelenmedi; sonuçlar görüldükten sonra model, eşik veya ön işleme değiştirilmedi (D-08).
+**APTOS → IDRiD (dış test).** QWK 0,923'ten 0,703'e (0,220 düşüş), doğruluk 0,835'ten 0,467'ye düştü. En sık karışmalar 0 → 1: 71, 2 → 1: 65, 3 → 2: 40'tır: sınıf 0'ın %42'si ve sınıf 2'nin %39'u sınıf 1 olarak tahmin edildi; sınıf 3'ün recall değeri 0,172'dir. Olası bir açıklama alan kaymasıdır: IDRiD tek bir klinikten ve farklı kameralarla toplanmıştır [6], APTOS ise başka bir merkezden gelir [5]. İki veri seti de Hindistan'dan olduğu için bu sonuç farklı bir merkezdeki başarıyı gösterir, farklı bir hasta topluluğundaki başarıyı göstermez (ARASTIRMA §2). IDRiD küçüktür (516 görüntü; sınıf 1 yalnız 25) ve sınıf dağılımı APTOS'tan farklıdır (sınıf 3 ve 4 yaklaşık %30), bu yüzden sınıf bazlı değerlerin belirsizliği büyüktür. Düşüşün nedeni ayrıca incelenmedi; sonuçlar görüldükten sonra model, eşik veya ön işleme değiştirilmedi (D-08).
 
 ## 9. Hata Analizi ve Açıklanabilirlik *[Meyrem]*
-*(İlk taslak, yalnız doğrulama kümesi, E4: `20261103-1104_efficientnet_b3_ben_graham`, n=522. Test kümesinde hata analizi yapılmaz, D-08.)*
+*(Yalnız doğrulama kümesi, E4: `20261103-1104_efficientnet_b3_ben_graham`, n = 522. Test kümesinde hata analizi yapılmaz, D-08.)*
 
 **En sık karışmalar** (gerçek → tahmin: adet): 2 → 1: 21 · 2 → 3: 19 · 1 → 2: 12 · 4 → 3: 8 · 0 → 1: 7. En sık hatalar komşu sınıflar arasındadır (1↔2, 2↔3, 3↔4). QWK komşu sınıf hatalarını az cezalandırdığı için bu, 0,913'lük QWK ile uyumludur.
 
-**Örnek hatalar** (`outputs/figures/errors_val.png`, git dışı; sınıf farkı büyük olan 10 hata): 10 örneğin 5'i gerçek 4 → tahmin 1 veya 2, diğerleri 1 → 3/4 ve 2 → 4 gibi uzak karışmalardır. Gözlemler (tek tek bakışla, kesin değil):
-- Bazı görüntülerde sarı parlak odaklar belirgin olduğu hâlde model sınıf 2 veya 4 arasında karışıyor; ağır sınıflar val'de az örnekli olduğu için (sınıf 3: 25, sınıf 4: 40 görüntü; sınıf 0: 268) recall düşük kalıyor (E4: 0,52 / 0,60).
+**Örnek hatalar** (sınıf farkı büyük olan 10 hata): 10 örneğin 5'i gerçek 4 → tahmin 1 veya 2, diğerleri 1 → 3/4 ve 2 → 4 gibi uzak karışmalardır. Gözlemler (tek tek bakışla, kesin değil):
+- Bazı görüntülerde sarı parlak odaklar belirgin olduğu hâlde model sınıf 2 veya 4 arasında karışıyor; ağır sınıflar doğrulama kümesinde az örnekli olduğu için (sınıf 3: 25, sınıf 4: 40 görüntü; sınıf 0: 268) recall düşük kalıyor (E4: 0,52 / 0,60).
 - Gerçek 4 → tahmin 1 olan örnekte (d1a24527a15d) belirgin bir lezyon seçilemiyor; etiket gürültüsü veya modelin yakalayamadığı ince bulgu olabilir. Bu bir tahmindir, klinik yorum değildir.
 - Yanlış tahminlerin birçoğu yüksek güvenle (p ≥ 0,7) yapılmıştır; model olasılığı hata sinyali olarak güvenilir değildir.
 
-**Grad-CAM:** E1 ile 3 val görüntüsünde ısı haritası retina üzerinde yoğunlaştı (siyah kenarlarda değil); örneklerin biri lazer izi bölgesini vurguladı. **Grad-CAM galerisi (E4, val, her sınıftan 1 doğru + 1 yanlış, sabit seed; `outputs/figures/gallery/gallery.png`, git dışı):** Isı haritaları retina içinde kalıyor, siyah kenarlara taşmıyor. Sınıf 2 ve 3'ün doğru örneklerinde ısı, sarı parlak odakların bulunduğu merkez/makula çevresinde yoğunlaşıyor. Sınıf 0'ın doğru örneğinde ısı optik disk kenarında yoğunlaşıyor; sağlam retinada belirgin bir lezyon olmadığından bu, haritanın her zaman lezyonu göstermediğine işaret ediyor. Yanlış örneklerde (0→1, 1→2) ısı geniş ve dağınık; 4→2 örneğinde ise birden fazla bölgeye yayılıyor. Bunlar tek tek 10 örneğe bakışla yapılmış gözlemlerdir, genelleme değildir. Isı haritası lezyon tespiti değil, modelin dikkat ettiği bölgelerdir.
+**Grad-CAM:** E1 ile 3 doğrulama görüntüsünde ısı haritası retina üzerinde yoğunlaştı (siyah kenarlarda değil); örneklerin biri lazer izi bölgesini vurguladı. 
+
+**Grad-CAM galerisi** (E4, doğrulama kümesi, her sınıftan 1 doğru + 1 yanlış, sabit seed): Isı haritaları retina içinde kalıyor, siyah kenarlara taşmıyor. Sınıf 2 ve 3'ün doğru örneklerinde ısı, sarı parlak odakların bulunduğu merkez/makula çevresinde yoğunlaşıyor. Sınıf 0'ın doğru örneğinde ısı optik disk kenarında yoğunlaşıyor; sağlam retinada belirgin bir lezyon olmadığından bu, haritanın her zaman lezyonu göstermediğine işaret ediyor. Yanlış örneklerde (0→1, 1→2) ısı geniş ve dağınık; 4→2 örneğinde ise birden fazla bölgeye yayılıyor. Bunlar tek tek 10 örneğe bakışla yapılmış gözlemlerdir, genelleme değildir. Isı haritası lezyon tespiti değil, modelin dikkat ettiği bölgelerdir.
 
 ## 10. Arayüz *[Meyrem]*
 Final model (E4), Streamlit ile hazırlanan tek sayfalık bir arayüze bağlandı (`app/streamlit_app.py`). Kullanıcı bir göz dibi fotoğrafı (PNG/JPG) yükler; sayfa tahmin edilen dereceyi, beş derecenin olasılıklarını 0–4 sırasıyla ve Grad-CAM ısı haritasını kırpılmış görüntünün yanında gösterir. Açılamayan veya 224 pikselden küçük dosyalar için hata mesajı verilir. "Akademik prototiptir; tıbbi teşhis yerine geçmez." uyarısı her ekranda görünür; yüklenen görüntü yalnız bellekte işlenir, diske yazılmaz. Arayüz internet bağlantısı gerektirmez. Çalıştırma: README "Model ağırlıkları ve demo".
 
-**GPU'suz yanıt süresi (FOG-5, hedef ≤ 10 sn).** Ölçüm 12 Kasım 2026'da, GPU gizlenerek (`CUDA_VISIBLE_DEVICES=-1`) AMD Ryzen 7 6800H (8 çekirdek / 16 iş parçacığı), 15,3 GB RAM'li bir dizüstü bilgisayarda yapıldı. Süre, arayüzün çağırdığı `explain_image` fonksiyonunun (ön işleme + tahmin + Grad-CAM) süresidir; her sınıftan bir val görüntüsü kullanıldı, ilk (ısınma) çalıştırma ortalamaya katılmadı. Ölçüm arayüze tıklanarak değil, aynı fonksiyonu çağıran bir betikle yapıldı; sayfa çizimi bu süreye dahil değildir.
+**GPU'suz yanıt süresi (FOG-5, hedef ≤ 10 sn).** Ölçüm 12 Kasım 2026'da, GPU gizlenerek (`CUDA_VISIBLE_DEVICES=-1`) AMD Ryzen 7 6800H (8 çekirdek / 16 iş parçacığı), 15,3 GB RAM'li bir dizüstü bilgisayarda yapıldı. Süre, arayüzün çağırdığı `explain_image` fonksiyonunun (ön işleme + tahmin + Grad-CAM) süresidir; her sınıftan bir doğrulama görüntüsü kullanıldı, ilk (ısınma) çalıştırma ortalamaya katılmadı. Ölçüm arayüze tıklanarak değil, aynı fonksiyonu çağıran bir betikle yapıldı; sayfa çizimi bu süreye dahil değildir.
 
 | Ölçüm | Gerçek sınıf | Süre |
 |---|---|---|
@@ -220,7 +232,7 @@ Ortalama 0,58 sn, en kötü 0,65 sn; hedef karşılandı. Model dosyasının yü
 - Etiketlerde uzmanlar arası farklılık var [4]; çelişkili tekrarlar bunun göstergesi.
 - Tekrar görüntüler yalnız birebir (MD5) ve pHash mesafesi 0 olan eşleşmelerle bulundu (D-18). Daha gevşek eşik zincirleme yanlış eşleşme ürettiği için kullanılmadı; bu yüzden çok benzer ama birebir olmayan bazı tekrarlar veride kalmış olabilir.
 - Final model IDRiD'de APTOS testine göre belirgin biçimde düşük başarı gösterdi (QWK 0,923 → 0,703, §8). Model farklı klinik ve kameralardan gelen görüntülere iyi genellenmeyebilir; düşüşün nedeni ayrıca incelenmedi.
-- Her deney tek seed ile bir kez koşuldu; tekrar eğitimde QWK 0,0056 değişti (§6). Sınıf 3 ve 4 test kümesinde yalnız 25 ve 40 görüntü olduğundan bu sınıfların recall değerlerinin belirsizliği yüksektir.
+- E1–E4 deneylerinin her biri tek seed ile bir kez koşuldu; aynı seed ile tekrar eğitimde QWK 0,0056 değişti (§6). Final ayarın bölmeye bağlılığı 5 katlı çapraz doğrulamayla ölçüldü (QWK 0,902 ± 0,017, §8), ancak birden fazla seed denenmedi. Sınıf 3 ve 4 test kümesinde yalnız 25 ve 40 görüntü olduğundan bu sınıfların recall değerlerinin belirsizliği yüksektir.
 - Sistem klinik olarak doğrulanmamıştır, tanı amacıyla kullanılamaz. Arayüz yüklenen görüntüyü saklamaz.
 
 ## 12. Sonuç ve Gelecek Çalışmalar *[Ekip]*
@@ -232,8 +244,38 @@ Bu projede APTOS 2019 verisi tekrar ve çelişkili etiket kontrolünden geçiril
 - **Farklı topluluklarda dış test:** Fransa'dan gelen ve uzman uzlaşısıyla etiketlenmiş Messidor-2 [7][8] üzerinde test, IDRiD'deki düşüşün farklı bir topluluktaki karşılığını gösterebilir.
 - **Sıralı çıkış:** Dereceler sıralı olduğu için regresyon çıkışı ve doğrulama kümesinde belirlenen sınıf eşikleri, komşu sınıf hatalarını azaltabilir.
 - **Daha yüksek çözünürlük:** Mikroanevrizma gibi küçük lezyonlar için 384 pikselden yüksek girdi boyutları denenebilir.
-- **Daha güvenilir ölçüm:** 5 katlı çapraz doğrulama ve birden fazla seed ile sonuçların değişkenliği daha iyi tahmin edilebilir.
+- **Daha güvenilir ölçüm:** Birden fazla seed ile eğitim, sonuçların değişkenliğinin daha iyi tahmin edilmesini sağlayabilir.
 - **Alan uyumu:** Farklı kamera ve kliniklere genellemeyi artırmak için farklı kaynaklardan veriyle eğitim değerlendirilebilir.
 
 ## Kaynakça
-ARASTIRMA.md → "Kaynaklar" listesinden yalnız metinde atıf yapılanlar alınır.
+[1] Wilkinson CP ve ark. *Proposed international clinical diabetic retinopathy and diabetic macular edema disease severity scales.* Ophthalmology. 2003;110(9):1677–1682.
+
+[2] Gulshan V ve ark. *Development and validation of a deep learning algorithm for detection of diabetic retinopathy in retinal fundus photographs.* JAMA. 2016;316(22):2402–2410.
+
+[3] Ting DSW ve ark. *Development and validation of a deep learning system for diabetic retinopathy and related eye diseases using retinal images from multiethnic populations with diabetes.* JAMA. 2017;318(22):2211–2223.
+
+[4] Krause J ve ark. *Grader variability and the importance of reference standards for evaluating machine learning models for diabetic retinopathy.* Ophthalmology. 2018;125(8):1264–1272. https://arxiv.org/abs/1710.01711
+
+[5] APTOS 2019 Blindness Detection, Kaggle. https://www.kaggle.com/competitions/aptos2019-blindness-detection
+
+[6] Porwal P ve ark. *Indian Diabetic Retinopathy Image Dataset (IDRiD): A Database for Diabetic Retinopathy Screening Research.* Data. 2018;3(3):25. https://doi.org/10.3390/data3030025 · https://idrid.grand-challenge.org/Data/ · https://ieee-dataport.org/node/956
+
+[7] Decencière E ve ark. *Feedback on a publicly distributed image database: the Messidor database.* Image Anal Stereol. 2014;33(3):231–234. · Abràmoff MD ve ark. JAMA Ophthalmol. 2013;131(3):351–357. · https://www.adcis.net/en/third-party/messidor2/
+
+[8] Messidor-2 DR Grades (Google Brain), Kaggle: https://baselight.app/u/kaggle/dataset/google_brain_messidor2_dr_grades
+
+[9] APTOS 2019 kuralları: https://www.kaggle.com/competitions/aptos2019-blindness-detection/rules · lisans özeti: https://arxiv.org/pdf/2605.13015
+
+[14] IJSR v15i8: https://www.ijsr.net/archive/v15i8/SR26812222953.pdf
+
+[15] IPB Repository: https://repository.ipb.ac.id/handle/123456789/178452
+
+[16] He K, Zhang X, Ren S, Sun J. *Deep Residual Learning for Image Recognition.* CVPR 2016.
+
+[17] Tan M, Le QV. *EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks.* ICML 2019.
+
+[18] Cohen J. *Weighted kappa: Nominal scale agreement with provision for scaled disagreement or partial credit.* Psychological Bulletin. 1968;70(4):213–220.
+
+[19] Graham B. *Kaggle Diabetic Retinopathy Detection competition report.* 2015.
+
+[21] Selvaraju RR ve ark. *Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization.* ICCV 2017.
