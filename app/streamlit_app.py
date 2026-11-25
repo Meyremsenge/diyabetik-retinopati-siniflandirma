@@ -106,6 +106,11 @@ def header_html() -> str:
     )
 
 
+def turkish_number(value: float, digits: int) -> str:
+    """Sayıyı Türkçe yazımla (ondalık virgülü) metne çevirir."""
+    return f"{value:.{digits}f}".replace(".", ",")
+
+
 def result_html(prediction: int, probabilities: list[float]) -> str:
     """Tahmin kartı: derece rozeti, ölçek ve 0–4 sırasıyla olasılık çubukları."""
     color = CLASS_COLORS[prediction]
@@ -115,7 +120,7 @@ def result_html(prediction: int, probabilities: list[float]) -> str:
         f'<div class="vd-grade" style="background:{color}">{prediction}</div>',
         '<div><div class="vd-eyebrow">Tahmin edilen derece</div>',
         f'<div class="vd-grade-name">{CLASS_NAMES[prediction]}</div>',
-        f'<div class="vd-confidence">Model olasılığı <b>%{confidence:.0f}</b></div></div></div>',
+        f'<div class="vd-confidence">Model olasılığı <b>%{turkish_number(confidence, 0)}</b></div></div></div>',
         '<div class="vd-scale">',
     ]
     for label in range(5):
@@ -134,7 +139,7 @@ def result_html(prediction: int, probabilities: list[float]) -> str:
             f'<div class="vd-prob-row{active}"><span class="vd-prob-num">{label}</span>'
             f"<span>{CLASS_NAMES[label]}</span>"
             f'<div class="vd-prob-track"><div class="vd-prob-fill" style="width:{percent:.1f}%;background:{fill}"></div></div>'
-            f'<span class="vd-prob-value">%{percent:.1f}</span></div>'
+            f'<span class="vd-prob-value">%{turkish_number(percent, 1)}</span></div>'
         )
     parts.append("</div>")
     return "".join(parts)
@@ -159,26 +164,28 @@ def main() -> None:
     left, right = st.columns([5, 7], gap="large")
 
     with left:
-        with st.container(border=True):
+        with st.container(border=True, key="card-upload"):
             html('<div class="vd-card-title"><span class="vd-step">1</span>Görüntü yükle</div>')
             uploaded = st.file_uploader("Fundus görüntüsü yükle", type=["png", "jpg", "jpeg"])
             html(
-                f'<div class="vd-note">{LOCK_SVG}<span>PNG veya JPG, en az {MIN_SIDE} piksel. '
+                f'<div class="vd-note">{LOCK_SVG}<span>En az {MIN_SIDE} piksel. '
                 "Görüntü yalnız bellekte işlenir, diske kaydedilmez.</span></div>"
             )
 
     image = None
+    error_message = None
     if uploaded is not None:
         try:
             image = validate_image(uploaded.getvalue())
         except ValueError as error:
-            with right:
-                st.error(str(error))
-            st.stop()
+            error_message = str(error)
 
     with right:
-        with st.container(border=True):
+        with st.container(border=True, key="card-result"):
             html('<div class="vd-card-title"><span class="vd-step">2</span>Sonuç</div>')
+            if error_message is not None:
+                st.error(error_message)
+                return
             if image is None:
                 html(
                     f'<div class="vd-empty">{EMPTY_SVG}<h3>Sonuç burada görünecek</h3>'
@@ -192,7 +199,7 @@ def main() -> None:
             elapsed = time.perf_counter() - start
             html(result_html(prediction, probabilities))
 
-    with st.container(border=True):
+    with st.container(border=True, key="card-heatmap"):
         html('<div class="vd-card-title"><span class="vd-step">3</span>Modelin dikkat ettiği bölgeler</div>')
         original_column, heatmap_column = st.columns(2, gap="medium")
         with original_column:
@@ -204,12 +211,12 @@ def main() -> None:
         html(
             '<div class="vd-legend"><span>düşük</span><div class="vd-legend-bar"></div><span>yüksek dikkat</span></div>'
         )
-        st.write("Isı haritası modelin dikkat ettiği bölgeleri gösterir; lezyon tespiti değildir.")
+        st.caption("Isı haritası modelin dikkat ettiği bölgeleri gösterir; lezyon tespiti değildir.")
 
     model_name = MODEL_NAMES.get(config["model"], config["model"])
     html(
         f'<div class="vd-footer"><span>VisionDx · {model_name} · akademik prototip</span>'
-        f"<span>Süre: {elapsed:.1f} sn · {device.type}</span></div>"
+        f"<span>Süre: {turkish_number(elapsed, 1)} sn · {device.type}</span></div>"
     )
 
 
