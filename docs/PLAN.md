@@ -152,3 +152,5 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 - **Çalışma kuralı (Meyrem, 1 Kasım 2026):** Önemsiz bir ayrıntı (tarih, küçük not, biçim) yüzünden kimse bekletilmez ve iş durdurulmaz; ayrıntı boş bırakılır veya makul varsayılır, iş ilerler. Yalnız ciddi bir durumda (yanlış sonuç, veri sızıntısı, kırılan test, başkasının işini bozma) durup sorulur.
 
 - **Demo görünüm düzeltmeleri (Meyrem, 25 Kasım 2026, 5.2 kapsamında):** kart zemini ve taşan yazılar, Türkçe büyük harf hatası, Türkçe yükleme metinleri, ondalık virgülü, hata mesajı sonuç kartında. Model ve tahmin değişmedi.
+
+- **Demo tanıtım bölümleri (Meyrem, 25 Kasım 2026, açık istekle):** temsili retina çizimli kapak, final model test sonuçları, derece rehberi, çalışma adımları (`app/landing.py`); Streamlit araç çubuğu gizlendi; yükleme ve sonuç kartları eşit boyda; sonuç kartlarına ölçek çubuğu, rehberde tahmin edilen derecenin vurgusu. Yeni kütüphane yok, model ve tahmin değişmedi.

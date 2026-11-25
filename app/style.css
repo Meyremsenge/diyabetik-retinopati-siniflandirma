@@ -19,31 +19,153 @@ html, body, [data-testid="stAppViewContainer"] {
 
 [data-testid="stAppViewContainer"] { background: var(--vd-bg); }
 [data-testid="stHeader"] { background: transparent; }
-[data-testid="stDecoration"], footer { display: none !important; }
+/* Streamlit'in geliştirici araç çubuğu (menü, yeniden çalıştır) demoda gizlenir */
+[data-testid="stDecoration"], [data-testid="stToolbar"], footer,
+[data-testid="stAppToolbar"], [data-testid="stMainMenu"], [data-testid="stStatusWidget"],
+[data-testid="stAppDeployButton"], [data-testid="stToolbarActions"] { display: none !important; }
 
 [data-testid="stMainBlockContainer"] {
   max-width: 1180px;
-  padding-top: 2.2rem;
+  padding-top: 1.4rem;
   padding-bottom: 3rem;
 }
 
-/* ---------- Üst bant ---------- */
-.vd-top {
-  display: flex;
+/* ---------- Kapak ---------- */
+.vd-hero {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.1rem;
+  gap: 2rem;
+  padding: 1.5rem 2.2rem;
+  border-radius: 24px;
+  background: radial-gradient(circle at 82% 50%, #17756A 0%, #0B4B45 42%, #082B29 100%);
+  color: #FFFFFF;
+  box-shadow: 0 18px 40px -22px rgba(8, 43, 41, 0.7);
 }
-.vd-brand { display: flex; align-items: center; gap: 0.85rem; }
+.vd-brand { display: flex; align-items: center; gap: 0.75rem; }
 .vd-brand svg { flex: none; }
-.vd-wordmark {
-  font-size: 1.45rem;
+.vd-brand svg > rect:first-of-type { fill: rgba(255, 255, 255, 0.12); }
+.vd-wordmark { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
+.vd-hero-title {
+  font-size: 1.9rem;
+  font-weight: 750;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  margin: 0.8rem 0 0.5rem;
+}
+.vd-hero-sub { color: #C5E4DD; font-size: 1.02rem; line-height: 1.55; max-width: 34rem; }
+.vd-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.9rem; }
+.vd-chip {
+  padding: 0.32rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.8rem;
+}
+.vd-hero-art { text-align: center; }
+.vd-hero-art img { width: 100%; max-width: 230px; }
+.vd-hero-art span { display: block; margin-top: 0.4rem; font-size: 0.72rem; color: #8FBFB5; }
+
+/* ---------- Tanıtım bölümleri ---------- */
+.vd-section { margin: 2.2rem 0 1rem; color: var(--vd-muted); font-size: 0.9rem; }
+.vd-section-title {
+  color: var(--vd-ink);
+  font-size: 1.35rem;
   font-weight: 700;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.2rem;
+}
+.vd-grid { display: grid; gap: 0.9rem; }
+.vd-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.vd-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.vd-grid-5 { grid-template-columns: repeat(5, 1fr); }
+.vd-stat, .vd-tile {
+  position: relative;
+  background: var(--vd-surface);
+  border: 1px solid var(--vd-line);
+  border-radius: 16px;
+  padding: 1.1rem 1.15rem 1.2rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.vd-stat:hover, .vd-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -20px rgba(8, 43, 41, 0.45);
+}
+
+/* Test sonucu kartları */
+.vd-stat-top {
+  display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;
+  color: var(--vd-faint); font-size: 0.74rem;
+}
+.vd-stat-tag {
+  padding: 0.18rem 0.55rem; border-radius: 999px;
+  background: var(--vd-accent-soft); color: var(--vd-accent); font-weight: 650;
+}
+.vd-stat-value {
+  font-size: 2.2rem;
+  font-weight: 750;
+  color: var(--vd-accent);
   letter-spacing: -0.02em;
   line-height: 1.1;
+  margin-top: 0.85rem;
+  font-variant-numeric: tabular-nums;
 }
-.vd-tagline { color: var(--vd-muted); font-size: 0.9rem; margin-top: 0.15rem; }
+.vd-stat-name { font-weight: 650; margin-top: 0.15rem; }
+.vd-meter { height: 6px; border-radius: 999px; background: #EFEDE7; overflow: hidden; margin: 0.75rem 0 0.7rem; }
+.vd-meter > div { height: 100%; border-radius: 999px; background: var(--vd-accent); }
+.vd-stat-note { color: var(--vd-muted); font-size: 0.8rem; line-height: 1.45; }
+/* Dış test kartı: başarının düştüğü yer ayrı renkle belli olsun */
+.vd-stat.is-external { background: #FFFBF3; border-color: #EAD9B5; }
+.vd-stat.is-external .vd-stat-tag { background: #F6E7C6; color: #8A5A10; }
+.vd-stat.is-external .vd-stat-value { color: #A8650F; }
+.vd-stat.is-external .vd-meter > div { background: #D39B2A; }
+
+/* Derece rehberi ve adım kartları */
+.vd-tile-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.vd-tile b { display: block; margin: 0.8rem 0 0.25rem; font-size: 0.95rem; }
+.vd-tile p { color: var(--vd-muted); font-size: 0.82rem; line-height: 1.5; margin: 0; }
+.vd-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 10px;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+.vd-grade-tile { overflow: hidden; }
+.vd-grade-tile::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--grade);
+}
+.vd-grade-tile .vd-badge { background: var(--grade); }
+.vd-grade-tile.is-active {
+  border-color: var(--grade);
+  background: color-mix(in srgb, var(--grade) 7%, #FFFFFF);
+  box-shadow: 0 0 0 1px var(--grade), 0 14px 28px -20px var(--grade);
+}
+.vd-tile-tag {
+  font-size: 0.7rem; font-weight: 650; color: #FFFFFF;
+  padding: 0.2rem 0.55rem; border-radius: 999px; background: var(--grade);
+}
+
+.vd-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2.4rem; height: 2.4rem; border-radius: 12px;
+  background: var(--vd-accent-soft); color: var(--vd-accent);
+}
+.vd-flow-step {
+  font-size: 0.72rem; font-weight: 650; letter-spacing: 0.06em; text-transform: uppercase; color: var(--vd-faint);
+}
+/* Adımlar arasındaki akış oku */
+.vd-flow { gap: 1.6rem; }
+.vd-flow-tile:not(:last-child)::after {
+  content: "→";
+  position: absolute; top: 50%; right: -1.45rem; transform: translateY(-50%);
+  width: 1.3rem; height: 1.3rem; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--vd-bg); color: var(--vd-accent); font-size: 0.85rem; font-weight: 700;
+}
 
 /* Uyarı niteliğindeki alt yazılar okunur kalsın (varsayılan saydamlık çok soluk) */
 [data-testid="stCaptionContainer"] { opacity: 1; }
@@ -62,8 +184,32 @@ html, body, [data-testid="stAppViewContainer"] {
   border-color: var(--vd-line);
   border-radius: 16px;
 }
+/* Yükleme ve sonuç kartı aynı boyda olsun. Gerçek DOM zinciri (Streamlit 1.66, ölçülerek bakıldı):
+   stHorizontalBlock > stColumn > stVerticalBlock > stLayoutWrapper > st-key-card-*
+   Satır iki sütunu esnetir; her halka kalan yüksekliği doldurursa iki kart da satır boyunu alır. */
+[data-testid="stHorizontalBlock"]:has(.st-key-card-upload) { align-items: stretch; }
+[data-testid="stColumn"]:has(.st-key-card-upload) > [data-testid="stVerticalBlock"],
+[data-testid="stColumn"]:has(.st-key-card-result) > [data-testid="stVerticalBlock"] { height: 100%; }
+[data-testid="stLayoutWrapper"]:has(> .st-key-card-upload),
+[data-testid="stLayoutWrapper"]:has(> .st-key-card-result) { flex: 1 1 auto; }
+.st-key-card-upload, .st-key-card-result { flex: 1 1 auto; }
+/* Artan boşluk: yükleme kartında gizlilik notu dibe yaslanır, boş sonuç kartında içerik ortalanır */
+.st-key-card-upload > [data-testid="stElementContainer"]:last-child { margin-top: auto; }
+.st-key-card-result > [data-testid="stElementContainer"]:has(.vd-empty) {
+  flex: 1 1 auto; display: flex; align-items: center; justify-content: center;
+}
+/* Yüklenen görüntünün küçük önizlemesi */
+.st-key-card-upload [data-testid="stImage"] { display: flex; justify-content: center; margin-top: 0.5rem; }
+.st-key-card-upload [data-testid="stImage"] img { box-shadow: 0 8px 20px -12px rgba(8, 43, 41, 0.6); }
+.st-key-card-upload [data-testid="stImage"] img { border-radius: 12px; }
+/* Görüntü yüklenmeden önce önizleme yuvası aynı yeri tutar; kart boyu değişmez */
+.vd-preview-empty {
+  height: 150px; margin-top: 0.5rem; border: 1.5px dashed var(--vd-line); border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--vd-faint); font-size: 0.85rem; background: #FAF9F5;
+}
 /* Streamlit'in -1rem alt boşluğu, kartın son öğesini kenarlıktan taşırıyordu */
-[data-testid="stMarkdownContainer"]:has(.vd-note, .vd-probs, .vd-empty) { margin-bottom: 0; }
+[data-testid="stMarkdownContainer"]:has(.vd-note, .vd-probs, .vd-empty, .vd-hero, .vd-grid) { margin-bottom: 0; }
 
 /* ---------- Kart başlıkları ---------- */
 .vd-card-title {
@@ -107,7 +253,7 @@ html, body, [data-testid="stAppViewContainer"] {
 [data-testid="stFileUploaderDropzone"] button p::after { content: "Dosya seç"; font-size: 0.9rem; }
 [data-testid="stFileUploaderDropzoneInstructions"] span { font-size: 0; }
 [data-testid="stFileUploaderDropzoneInstructions"] span::after {
-  content: "PNG veya JPG · en fazla 20 MB";
+  content: "PNG veya JPG · en az 224 px · en fazla 20 MB";
   font-size: 0.85rem;
 }
 
@@ -125,7 +271,8 @@ html, body, [data-testid="stAppViewContainer"] {
 /* ---------- Boş durum ---------- */
 .vd-empty {
   text-align: center;
-  padding: 2.6rem 1rem 2.2rem;
+  padding: 1rem 1.5rem;
+  max-width: 30rem;
   color: var(--vd-muted);
 }
 .vd-empty h3 {
@@ -222,13 +369,19 @@ html, body, [data-testid="stAppViewContainer"] {
   gap: 1rem;
   color: var(--vd-faint);
   font-size: 0.78rem;
-  margin-top: 1.6rem;
+  flex-wrap: wrap;
+  margin-top: 2.4rem;
   padding-top: 1rem;
   border-top: 1px solid var(--vd-line);
 }
 
 @media (max-width: 760px) {
-  .vd-top { flex-direction: column; align-items: flex-start; }
+  .vd-hero { grid-template-columns: 1fr; padding: 1.6rem 1.4rem; }
+  .vd-hero-title { font-size: 1.6rem; }
+  .vd-hero-art img { max-width: 200px; }
+  .vd-grid-3, .vd-grid-5 { grid-template-columns: 1fr; }
+  .vd-flow-tile:not(:last-child)::after { content: "↓"; top: auto; bottom: -1.45rem; right: 50%; transform: translateX(50%); }
+  .vd-grid-4 { grid-template-columns: 1fr 1fr; }
   .vd-prob-row { grid-template-columns: 1.4rem 6.5rem 1fr 3rem; }
   .vd-grade { width: 68px; height: 68px; font-size: 2.1rem; }
 }

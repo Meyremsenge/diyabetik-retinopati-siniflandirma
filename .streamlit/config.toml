@@ -9,8 +9,8 @@ textColor = "#14211F"
 font = "sans serif"
 
 [client]
-# "Deploy" gibi geliştirici seçeneklerini gizler; yazdırma (PDF) menüsü kalır
-toolbarMode = "viewer"
+# "Deploy" gibi geliştirici seçeneklerini gizler (araç çubuğu app/style.css ile de gizlenir)
+toolbarMode = "minimal"
 
 [browser]
 # Kullanım istatistiği dış servise gönderilmez
@@ -19,3 +19,5 @@ gatherUsageStats = false
 [server]
 # Yüklenebilecek en büyük dosya (MB)
 maxUploadSize = 20
+# "Dosya değişti" uyarısını kapatır; kod değişince uygulama yeniden başlatılır
+fileWatcherType = "none"
