@@ -6,6 +6,7 @@ train.csv de out_dir'e kopyalanır; böylece out_dir tek başına bir veri klas�
 
 Nasıl çalıştırılır (proje kökünden):
     python -m src.preprocess_images --data-root <ham APTOS klasörü> --out-dir <çıktı klasörü>
+    (E4 için --ben-graham, E7 için --clahe ekle)
 Deneme için: --limit 20
 """
 import argparse
@@ -16,12 +17,12 @@ import pandas as pd
 from PIL import Image
 from tqdm import tqdm
 
-from src.preprocessing import ben_graham as apply_ben_graham, prepare_image
+from src.preprocessing import ben_graham as apply_ben_graham, clahe as apply_clahe, prepare_image
 
 
 def preprocess_all(
     data_root: Path, out_dir: Path, size: int = 512, limit: int | None = None,
-    ben_graham: bool = False,
+    ben_graham: bool = False, clahe: bool = False,
 ) -> int:
     """Görüntüleri işleyip out_dir'e yazar, yazılan görüntü sayısını döndürür."""
     csv_path = data_root / "train.csv"
@@ -36,6 +37,8 @@ def preprocess_all(
             prepared = prepare_image(img, size)
         if ben_graham:
             prepared = apply_ben_graham(prepared)
+        if clahe:
+            prepared = apply_clahe(prepared)
         prepared.save(out_dir / f"{image_id}.jpg", format="JPEG", quality=95)
 
     shutil.copy(csv_path, out_dir / "train.csv")
@@ -61,9 +64,14 @@ def main(argv: list[str] | None = None) -> None:
                         help="yalnız ilk N görüntü (deneme için)")
     parser.add_argument("--ben-graham", action="store_true",
                         help="kırpmadan sonra Ben Graham dönüşümünü uygula (E4)")
+    parser.add_argument("--clahe", action="store_true",
+                        help="kırpmadan sonra CLAHE uygula (E7, Ben Graham ile birlikte kullanılmaz)")
     args = parser.parse_args(argv)
+    if args.ben_graham and args.clahe:
+        parser.error("--ben-graham ve --clahe birlikte kullanılamaz (E7 yalnız CLAHE'yi ölçer).")
 
-    written = preprocess_all(args.data_root, args.out_dir, args.size, args.limit, args.ben_graham)
+    written = preprocess_all(args.data_root, args.out_dir, args.size, args.limit,
+                             args.ben_graham, args.clahe)
     print(
         f"Yazılan görüntü: {written} · "
         f"Klasör boyutu: {folder_size_mb(args.out_dir):.1f} MB · {args.out_dir}"
