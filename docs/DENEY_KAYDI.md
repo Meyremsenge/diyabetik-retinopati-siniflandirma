@@ -30,7 +30,7 @@ Zip'i açıp koşu klasörlerini `outputs/runs/` altına koyun (git'e girmez). `
 | E4 | 20261103-1104_efficientnet_b3_ben_graham | B | Kaggle Tesla T4 | efficientnet_b3 | + Ben Graham | ağırlıklı CE | 15,7 dk | 0.913 | 0.672 | 0.974 / 0.686 / 0.681 / 0.520 / 0.600 | Tamamlandı. 15 epoch koşuldu, en iyi epoch 11 (metrics_val.json, n=522). Taban: E3 (D-17), yalnız ön işleme ve data_root farklı (`aptos_512_bg`). Ağırlıklar E3 ile aynı. Kaggle torch 2.11.0+cu128, commit 357e92f. Tek koşu, tek seed |
 | E6 *(Could)* | — | M | — | — | — | regresyon + eşik | — | — | — | — | Çalıştırılmadı (PLAN 6.3 yapılmayacak, D-20, 2026-11-25) |
 | Messidor-2 *(Could)* | — | R | — | — | — | — | — | — | — | — | Çalıştırılmadı (PLAN 6.2, D-22: lisans başvurusu yapılmadı, 2026-11-25) |
-| E7 *(Could)* | — | R | — | efficientnet_b3 | CLAHE | ağırlıklı CE | — | — | — | — | Çalıştırılmadı (PLAN 6.4, D-21: ekip onayı var; kod ve `configs/e7_clahe.yaml` hazır, önbellek ve eğitim henüz yapılmadı, 2026-11-25) |
+| E7 *(Could)* | — | R | — | efficientnet_b3 | CLAHE | ağırlıklı CE | — | — | — | — | Çalıştırılmadı (PLAN 6.4, D-21: ekip onayı var; kod, `configs/e7_clahe.yaml` ve CLAHE önbelleği hazır: Kaggle dataset `visiondx-aptos-512-clahe`, 3662 görüntü 512×512, sınıf dağılımı veri raporuyla aynı, Kaggle scikit-image 0.25.2; eğitim henüz koşulmadı, 2026-11-25) |
 
 ## Final model
 
