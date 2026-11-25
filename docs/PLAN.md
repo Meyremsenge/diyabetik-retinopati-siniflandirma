@@ -130,7 +130,7 @@ E2/E3/E4'ü yürütecek kişi Büşra'dır; Rümeysa'nın Kaggle koşusu yardım
 - [ ] 6.2 `[R]` *(Could)* Messidor-2 dış testi (ekip onayı alındı, D-22, 25 Kasım 2026; lisans başvurusu ve uygulama bekliyor, görüntü gelmezse "yapılmadı: lisans süresi") → [kart](planlar/H6.md#m6-2)
 - [x] 6.3 ✖ `[M]` *(Could)* Regresyon çıkışı + eşik optimizasyonu (YAPILMAYACAK, Meyrem 25 Kasım 2026, D-20: isteğe bağlı iş; teslime az kaldı, kod ve sözleşme değişikliği ile yeni eğitim gerektiriyor; raporda gelecek çalışma) → [kart](planlar/H6.md#m6-3)
 - [ ] 6.4 `[R]` *(Could)* CLAHE deneyi (ekip onayı alındı, D-21, 25 Kasım 2026; uygulama bekliyor) → [kart](planlar/H6.md#m6-4)
-- [ ] 6.5 `[E]` Rapor dil/biçim cilası (Meyrem'in payı tamam, 25 Kasım: §7–§10 cilası, kaynakça, §8–DENEY_KAYDI karşılaştırması, §4–§5 çapraz okuma PR yorumunda; Büşra'nın §4–§5 okuması tamam; Rümeysa §4, §5.1, §5.3'ü Meyrem ve Büşra'nın notlarıyla düzeltti, 25 Kasım; Rümeysa'nın Büşra'nın bölümünü çapraz okuması bekliyor) → [kart](planlar/H6.md#m6-5)
+- [x] 6.5 `[E]` Rapor dil/biçim cilası (3 çapraz okuma tamam, PR #58 yorumları: Meyrem §4–§5 ve kendi payı, Büşra §4–§5, Rümeysa §5.2 ve §6; kaynakça doğrulandı; 6.2 ve 6.4 onaylı ama yapılmadı, durumu raporda açık, 25 Kasım 2026) → [kart](planlar/H6.md#m6-5)
 
 ---
 
