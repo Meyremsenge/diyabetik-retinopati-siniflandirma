@@ -11,7 +11,9 @@ import pytest
 import yaml
 from PIL import Image
 
-from src.train import REQUIRED_KEYS, compute_class_weights, load_config, main, make_run_dir
+from src.train import (
+    REQUIRED_KEYS, compute_class_weights, fold_frames, load_config, main, make_run_dir,
+)
 
 ROOT = Path(__file__).resolve().parent.parent
 PREDICTION_COLUMNS = ["image_id", "y_true", "y_pred",
@@ -131,3 +133,39 @@ def test_tiny_run_weighted_ce(tiny_config):
 
     saved_config = yaml.safe_load((single_run_dir(runs_dir) / "config.yaml").read_text())
     assert len(saved_config["computed_class_weights"]) == 5
+
+
+@pytest.fixture
+def fold_df():
+    """50 satır: 5 sınıf × 10 görüntü."""
+    return pd.DataFrame({
+        "image_id": [f"f{i:02d}" for i in range(50)],
+        "diagnosis": [i % 5 for i in range(50)],
+    })
+
+
+def test_folds_disjoint_and_complete(fold_df):
+    val_ids = []
+    for fold in range(5):
+        train_part, val_part = fold_frames(fold_df, fold)
+        assert set(train_part["image_id"]).isdisjoint(val_part["image_id"])
+        val_ids += val_part["image_id"].tolist()
+    assert len(val_ids) == 50
+    assert set(val_ids) == set(fold_df["image_id"])
+
+
+def test_fold_is_stratified(fold_df):
+    for fold in range(5):
+        _, val_part = fold_frames(fold_df, fold)
+        assert val_part["diagnosis"].value_counts().to_dict() == {0: 2, 1: 2, 2: 2, 3: 2, 4: 2}
+
+
+def test_fold_deterministic(fold_df):
+    first = fold_frames(fold_df, 2)[1]["image_id"].tolist()
+    second = fold_frames(fold_df, 2)[1]["image_id"].tolist()
+    assert first == second
+
+
+def test_fold_out_of_range(fold_df):
+    with pytest.raises(ValueError):
+        fold_frames(fold_df, 5)
